@@ -11,6 +11,8 @@
 // #include <LUFA/Platform/Platform.h>
 
 
+#include "strings.c"
+
 typedef struct
 {
     USB_Descriptor_Configuration_Header_t	Config;
@@ -19,14 +21,14 @@ typedef struct
     USB_HID_Descriptor_HID_t			HID_JoystickHID;
     USB_Descriptor_Endpoint_t			HID_ReportINEndpoint;
 
-    // First CDC Control Interface
+    USB_Descriptor_Interface_Association_t	CDC_IAD;
+    // CDC Control Interface
     USB_Descriptor_Interface_t			CDC_CCI_Interface;
     USB_CDC_Descriptor_FunctionalHeader_t	CDC_Functional_Header;
     USB_CDC_Descriptor_FunctionalACM_t		CDC_Functional_ACM;
     USB_CDC_Descriptor_FunctionalUnion_t	CDC_Functional_Union;
     USB_Descriptor_Endpoint_t			CDC_ManagementEndpoint;
-
-    // First CDC Data Interface
+    // CDC Data Interface
     USB_Descriptor_Interface_t			CDC_DCI_Interface;
     USB_Descriptor_Endpoint_t			CDC_DataOutEndpoint;
     USB_Descriptor_Endpoint_t			CDC_DataInEndpoint;
@@ -124,20 +126,16 @@ const USB_Descriptor_Device_t PROGMEM DeviceDescriptor =
 
     .Endpoint0Size          = 8,
 
-    .VendorID               = 0x1D50,
-    .ProductID              = 0xD000,
-    .ReleaseNumber          = VERSION_BCD(0,1,0),
+    .VendorID               = 0x1209,
+    .ProductID              = 0xC00C,
+    .ReleaseNumber          = VERSION_BCD(0,9,0),
 
-    .ManufacturerStrIndex   = 1,
-    .ProductStrIndex        = 2,
-    .SerialNumStrIndex      = NO_DESCRIPTOR,
+    .ManufacturerStrIndex   = SI_mfg,
+    .ProductStrIndex        = SI_product,
+    .SerialNumStrIndex      = USE_INTERNAL_SERIAL,
 
     .NumberOfConfigurations = 1,
 };
-
-const USB_Descriptor_String_t PROGMEM LanguageString = USB_STRING_DESCRIPTOR_ARRAY(LANGUAGE_ID_ENG);
-const USB_Descriptor_String_t PROGMEM ManufacturerString = USB_STRING_DESCRIPTOR(L"The Coren");
-const USB_Descriptor_String_t PROGMEM ProductString = USB_STRING_DESCRIPTOR(L"SIMPANEL rev. A");
 
 const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 {
@@ -191,6 +189,20 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 	.Attributes             = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
 	.EndpointSize           = sizeof(Report),
 	.PollingIntervalMS      = 0x0A
+      },
+
+    .CDC_IAD =
+      {
+	.Header                 = {.Size = sizeof(USB_Descriptor_Interface_Association_t), .Type = DTYPE_InterfaceAssociation},
+
+	.FirstInterfaceIndex    = 1,
+	.TotalInterfaces        = 2,
+
+	.Class                  = CDC_CSCP_CDCClass,
+	.SubClass               = CDC_CSCP_ACMSubclass,
+	.Protocol               = CDC_CSCP_ATCommandProtocol,
+
+	.IADStrIndex            = NO_DESCRIPTOR
       },
 
     .CDC_CCI_Interface =
@@ -304,22 +316,11 @@ uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
 	Size    = sizeof(USB_Descriptor_Configuration_t);
 	break;
       case DTYPE_String:
-	switch (DescriptorNumber)
 	  {
-	  case 0:
-	    Address = &LanguageString;
-	    Size    = pgm_read_byte(&LanguageString.Header.Size);
-	    break;
-	  case 1:
-	    Address = &ManufacturerString;
-	    Size    = pgm_read_byte(&ManufacturerString.Header.Size);
-	    break;
-	  case 2:
-	    Address = &ProductString;
-	    Size    = pgm_read_byte(&ProductString.Header.Size);
-	    break;
+	    USB_Descriptor_String_t* a = (USB_Descriptor_String_t*)pgm_read_ptr(Strings+DescriptorNumber);
+	    Address = a;
+	    Size = pgm_read_byte(&(a->Header.Size));
 	  }
-
 	break;
       case DTYPE_HID:
 	Address = &ConfigurationDescriptor.HID_JoystickHID;
