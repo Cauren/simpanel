@@ -1,0 +1,7 @@
+(fp_lib_table
+  (lib (name LTP-587HR)(type Legacy)(uri C:/Users/marc/Desktop/CAD/LTP-587HR.mod)(options "")(descr ""))
+  (lib (name arduino_shields)(type Legacy)(uri C:/Users/marc/Desktop/CAD/Arduino_Shield_Modules_for_KiCad_V3/arduino_shields.mod)(options "")(descr ""))
+  (lib (name B3J-2100)(type Legacy)(uri C:/Users/marc/Desktop/CAD/B3J-2100/KiCad/B3J-2100.mod)(options "")(descr ""))
+  (lib (name KiCad)(type KiCad)(uri C:/Users/marc/Desktop/CAD/B3J-2100/KiCad)(options "")(descr ""))
+  (lib (name pecr11)(type KiCad)(uri C:/Users/marc/Desktop/CAD/pecr11/pecr11.pretty)(options "")(descr ""))
+)
