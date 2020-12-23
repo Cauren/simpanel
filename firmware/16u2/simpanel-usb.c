@@ -51,7 +51,7 @@ uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
 
 typedef struct {
     uint8_t		dials;
-    uint8_t		dswitch;
+    uint8_t		dswitch[4];
     uint16_t		ap;
     uint8_t		switches[3];
 } Report;
@@ -63,6 +63,9 @@ typedef struct {
     uint8_t		dswitch;
 } MCUReport;
 
+#define S(_sn_) _HID_RI_ENTRY(HID_RI_TYPE_LOCAL , 0x70, 8, SI_##_sn_)
+#define SMIN(_sn_) _HID_RI_ENTRY(HID_RI_TYPE_LOCAL , 0x80, 8, SI_##_sn_)
+#define SMAX(_sn_) _HID_RI_ENTRY(HID_RI_TYPE_LOCAL , 0x90, 8, SI_##_sn_)
 
 const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
     HID_RI_USAGE_PAGE(8, 0x01), /* Generic Desktop */
@@ -72,36 +75,131 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
     	// Autopilot
         HID_RI_USAGE_PAGE(8, 0x02), /* Simulation controls */
         HID_RI_USAGE(8, 0x01), /* Flight Simulation device */
-	HID_RI_COLLECTION(8, 0x01),
+	S(g_ap),
+	HID_RI_COLLECTION(8, 0x02),
 
-	    HID_RI_LOGICAL_MINIMUM(8, 0x00),
-	    HID_RI_LOGICAL_MAXIMUM(8, 0x01),
-
+	    HID_RI_LOGICAL_MINIMUM(8, 0),
+	    HID_RI_LOGICAL_MAXIMUM(8, 1),
 	    HID_RI_USAGE_PAGE(8, 0x09), /* Button */
 	    HID_RI_USAGE_MINIMUM(8, 1),
-	    HID_RI_USAGE_MAXIMUM(8, 13),
-	    HID_RI_REPORT_COUNT(8, 13),
+	    HID_RI_USAGE_MAXIMUM(8, 8),
+	    SMIN(dial1m),
+	    SMAX(dial4p),
+	    HID_RI_REPORT_COUNT(8, 8),
 	    HID_RI_REPORT_SIZE(8, 1),
 	    HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
 
-	    HID_RI_REPORT_COUNT(8, 1),
-	    HID_RI_REPORT_SIZE(8, 3),
-	    HID_RI_INPUT(8, HID_IOF_CONSTANT),
+	    HID_RI_USAGE_PAGE(8, 0x0A),
+	    HID_RI_USAGE(8, 1), // ordinal 1
+	    HID_RI_COLLECTION(8, 0x00),
+		HID_RI_USAGE_PAGE(8, 0x01),
+		HID_RI_USAGE(8, 0x37), // Dial
+		S(dial1),
+		HID_RI_LOGICAL_MINIMUM(8, -63),
+		HID_RI_LOGICAL_MAXIMUM(8, 63),
+		HID_RI_REPORT_COUNT(8, 1),
+		HID_RI_REPORT_SIZE(8, 7),
+		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_WRAP | HID_IOF_RELATIVE | HID_IOF_VOLATILE),
+		HID_RI_USAGE_PAGE(8, 0x09), // button
+		HID_RI_USAGE(8, 9),
+		HID_RI_LOGICAL_MINIMUM(8, 0),
+		HID_RI_LOGICAL_MAXIMUM(8, 1),
+		S(dial1b),
+		HID_RI_REPORT_COUNT(8, 1),
+		HID_RI_REPORT_SIZE(8, 1),
+		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
+	    HID_RI_END_COLLECTION(0),
+
+	    HID_RI_USAGE_PAGE(8, 0x0A),
+	    HID_RI_USAGE(8, 2), // ordinal 1
+	    HID_RI_COLLECTION(8, 0x00),
+		HID_RI_USAGE_PAGE(8, 0x01),
+		HID_RI_USAGE(8, 0x37), // Dial
+		S(dial2),
+		HID_RI_LOGICAL_MINIMUM(8, -63),
+		HID_RI_LOGICAL_MAXIMUM(8, 63),
+		HID_RI_REPORT_COUNT(8, 1),
+		HID_RI_REPORT_SIZE(8, 7),
+		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_WRAP | HID_IOF_RELATIVE | HID_IOF_VOLATILE),
+		HID_RI_USAGE_PAGE(8, 0x09), // button
+		HID_RI_USAGE(8, 10),
+		HID_RI_LOGICAL_MINIMUM(8, 0),
+		HID_RI_LOGICAL_MAXIMUM(8, 1),
+		S(dial2b),
+		HID_RI_REPORT_COUNT(8, 1),
+		HID_RI_REPORT_SIZE(8, 1),
+		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
+	    HID_RI_END_COLLECTION(0),
+
+	    HID_RI_USAGE_PAGE(8, 0x0A),
+	    HID_RI_USAGE(8, 3), // ordinal 1
+	    HID_RI_COLLECTION(8, 0x00),
+		HID_RI_USAGE_PAGE(8, 0x01),
+		HID_RI_USAGE(8, 0x37), // Dial
+		S(dial3),
+		HID_RI_LOGICAL_MINIMUM(8, -63),
+		HID_RI_LOGICAL_MAXIMUM(8, 63),
+		HID_RI_REPORT_COUNT(8, 1),
+		HID_RI_REPORT_SIZE(8, 7),
+		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_WRAP | HID_IOF_RELATIVE | HID_IOF_VOLATILE),
+		HID_RI_USAGE_PAGE(8, 0x09), // button
+		HID_RI_USAGE(8, 11),
+		HID_RI_LOGICAL_MINIMUM(8, 0),
+		HID_RI_LOGICAL_MAXIMUM(8, 1),
+		S(dial3b),
+		HID_RI_REPORT_COUNT(8, 1),
+		HID_RI_REPORT_SIZE(8, 1),
+		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
+	    HID_RI_END_COLLECTION(0),
+
+	    HID_RI_USAGE_PAGE(8, 0x0A),
+	    HID_RI_USAGE(8, 4), // ordinal 1
+	    HID_RI_COLLECTION(8, 0x00),
+		HID_RI_USAGE_PAGE(8, 0x01),
+		HID_RI_USAGE(8, 0x37), // Dial
+		S(dial4),
+		HID_RI_LOGICAL_MINIMUM(8, -63),
+		HID_RI_LOGICAL_MAXIMUM(8, 63),
+		HID_RI_REPORT_COUNT(8, 1),
+		HID_RI_REPORT_SIZE(8, 7),
+		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_WRAP | HID_IOF_RELATIVE | HID_IOF_VOLATILE),
+		HID_RI_USAGE_PAGE(8, 0x09), // button
+		HID_RI_USAGE(8, 12),
+		HID_RI_LOGICAL_MINIMUM(8, 0),
+		HID_RI_LOGICAL_MAXIMUM(8, 1),
+		S(dial4b),
+		HID_RI_REPORT_COUNT(8, 1),
+		HID_RI_REPORT_SIZE(8, 1),
+		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
+	    HID_RI_END_COLLECTION(0),
 
 	    HID_RI_USAGE_PAGE(8, 0x09), /* Button */
-	    HID_RI_USAGE_MINIMUM(8, 14),
+	    HID_RI_USAGE_MINIMUM(8, 13),
 	    HID_RI_USAGE_MAXIMUM(8, 24),
-	    HID_RI_REPORT_COUNT(8, 11),
+	    HID_RI_LOGICAL_MINIMUM(8, 0),
+	    HID_RI_LOGICAL_MAXIMUM(8, 1),
+	    SMIN(ap_sw1),
+	    SMAX(ap_sw12),
+	    HID_RI_REPORT_COUNT(8, 12),
 	    HID_RI_REPORT_SIZE(8, 1),
 	    HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
 
 	    HID_RI_REPORT_COUNT(8, 1),
-	    HID_RI_REPORT_SIZE(8, 5),
+	    HID_RI_REPORT_SIZE(8, 4),
 	    HID_RI_INPUT(8, HID_IOF_CONSTANT),
+
+	HID_RI_END_COLLECTION(0),
+
+	HID_RI_USAGE_PAGE(8, 0x02),
+	HID_RI_USAGE(8, 0x01),
+	S(g_sw),
+	HID_RI_COLLECTION(8, 0x02),
 
 	    HID_RI_USAGE_PAGE(8, 0x09), /* Button */
 	    HID_RI_USAGE_MINIMUM(8, 25),
-	    HID_RI_USAGE_MAXIMUM(8, 47),
+	    HID_RI_USAGE_MAXIMUM(8, 46),
+	    SMIN(s1),
+	    SMAX(s16),
 	    HID_RI_REPORT_COUNT(8, 22),
 	    HID_RI_REPORT_SIZE(8, 1),
 	    HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
@@ -167,7 +265,7 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 	.SubClass               = HID_CSCP_NonBootSubclass,
 	.Protocol               = HID_CSCP_NonBootProtocol,
 
-	.InterfaceStrIndex      = NO_DESCRIPTOR
+	.InterfaceStrIndex      = SI_hid,
       },
 
     .HID_JoystickHID =
@@ -202,7 +300,7 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 	.SubClass               = CDC_CSCP_ACMSubclass,
 	.Protocol               = CDC_CSCP_ATCommandProtocol,
 
-	.IADStrIndex            = NO_DESCRIPTOR
+	.IADStrIndex            = SI_ctc,
       },
 
     .CDC_CCI_Interface =
@@ -340,6 +438,7 @@ static volatile Report		report;
 static volatile Report		new_report;
 static volatile MCUReport	mcu_report;
 static volatile bool		report_changed = true;
+static volatile bool		slow_report = false;
 
 static CDC_LineEncoding_t linesetup = {	.BaudRateBPS = 0,
     					.CharFormat  = CDC_LINEENCODING_OneStopBit,
@@ -625,21 +724,26 @@ void write(void) {
 
 void update_report(void)
 {
-    new_report.dswitch = mcu_report.dswitch;
+    new_report.dswitch[0] = (mcu_report.dswitch&0x01) ? 0x80: 0x00;
+    new_report.dswitch[1] = (mcu_report.dswitch&0x02) ? 0x80: 0x00;
+    new_report.dswitch[2] = (mcu_report.dswitch&0x04) ? 0x80: 0x00;
+    new_report.dswitch[3] = (mcu_report.dswitch&0x08) ? 0x80: 0x00;
     new_report.ap = mcu_report.ap;
     new_report.switches[0] = mcu_report.switches[0];
     new_report.switches[1] = mcu_report.switches[1];
     new_report.switches[2] = mcu_report.switches[2];
 
-    if(!report_changed) {
+    if(!report_changed && !slow_report) {
 	uint8_t dials = 0;
 	for(uint8_t i=0; i<4; i++)
 	    if(!(new_report.dials & (0x03<<(i*2)))) {
 		if(mcu_report.dials[i] < 0) {
 		    dials |= 0x01 << (i*2);
+		    new_report.dswitch[i] |= 0x7F;
 		    mcu_report.dials[i]++;
 		} else if(mcu_report.dials[i] > 0) {
 		    dials |= 0x02 << (i*2);
+		    new_report.dswitch[i] |= 0x01;
 		    mcu_report.dials[i]--;
 		}
 	    }
@@ -648,7 +752,10 @@ void update_report(void)
 
     cli();
     if(   report.dials != new_report.dials
-       || report.dswitch != new_report.dswitch
+       || report.dswitch[0] != new_report.dswitch[0]
+       || report.dswitch[1] != new_report.dswitch[1]
+       || report.dswitch[2] != new_report.dswitch[2]
+       || report.dswitch[3] != new_report.dswitch[3]
        || report.ap != new_report.ap
        || report.switches[0] != new_report.switches[0]
        || report.switches[1] != new_report.switches[1]
@@ -677,6 +784,12 @@ void do_mcu_in(char* s, uint8_t len) {
       case 's':
 	if(len == sizeof(mcu_report)*2+1) {
 	    updates++;
+	    if(slow_report) {
+		out('S');
+		for(uint8_t i=1; i<len; i++)
+		    out(s[i]);
+		write();
+	    }
 	    ++s;
 	    uint8_t* d = (uint8_t*)&mcu_report;
 	    for(uint8_t i=0; i<4; i++) {
@@ -735,7 +848,7 @@ void do_con_in(char* s, uint8_t len) {
 	return;
 
       case 's':
-	out('S'); out(':');
+	out('S');
 	hex(status);
 	out(' ');
 	hex(updates);
@@ -743,7 +856,7 @@ void do_con_in(char* s, uint8_t len) {
 	return;
 
       case 'r':
-	out('R'); out(':');
+	out('R');
 	for(uint8_t i=0; i<sizeof(report); i++)
 	    hex(((char*)&report)[i]);
 	write();
@@ -762,9 +875,17 @@ void do_con_in(char* s, uint8_t len) {
 	}
 	break;
 
+      case 'x':
+	if(len == 2)
+	    slow_report = (s[1]=='s');
+	out('X');
+	out(slow_report? 'S': 'F');
+	write();
+	return;
+
       case 'v':
-	  out('M'); out(':'); outs(s_model, 15); crlf();
-	  out('V'); out(':'); outs(s_version, 5); write();
+	  out('M'); outs(s_model, 15); crlf();
+	  out('V'); outs(s_version, 5); write();
 	  *s = 'v';
 	  mcu_send(s, 1);
 	  return;

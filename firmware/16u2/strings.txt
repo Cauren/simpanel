@@ -1,5 +1,7 @@
 mfg	The Coren
 product	SIMPANEL rev. A
+hid	SIMPANEL HID
+ctc	SIMPANEL Control Port
 g_ap	Autopilot panel
 ap_sw1	HDG hold
 ap_sw2	A/T
@@ -30,7 +32,7 @@ dial3m	VS-
 dial3p	VS+
 dial4m	ALT-
 dial4p	ALT+
-switch	Switch panel
+g_sw	Switch panel
 s1	SW1
 s2	SW2
 s3	SW3

@@ -283,12 +283,53 @@ int main(void)
 
     sei();
 
+    uint8_t send = 0;
     for(;;) {
 	decode();
 	if(milis > 50) {
-	    uint8_t send = 0;
 
 	    milis = 0;
+
+	    cli();
+	    IOBuf*	b = read_buf;
+	    if(b)
+		read_buf = b->next;
+	    sei();
+	    if(b) {
+		if(!write_buf)
+		    write_buf = newbuf(0);
+		if(b->end == b->len+1) switch(b->buf[1]) {
+		  case 'v':
+		    outs(write_buf, info, sizeof(info));
+		    break;
+		  case 'r':
+		    out(write_buf, 'l');
+		    out(write_buf, 'T');
+		    for(uint8_t i=0; i<11; i++)
+			out(write_buf, (inputs[i]&4)? '*': 'o');
+		    for(uint8_t i=0; i<4; i++) {
+			out(write_buf, ' ');
+			hex(write_buf, encoders[i]);
+		    }
+		    break;
+		  case 's':
+		    send = 1;
+		    break;
+
+		  default:
+		    out(write_buf, 'l');
+		    out(write_buf, 'E');
+		    out(write_buf, b->buf[1]);
+		    out(write_buf, '?');
+		    break;
+		}
+		b->end = 0;
+		if(write_buf->end > 1) {
+		    write_buf->buf[0] = 0x80 | (write_buf->len = write_buf->end-1);
+		    xmitbuf(write_buf);
+		    write_buf = 0;
+		}
+	    }
 
 	    for(uint8_t i=0; i<4; i++) {
 		send |= (report[i] = encoders[i]);
@@ -348,53 +389,10 @@ int main(void)
 		}
 
 		xmitbuf(b);
+		send = 0;
 	    }
 	}
-	cli();
-	IOBuf*	b = read_buf;
-	if(b)
-	    read_buf = b->next;
-	sei();
-	if(b) {
-	    if(!write_buf)
-		write_buf = newbuf(0);
-	    if(b->end == b->len+1) switch(b->buf[1]) {
-	      case 'v':
-		outs(write_buf, info, sizeof(info));
-		break;
-	      case 'r':
-		out(write_buf, 'l');
-		out(write_buf, 'T');
-		for(uint8_t i=0; i<11; i++)
-		    out(write_buf, (inputs[i]&4)? '*': 'o');
-		for(uint8_t i=0; i<4; i++) {
-		    out(write_buf, ' ');
-		    hex(write_buf, encoders[i]);
-		}
-		break;
-	      case 's':
-		out(write_buf, 'l');
-		out(write_buf, 'S');
 
-		for(uint8_t i=0; i<10; i++) {
-		    hex(write_buf, report[i]);
-		}
-		break;
-
-	      default:
-		out(write_buf, 'l');
-		out(write_buf, 'E');
-		out(write_buf, b->buf[1]);
-		out(write_buf, '?');
-		break;
-	    }
-	    b->end = 0;
-	    if(write_buf->end > 1) {
-		write_buf->buf[0] = 0x80 | (write_buf->len = write_buf->end-1);
-		xmitbuf(write_buf);
-		write_buf = 0;
-	    }
-	}
     }
 }
 
