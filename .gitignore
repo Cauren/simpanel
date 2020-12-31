@@ -1,2 +1,12 @@
 
 hardware/simpanel/fp-lib-table
+
+msfs2020/SimpanelModule/MSFS/Debug/
+
+msfs2020/SimpanelModule/.vs/
+
+msfs2020/SimpanelConnect/.vs/
+
+msfs2020/SimpanelConnect/bin/
+
+msfs2020/SimpanelConnect/obj/
