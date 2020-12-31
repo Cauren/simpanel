@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include <util/delay.h>
+#include <util/twi.h>
 
 #define BUFS 8
 #define BSIZE 44
@@ -224,6 +225,354 @@ void hex(IOBuf* b, uint8_t n) {
 static uint8_t prport[10];
 static uint8_t report[10];
 
+enum _i2c_state {
+    I2CIdle, I2CStart, I2CAddr, I2CData, I2CStop,
+    I2CRead,
+};
+
+static enum _i2c_state i2cs;
+static uint8_t i2cbuf[32];
+static uint8_t i2clen;
+static uint8_t i2cptr;
+static uint8_t i2ce;
+
+ISR(TWI_vect)
+{
+    switch(i2cs) {
+	case I2CStart:
+	  i2ce = 2;
+	  if((TWSR&0xF8) == 0x08) {
+	      i2cs = I2CAddr;
+	      TWDR = i2cbuf[i2cptr++];
+	      TWCR = 0x85;
+	      return;
+	  }
+	  break;
+	case I2CAddr:
+	  i2ce = 3;
+	  switch(TWSR&0xF8) {
+	    case 0x38:
+	      i2cs = I2CStart;
+	      i2ce = 4;
+	      TWCR = 0xA5;
+	      i2cptr = 0;
+	      return;
+	    case 0x48:
+	    case 0x20:
+	      i2ce = 5;
+	      break;
+	    case 0x18:
+	      i2ce = 6;
+	      i2cs = I2CData;
+	      TWDR = i2cbuf[i2cptr++];
+	      TWCR = 0x85;
+	      return;
+	    case 0x40:
+	      i2ce = 13;
+	      i2cs = I2CRead;
+	      TWCR = (i2cptr < (i2clen-1))? 0xC5: 0x85;
+	      return;
+	  }
+	  break;
+	case I2CRead:
+	  i2ce = 14;
+	  i2cbuf[i2cptr++] = TWDR;
+	  if(i2cptr < i2clen) {
+	      TWCR = (i2cptr < (i2clen-1))? 0xC5: 0x85;
+	      return;
+	  }
+	  i2cs = I2CIdle;
+	  TWCR = 0x95;
+	  return;
+
+	case I2CData:
+	  i2ce = 7;
+	  switch(TWSR&0xF8) {
+	    case 0x28:
+	      i2ce = 8;
+	      if(i2cptr < i2clen) {
+		  i2ce = 9;
+		  TWDR = i2cbuf[i2cptr++];
+		  TWCR = 0x85;
+	      } else {
+		  i2cs = I2CIdle;
+		  i2ce = 10;
+		  TWCR = 0x95;
+	      }
+	      return;
+	    case 0x30:
+	      i2ce = 11;
+	      i2cs = I2CIdle;
+	      TWCR = 0x95;
+	      return;
+	  }
+	  break;
+	case I2CStop:
+	  i2ce += 16;
+	  i2cs = I2CIdle;
+	  TWCR = 0x84;
+	  return;
+
+	case I2CIdle:
+	  i2ce = 12;
+	  break;
+    }
+    i2cs = I2CIdle;
+    TWCR = 0x84;
+}
+
+void i2c_send(void)
+{
+    cli();
+    if(i2clen < 2)
+	return;
+    while(i2cs != I2CIdle) {
+	sei();
+	while(i2cs != I2CIdle)
+	    ;
+	cli();
+    }
+    i2cptr = 0;
+    i2cs = I2CStart;
+    i2ce = 1;
+    TWCR = 0xA5;
+    sei();
+}
+
+uint8_t		dpy_step;
+uint16_t	dpyA[12];
+uint16_t	dpyB[12];
+uint8_t		dd[16];
+uint16_t	ap;
+uint16_t	refresh;
+
+static const uint16_t digit_seg[] PROGMEM = {
+    0x07F, // 0
+    0x291, // 1
+    0x437, // 2
+    0x41F, // 3
+    0x44C, // 4
+    0x45B, // 5
+    0x47B, // 6
+    0x303, // 7
+    0x47F, // 8
+    0x45F, // 9
+    0x46F, // A
+    0x4F9, // B
+    0x073, // C
+    0x29F, // D
+    0x473, // E
+    0x463, // F
+    0x000, //   (g)
+    0x680, // + (h)
+    0x293, // I
+    0x400, // - (j)
+    0x000, //   (k)
+    0x070, // L
+    0x2EF, // M
+    0x06F, // N
+    0x000, //   (o)
+    0x467, // P
+    0x000, // space
+};
+
+static const uint8_t pwm_bits[] PROGMEM = {
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+
+    0xBF, 0xBF, 0xBF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xBF, 0xBF, 0xBF, 0xBF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
+};
+
+static const uint8_t boot_string[] PROGMEM = "jjj5IMPANELjjjjj";
+
+void dpy_setup(void)
+{
+    // ns = pgm_read_byte(enc_sm + (encstate[3]<<2) + (((pins&0x02)>>1) | ((pins&0x08)>>2)));
+    uint16_t	dpy[17];
+
+    for(uint8_t i=0; i<16; i++)
+	dpy[i] = pgm_read_word(digit_seg + dd[i]);
+    dpy[16] = ap;
+    for(uint8_t i=0; i<12; i++)
+	dpyA[i] = dpyB[i] = 0;
+
+    for(uint8_t d=0; d<12; d++) {
+	uint16_t digit = dpy[4+d];
+	uint16_t bit = 1<<d;
+	for(uint8_t b=0; b<11; b++) {
+	    if(digit&1) {
+		if(b < d)
+		    dpyA[b] |= bit>>1;
+		else
+		    dpyA[b+1] |= bit;
+	    }
+	    digit >>= 1;
+	}
+    }
+
+    for(uint8_t d=0; d<5; d++) {
+	uint16_t digit = dpy[(d<4)? 3-d: 16];
+	uint16_t bit = 1<<d;
+	for(uint8_t b=0; b<11; b++) {
+	    if(digit&1) {
+		if(b < d)
+		    dpyB[b] |= bit>>1;
+		else
+		    dpyB[b+1] |= bit;
+	    }
+	    digit >>=1;
+	}
+    }
+
+    dpy_step = 32;
+}
+
+void dpy_update(void)
+{
+    cli();
+    if(dpy_step>35 || i2cs!=I2CIdle) {
+	sei();
+	return;
+    }
+    switch(dpy_step) {
+      case 0:
+	i2clen = 3;
+	i2cbuf[1] = 0xFD;
+	i2cbuf[2] = 0xC0;
+	break;
+
+      case 2:
+	i2cbuf[1] = 0x06;
+	i2cbuf[2] = 0x11;
+	break;
+
+      case 4:
+	i2cbuf[1] = 0x04;
+	i2cbuf[2] = 0x2B;
+	break;
+
+      case 6:
+	i2cbuf[1] = 0x05;
+	i2cbuf[2] = 0xC0;
+	break;
+
+      case 8:
+	i2cbuf[1] = 0x00;
+	i2cbuf[2] = 0x40;
+	break;
+
+      case 10:
+	i2clen = 3;
+	i2cbuf[1] = 0x09;
+	i2cbuf[2] = 0x03;
+	break;
+
+      case 12:
+	i2cbuf[1] = 0xFD;
+	i2cbuf[2] = 0x40;
+	break;
+
+      case 14:
+	i2clen = 26;
+	i2cbuf[1] = 0x00;
+	for(uint8_t i=2; i<26; i++)
+	    i2cbuf[i] = 0x00;
+	break;
+
+      case 16:
+      case 17:
+      case 18:
+      case 19:
+      case 20:
+      case 21:
+      case 22:
+      case 23:
+      case 24:
+      case 25:
+      case 26:
+	i2clen = 24;
+	i2cbuf[1] = 0x18 + ((dpy_step-16)&~1)*11;
+	for(uint8_t i=2; i<24; i++)
+	    i2cbuf[i] = pgm_read_byte(pwm_bits
+				     + ((dpy_step&1)? 132: 0)
+				     + ((dpy_step-16)&~1)*11
+				     + i-2);
+	break;
+
+      case 28:
+	i2clen = 3;
+	i2cbuf[1] = 0xFD;
+	i2cbuf[2] = 0x80;
+	break;
+
+      case 30:
+	i2clen = 14;
+	i2cbuf[1] = 0x00;
+	for(uint8_t i=0; i<12; i++)
+	    i2cbuf[i+2] = 0x60;
+	break;
+
+      case 31:
+	for(uint8_t i=0; i<12; i++)
+	    i2cbuf[i+2] = 0x60;
+	break;
+
+      case 32:
+	i2clen = 3;
+	i2cbuf[1] = 0xFD;
+	i2cbuf[2] = 0x01;
+	break;
+
+      case 34:
+	i2clen = 26;
+	i2cbuf[1] = 0x00;
+	for(uint8_t i=0; i<12; i++) {
+	    i2cbuf[2+(i*2)] = dpyA[i] & 0xFF;
+	    i2cbuf[3+(i*2)] = (dpyA[i]>>8) & 0x07;
+	}
+	break;
+
+      case 35:
+	i2clen = 26;
+	i2cbuf[1] = 0x00;
+	for(uint8_t i=0; i<12; i++) {
+	    i2cbuf[2+(i*2)] = dpyB[i] & 0xFF;
+	    i2cbuf[3+(i*2)] = (dpyB[i]>>8) & 0x07;
+	}
+	// dpy_step = 31;
+	break;
+    }
+
+    i2cbuf[0] = (dpy_step&1)? 0x6E: 0x60;
+    i2cptr = 0;
+    i2cs = I2CStart;
+    i2ce = 1;
+    TWCR = 0xA5;
+    dpy_step++;
+    sei();
+}
+
 int main(void)
 {
     //    TCCR1B = 0x03;
@@ -273,7 +622,7 @@ int main(void)
     PORTL  = 0x00;
 
     TCCR3A = 0x00;
-    TCCR4A = 0x00;
+    TCCR4A = 0x01;
     TCCR5A = 0x00;
 
     TCCR1A = 0x00;  // no output, WGM = 0b..00
@@ -281,14 +630,125 @@ int main(void)
     OCR1A  = 2000;  // every ms
     TIMSK1 = 0x02;  // enable interrupt on OCR1A
 
+    TWBR   = 24;     // BR = 16Mhz / 16+2*TWIBR = 16Mhz / 64 = 256Khz
+    TWCR   = 0x04;
+    i2cs   = I2CIdle;
+    i2ce   = 0;
+
+    dpy_step = 0;
+    for(uint8_t i=0; i<12; i++) {
+	dpyA[i] = 0x7FF;
+	dpyB[i] = 0x7FF;
+    }
+    for(uint8_t i=0; i<16; i++) {
+	uint8_t c = pgm_read_byte(boot_string+i);
+	dd[i] = (c<='9')? (c&15): (c&0x1f)+9;
+    }
+    ap = 0;
+    refresh = 1;
+
+    uint8_t ready = 0;
+
     sei();
 
+    uint8_t send = 0;
     for(;;) {
 	decode();
+	if(ready) {
+	    dpy_update();
+	}
+
 	if(milis > 50) {
-	    uint8_t send = 0;
 
 	    milis = 0;
+	    ready = 1;
+	    if(refresh && dpy_step>35) {
+		dpy_setup();
+		refresh = 0;
+	    }
+
+	    cli();
+	    IOBuf*	b = read_buf;
+	    if(b)
+		read_buf = b->next;
+	    sei();
+	    if(b) {
+		if(!write_buf)
+		    write_buf = newbuf(0);
+		if(b->end == b->len+1) switch(b->buf[1]) {
+		  case 'v':
+		    outs(write_buf, info, sizeof(info));
+		    break;
+		  case 'r':
+		    out(write_buf, 'l');
+		    out(write_buf, 'T');
+		    for(uint8_t i=0; i<11; i++)
+			out(write_buf, (inputs[i]&4)? '*': 'o');
+		    for(uint8_t i=0; i<4; i++) {
+			out(write_buf, ' ');
+			hex(write_buf, encoders[i]);
+		    }
+		    break;
+		  case 's':
+		    send = 1;
+		    break;
+
+		  case 't':
+		    i2cbuf[0] = 0x60 + (b->buf[2]-'0');
+		    i2clen = 1;
+		    out(write_buf, 'l');
+		    out(write_buf, '>');
+		    for(uint8_t i=3; i<(b->end-1); i+=2) {
+			i2cbuf[i2clen++] =
+			    ((b->buf[i  ]-('0'+(b->buf[i  ]>'9'? 7: 0)))<<4) |
+			     (b->buf[i+1]-('0'+(b->buf[i+1]>'9'? 7: 0)));
+			hex(write_buf, i2cbuf[i2clen-1]);
+		    }
+		    i2c_send();
+		    break;
+
+		  case 'y':
+		    out(write_buf, 'l');
+		    out(write_buf, '<');
+		    for(uint8_t i=0; i<i2clen; i++)
+			hex(write_buf, i2cbuf[i]);
+		    break;
+
+		  case 'a':
+		    ap = ((((uint16_t)b->buf[2])-('0'+(b->buf[2]>'9'? 7: 0)))<<8) |
+			             ((b->buf[3]-('0'+(b->buf[3]>'9'? 7: 0)))<<4) |
+			              (b->buf[4]-('0'+(b->buf[4]>'9'? 7: 0)));
+		    refresh = 1;
+		    break;
+
+		  case 'w':
+		    for(uint8_t i=2; i<b->end; i++)
+			dd[i-2] = (b->buf[i]<='9')? (b->buf[i]&15): (b->buf[i]&0x1f)+9;
+		    refresh = 1;
+		    break;
+
+		  case 'u':
+		    out(write_buf, 'l');
+		    out(write_buf, '2');
+		    hex(write_buf, i2ce);
+		    hex(write_buf, (uint8_t)i2cs);
+		    hex(write_buf, dpy_step);
+		    break;
+
+		  default:
+		    out(write_buf, 'l');
+		    out(write_buf, 'E');
+		    out(write_buf, b->buf[1]);
+		    out(write_buf, '?');
+		    break;
+		}
+		b->end = 0;
+		if(write_buf->end > 1) {
+		    write_buf->buf[0] = 0x80 | (write_buf->len = write_buf->end-1);
+		    xmitbuf(write_buf);
+		    write_buf = 0;
+		}
+	    }
 
 	    for(uint8_t i=0; i<4; i++) {
 		send |= (report[i] = encoders[i]);
@@ -348,53 +808,10 @@ int main(void)
 		}
 
 		xmitbuf(b);
+		send = 0;
 	    }
 	}
-	cli();
-	IOBuf*	b = read_buf;
-	if(b)
-	    read_buf = b->next;
-	sei();
-	if(b) {
-	    if(!write_buf)
-		write_buf = newbuf(0);
-	    if(b->end == b->len+1) switch(b->buf[1]) {
-	      case 'v':
-		outs(write_buf, info, sizeof(info));
-		break;
-	      case 'r':
-		out(write_buf, 'l');
-		out(write_buf, 'T');
-		for(uint8_t i=0; i<11; i++)
-		    out(write_buf, (inputs[i]&4)? '*': 'o');
-		for(uint8_t i=0; i<4; i++) {
-		    out(write_buf, ' ');
-		    hex(write_buf, encoders[i]);
-		}
-		break;
-	      case 's':
-		out(write_buf, 'l');
-		out(write_buf, 'S');
 
-		for(uint8_t i=0; i<10; i++) {
-		    hex(write_buf, report[i]);
-		}
-		break;
-
-	      default:
-		out(write_buf, 'l');
-		out(write_buf, 'E');
-		out(write_buf, b->buf[1]);
-		out(write_buf, '?');
-		break;
-	    }
-	    b->end = 0;
-	    if(write_buf->end > 1) {
-		write_buf->buf[0] = 0x80 | (write_buf->len = write_buf->end-1);
-		xmitbuf(write_buf);
-		write_buf = 0;
-	    }
-	}
     }
 }
 
