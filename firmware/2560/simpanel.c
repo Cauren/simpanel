@@ -4,12 +4,13 @@
 #include <avr/power.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+#include <avr/eeprom.h>
 #include <string.h>
 
 #include <util/delay.h>
 #include <util/twi.h>
 
-#define BUFS 8
+#define BUFS 16
 #define BSIZE 44
 typedef struct _iobuf {
     volatile uint8_t		len;
@@ -363,17 +364,22 @@ static const uint16_t digit_seg[] PROGMEM = {
     0x29F, // D
     0x473, // E
     0x463, // F
-    0x000, //   (g)
-    0x680, // + (h)
+    0x200, // g (comma)
+    0x46C, // H
     0x293, // I
-    0x400, // - (j)
-    0x000, //   (k)
+    0x400, // j (-)
+    0x010, // k (uline)
     0x070, // L
     0x2EF, // M
     0x06F, // N
-    0x000, //   (o)
+    0x447, // o (degree)
     0x467, // P
-    0x000, // space
+    0x000, // q (space)
+    0x667, // R
+    0x27C, // s (W)
+    0x100, // t (tick)
+    0x07C, // U
+    0x680, // v (+)
 };
 
 static const uint8_t pwm_bits[] PROGMEM = {
@@ -404,7 +410,9 @@ static const uint8_t pwm_bits[] PROGMEM = {
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
 };
 
-static const uint8_t boot_string[] PROGMEM = "jjj5IMPANELjjjjj";
+static const uint8_t user_name[5] EEMEM = "U5ERq";
+static const uint8_t boot_string[16] PROGMEM = "jjj5IMPANELjjjjj";
+static uint8_t	panelmode;
 
 void dpy_setup(void)
 {
@@ -412,7 +420,7 @@ void dpy_setup(void)
     uint16_t	dpy[17];
 
     for(uint8_t i=0; i<16; i++)
-	dpy[i] = pgm_read_word(digit_seg + dd[i]);
+	dpy[i] = pgm_read_word(digit_seg + ((dd[i]<='9')? (dd[i]&15): (dd[i]+9)&0x1f));
     dpy[16] = ap;
     for(uint8_t i=0; i<12; i++)
 	dpyA[i] = dpyB[i] = 0;
@@ -455,6 +463,7 @@ void dpy_update(void)
 	sei();
 	return;
     }
+    sei();
     switch(dpy_step) {
       case 0:
 	i2clen = 3;
@@ -565,12 +574,11 @@ void dpy_update(void)
     }
 
     i2cbuf[0] = (dpy_step&1)? 0x6E: 0x60;
-    i2cptr = 0;
-    i2cs = I2CStart;
-    i2ce = 1;
-    TWCR = 0xA5;
     dpy_step++;
-    sei();
+    i2cptr = 0;
+    i2ce = 1;
+    i2cs = I2CStart;
+    TWCR = 0xA5;
 }
 
 int main(void)
@@ -641,30 +649,52 @@ int main(void)
 	dpyB[i] = 0x7FF;
     }
     for(uint8_t i=0; i<16; i++) {
-	uint8_t c = pgm_read_byte(boot_string+i);
-	dd[i] = (c<='9')? (c&15): (c&0x1f)+9;
+	dd[i] = pgm_read_byte(boot_string+i);
     }
     ap = 0;
     refresh = 1;
 
     uint8_t ready = 0;
 
+    wdt_enable(WDTO_500MS);
     sei();
 
     uint8_t send = 0;
     for(;;) {
+	wdt_reset();
 	decode();
-	if(ready) {
+
+	if(ready)
 	    dpy_update();
-	}
 
 	if(milis > 50) {
 
 	    milis = 0;
 	    ready = 1;
-	    if(refresh && dpy_step>35) {
-		dpy_setup();
-		refresh = 0;
+
+	    if(dpy_step > 35) {
+		if(panelmode < 200) {
+		    panelmode++;
+		    if(panelmode == 100) {
+			for(uint8_t i=0; i<4; i++)
+			    dd[i] = 'q';
+			dd[4] = 'H';
+			dd[5] = 'I';
+			for(uint8_t i=0; i<5; i++)
+			    dd[i+6] = eeprom_read_byte(user_name+i);
+			for(uint8_t i=11; i<16; i++)
+			    dd[i] = 'q';
+			refresh = 1;
+		    } else if(panelmode == 200) {
+			for(uint8_t i=0; i<16; i++)
+			    dd[i] = 'q';
+			refresh = 1;
+		    }
+		}
+		if(refresh && dpy_step>35) {
+		    dpy_setup();
+		    refresh = 0;
+		}
 	    }
 
 	    cli();
@@ -722,8 +752,9 @@ int main(void)
 		    break;
 
 		  case 'w':
-		    for(uint8_t i=2; i<b->end; i++)
-			dd[i-2] = (b->buf[i]<='9')? (b->buf[i]&15): (b->buf[i]&0x1f)+9;
+		    for(uint8_t i=2; i<b->end && i<18; i++)
+			dd[i-2] = b->buf[i];
+		    panelmode = 200;
 		    refresh = 1;
 		    break;
 

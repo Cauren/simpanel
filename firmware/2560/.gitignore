@@ -1,3 +1,4 @@
 *.hex
+*.eep
 .cache
 *.o
