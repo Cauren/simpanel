@@ -1,27 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+using System.Windows.Forms;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.IO.Ports;
 using System.Threading;
-using System.Windows.Threading;
-using System.Text.RegularExpressions;
-
-
 using Microsoft.FlightSimulator.SimConnect;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Xml;
 
 namespace SimpanelConnect
 {
@@ -33,9 +21,22 @@ namespace SimpanelConnect
         static EventWaitHandle sim_message;
         private const uint WIN32_SIMCONNECT_EVENT = 0x0402;
         private volatile IntPtr hWnd;
+        private System.Windows.Forms.NotifyIcon systray;
+        static bool quitting;
         public MainWindow()
         {
             InitializeComponent();
+
+            // Assembly me = typeof(MainWindow).Assembly;
+
+            systray = new System.Windows.Forms.NotifyIcon();
+            systray.BalloonTipTitle = "Simpanel Connect";
+            systray.Text = "Simpanel";
+            systray.Click += new EventHandler(systray_click);
+            //Uri iconUri = new Uri("pack://application:,,,/simpanel_eWa_icon.ico", UriKind.Absolute);
+            systray.Icon = new System.Drawing.Icon(typeof(MainWindow), "simpanel_eWa_icon.ico");
+
+            quitting = false;
 
             usbthread = new Thread(USB_Handler);
             usbthread.Start();
@@ -150,6 +151,7 @@ namespace SimpanelConnect
             sim.SetNotificationGroupPriority(SC_GROUP.SPGroup, SimConnect.SIMCONNECT_GROUP_PRIORITY_HIGHEST);
 
             sim.RequestClientData(SC_CLIENTDATA.SPDisplayCD, SC_REQUEST.SPDisplayReq, SC_DATA.SPDisplayData, SIMCONNECT_CLIENT_DATA_PERIOD.ON_SET, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG.CHANGED, 0, 0, 0);
+            sim.TransmitClientEvent(SimConnect.SIMCONNECT_OBJECT_ID_USER, SC_EVENT.SPInputEvent, 0, SC_GROUP.SPGroup, SIMCONNECT_EVENT_FLAG.DEFAULT);
         }
 
         void _sim_quit(SimConnect sim, SIMCONNECT_RECV data)
@@ -177,7 +179,7 @@ namespace SimpanelConnect
 
         private void SIM_Handler()
         {
-            while (true)
+            while (!quitting)
             {
                 if (sim == null)
                 {
@@ -201,36 +203,39 @@ namespace SimpanelConnect
 
                 try
                 {
-                    while (true)
+                    while (!quitting)
                     {
-                        while (sim_message.WaitOne(5000, true))
+                        sim_message.WaitOne();
+                        if(!quitting)
                             sim.ReceiveMessage();
                     }
                 }
                 catch
                 {
                 }
-                this.Dispatcher.Invoke(new Action(() => sim_disconnected()));
-                sim.Dispose();
-                sim = null;
-                Thread.Sleep(2000);
+
+                if (!quitting)
+                {
+                    this.Dispatcher.Invoke(new Action(() => sim_disconnected()));
+                    sim.Dispose();
+                    sim = null;
+                    Thread.Sleep(5000);
+                }
             }
+
+            if (sim != null)
+                sim.Dispose();
         }
 
         public void USB_Writer(Object com)
         {
-            try
+            while (!quitting)
             {
-                while (true)
-                {
-                    string s = spout.Take();
-                    ((SerialPort)com).WriteLine(s);
-                }
-            }
-            catch
-            {
+                string s = spout.Take();
+                ((SerialPort)com).WriteLine(s);
             }
         }
+
         public void USB_Handler()
         {
             SerialPort com = new SerialPort();
@@ -238,7 +243,7 @@ namespace SimpanelConnect
             ports.Sort();
             ports.Reverse();
 
-            while (true)
+            while (!quitting)
             {
 
                 string r = null;
@@ -261,7 +266,7 @@ namespace SimpanelConnect
                     try
                     {
                         com.WriteLine("\nxs");
-                        while(true)
+                        while(!quitting)
                         {
                             r = com.ReadLine();
                             if (r.StartsWith("XS"))
@@ -278,39 +283,52 @@ namespace SimpanelConnect
                         break;
                 }
 
-                if (r != null && r.StartsWith("XS"))
+                if (!quitting && r != null && r.StartsWith("XS"))
                 {
-                    com.ReadTimeout = SerialPort.InfiniteTimeout;
+                    com.ReadTimeout = 500;
                     com.WriteTimeout = SerialPort.InfiniteTimeout;
                     Thread writer = new Thread(USB_Writer);
                     spout = new BlockingCollection<string>();
                     writer.Start(com);
-                    spout.Add("v");
-                    this.Dispatcher.Invoke(new Action(() => usb_connected(com.PortName)));
 
                     try
                     {
-                        while (true)
-                        {
-                            string line = com.ReadLine().TrimEnd('\r', '\n');
+                        spout.Add("v");
+                        this.Dispatcher.Invoke(new Action(() => usb_connected(com.PortName)));
 
-                            this.Dispatcher.BeginInvoke(new Action(() => recv_usb(line)));
+                        while (!quitting)
+                        {
+                            try
+                            {
+                                string line = com.ReadLine().TrimEnd('\r', '\n');
+
+                                this.Dispatcher.BeginInvoke(new Action(() => recv_usb(line)));
+                            }
+                            catch (TimeoutException)
+                            {
+                            }
                         }
                     }
                     catch
                     {
-                        r = "Lost connection";
                     }
-                    writer.Abort();
-                    writer.Join();
-                    spout.Dispose();
-                    spout = null;
+                    finally
+                    {
+                        com.Close();
+                        writer.Abort();
+                        writer.Join();
+                        spout.Dispose();
+                        spout = null;
+                    }
                 }
                 else
                     r = "No SIMPANEL found";
 
-                this.Dispatcher.Invoke(new Action(() => usb_disconnected(r)));
-                Thread.Sleep(1000);
+                if (!quitting)
+                {
+                    this.Dispatcher.Invoke(new Action(() => usb_disconnected(r)));
+                    Thread.Sleep(1000);
+                }
             }
         }
 
@@ -338,16 +356,39 @@ namespace SimpanelConnect
             }
         }
 
+        private bool usb_is_connected = false;
+        private bool sim_is_connected = false;
+
+        private void balloon()
+        {
+            string msg = usb_is_connected ? "Simpanel connected" : "No Simpanel found";
+            msg += "\n";
+            msg += sim_is_connected ? "Simulator connected" : "No simulator";
+            systray.BalloonTipText = msg;
+            systray.ShowBalloonTip(20000, "Simpanel Connect", msg, (sim_is_connected && usb_is_connected) ? ToolTipIcon.Info : ToolTipIcon.Warning);
+        }
+        private void sim_status()
+        {
+            if (spout != null)
+                spout.Add(sim_is_connected ? "mwqqq5IMIDLEqqqqqq" : "mwqN05IMqqqqqqqqqq");
+        }
         private void usb_connected(String port)
         {
             panelStatusBG.Background = active_green;
             panelStatusText.Text = port;
+            usb_is_connected = true;
+            sim_status();
+            balloon();
+            if(sim_is_connected)
+                sim.TransmitClientEvent(SimConnect.SIMCONNECT_OBJECT_ID_USER, SC_EVENT.SPInputEvent, 0, SC_GROUP.SPGroup, SIMCONNECT_EVENT_FLAG.DEFAULT);
         }
 
         private void usb_disconnected(String reason)
         {
             panelStatusBG.Background = inactive_red;
             panelStatusText.Text = "Disconnected";
+            usb_is_connected = false;
+            balloon();
         }
 
         private void sim_connecting()
@@ -360,12 +401,22 @@ namespace SimpanelConnect
         {
             simStatusBG.Background = active_green;
             simStatusText.Text = "Connected";
+            sim_is_connected = true;
+            sim_status();
+            balloon();
         }
 
         private void sim_disconnected()
         {
             simStatusBG.Background = inactive_red;
             simStatusText.Text = "Disconnected";
+            if (sim_is_connected)
+            {
+                sim_is_connected = false;
+                sim_status();
+                balloon();
+            }
+
         }
 
         private void sim_fsdata()
@@ -379,7 +430,7 @@ namespace SimpanelConnect
                 switch (c)
                     {
                         case '+':
-                            os += 'h';
+                            os += 'v';
                             break;
                         case '-':
                             os += 'j';
@@ -389,11 +440,10 @@ namespace SimpanelConnect
                             if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 's') || (c >= 'A' && c <= 'S'))
                                 os += c;
                             else
-                            os += 'g';
+                            os += 'q';
                             break;
                     }
             }
-            simModel.Text = "mw" + os;
             if (spout != null)
             {
                 spout.Add("mw" + os);
@@ -406,17 +456,43 @@ namespace SimpanelConnect
         {
             sp_input.data = s;
             sim.SetClientData(SC_CLIENTDATA.SPInputCD, SC_DATA.SPInputData, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, sp_input);
-            //nis.dial_alt += cur_is.dial_alt;
-            //nis.dial_hdg += cur_is.dial_hdg;
-            //nis.dial_spd += cur_is.dial_spd;
-            //nis.dial_vs += cur_is.dial_vs;
-            //cur_is = nis;
         }
 
 
         private void sim_frame(SimConnect sim)
         {
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            systray.Dispose();
+            systray = null;
+            quitting = true;
+            sim_message.Set();
+            usbthread.Join();
+            simthread.Join();
+            //try { usbthread.Abort(); } catch(System.ObjectDisposedException ex) { }
+            //try { simthread.Abort(); } catch(System.ObjectDisposedException ex) { }
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if(WindowState == WindowState.Minimized)
+                Hide();
+            balloon();
+        }
+
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if(systray != null)
+                systray.Visible = !IsVisible;
+        }
+        private void systray_click(object sender, EventArgs e)
+        {
+            Show();
+            WindowState = WindowState.Normal;
+        }
+
     }
 }
 

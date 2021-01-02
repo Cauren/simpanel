@@ -5,18 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpanelConnect"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="8">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="2"/>
-        <StackPanel Width="auto" Grid.Column="0" Grid.Row="1" Margin="0,0,4,0">
+        Title="Simpanel Connect" Height="320" Width="320" ResizeMode="CanMinimize" SizeToContent="Height" ShowInTaskbar="False" Closing="Window_Closing" StateChanged="Window_StateChanged" IsVisibleChanged="Window_IsVisibleChanged">
+        <StackPanel Width="auto" Grid.Column="0" Grid.Row="0" Margin="4">
             <Grid>
                 <Label HorizontalAlignment="Left" Margin="4px" Content="Panel"/>
                 <Border x:Name="panelStatusBG" HorizontalAlignment="Right" Width="100" Margin="4px" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" BorderThickness="1" Background="#FFFF8F8F">
@@ -42,8 +32,6 @@
                     <TextBlock x:Name="panelBoard" Grid.Column="1" Grid.Row="2" Text="n/a" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
                 </Grid>
             </Border>
-        </StackPanel>
-        <StackPanel Width="auto" Grid.Column="1" Grid.Row="1" Margin="4,0,0,0">
             <Grid>
                 <Label HorizontalAlignment="Left" Margin="4px" Content="Simulator"/>
                 <Border x:Name="simStatusBG" HorizontalAlignment="Right" Width="100" Margin="4px" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" BorderThickness="1" Background="#FFFF8F8F">
@@ -61,14 +49,9 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <Label HorizontalAlignment="Right" Grid.Column="0" Grid.Row="0" Content="Type" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" FontStyle="Italic"/>
+                    <Label HorizontalAlignment="Right" Grid.Column="0" Grid.Row="0" Content="Airframe" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" FontStyle="Italic"/>
                     <TextBlock x:Name="simType" Grid.Column="1" Grid.Row="0" Text="n/a" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-                    <Label HorizontalAlignment="Right" Grid.Column="0" Grid.Row="1" Content="Model" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" FontStyle="Italic"/>
-                    <TextBlock x:Name="simModel" Grid.Column="1" Grid.Row="1" Text="n/a" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-                    <Label HorizontalAlignment="Right" Grid.Column="0" Grid.Row="2" Content="Is APU on fire?" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" FontStyle="Italic"/>
-                    <TextBlock x:Name="simAPU" Grid.Column="1" Grid.Row="2" Text="n/a" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
                 </Grid>
             </Border>
         </StackPanel>
-    </Grid>
 </Window>
