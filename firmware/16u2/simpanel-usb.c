@@ -439,8 +439,9 @@ static volatile Report		new_report;
 static volatile MCUReport	mcu_report;
 static volatile bool		report_changed = true;
 static volatile bool		slow_report = false;
+static volatile bool		connected = false;
 
-static CDC_LineEncoding_t linesetup = {	.BaudRateBPS = 0,
+static CDC_LineEncoding_t linesetup = {	.BaudRateBPS = 115200,
     					.CharFormat  = CDC_LINEENCODING_OneStopBit,
 					.ParityType  = CDC_PARITY_None,
 					.DataBits    = 8
@@ -450,10 +451,14 @@ volatile uint8_t status=0;
 
 void EVENT_USB_Device_Connect(void)
 {
+    connected = true;
+    slow_report = false;
+    report_changed = false;
 }
 
 void EVENT_USB_Device_Disconnect(void)
 {
+    connected = false;
 }
 
 void EVENT_USB_Device_ConfigurationChanged(void)
@@ -616,6 +621,16 @@ void update_report(void);
 
 void do_usb_io(void)
 {
+    if(!connected) {
+	if(b_usbout) {
+	    cli();
+	    for(IOBuf* b = b_usbout; b; b=b->next)
+		b->end = 0;
+	    sei();
+	}
+	return;
+    }
+
     Endpoint_SelectEndpoint(SIMPANEL_IN_EPADDR);
     if(report_changed && Endpoint_IsINReady()) {
 	Endpoint_Write_Stream_LE((Report*)&report, sizeof(Report), NULL);
@@ -624,9 +639,28 @@ void do_usb_io(void)
 	update_report();
     }
 
-    while(b_usbout) {
+    if(b_usbout) {
 
 	Endpoint_SelectEndpoint(CDC_TX_EPADDR);
+
+	uint16_t sent = b_usbout->len;
+
+	switch(Endpoint_Write_Stream_LE((uint8_t*)b_usbout->buf, b_usbout->end, &sent)) {
+	  case ENDPOINT_RWSTREAM_IncompleteTransfer:
+	    b_usbout->len = sent;
+	    break;
+
+	  default:
+	    Endpoint_ClearIN();
+	    cli();
+	    b_usbout->end = 0;
+	    b_usbout = b_usbout->next;
+	    sei();
+	    break;
+	}
+    }
+
+#if 0
 	uint8_t left = 16 - Endpoint_BytesInEndpoint();
 	uint8_t send = b_usbout->end - b_usbout->len;
 
@@ -654,6 +688,7 @@ void do_usb_io(void)
 	    Endpoint_ClearIN();
 	}
     }
+#endif
 
     Endpoint_SelectEndpoint(CDC_RX_EPADDR);
     if(Endpoint_IsOUTReceived()) {
@@ -664,8 +699,15 @@ void do_usb_io(void)
 	    if(rx < 32) {
 		if(bl_usbin) {
 		    cli();
+		    if(rx == 'X'-0x40) {
+			bl_usbin->end = 0;
+			bl_usbin = 0;
+			sei();
+			continue;
+		    }
 		    bl_usbin->len = bl_usbin->end;
 		    queuebuf(bl_usbin, &b_usbin);
+		    bl_usbin = 0;
 		    sei();
 		}
 		continue;
@@ -768,6 +810,9 @@ void update_report(void)
 
 static uint8_t updates = 0;
 void do_mcu_in(char* s, uint8_t len) {
+    if(!connected)
+	return;
+
     switch(*s) {
       case 'l':
       case 'i':

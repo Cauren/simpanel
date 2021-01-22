@@ -126,21 +126,21 @@ ISR(TIMER1_COMPA_vect)
     if(!(pins&0x80)) BOUNCE(7);
 
     pins = PINB;
-    if( (pins&0x01)) BOUNCE(36);
-    if( (pins&0x04)) BOUNCE(37);
+    if(!(pins&0x01)) BOUNCE(36);
+    if(!(pins&0x04)) BOUNCE(37);
 
     pins = PINC;
     if(!(pins&0x01)) BOUNCE(8);
     if(!(pins&0x02)) BOUNCE(9);
     if(!(pins&0x04)) BOUNCE(10);
-    if( (pins&0x08)) BOUNCE(16);
-    if( (pins&0x10)) BOUNCE(17);
-    if( (pins&0x20)) BOUNCE(18);
-    if( (pins&0x40)) BOUNCE(19);
-    if( (pins&0x80)) BOUNCE(20);
+    if(!(pins&0x08)) BOUNCE(16);
+    if(!(pins&0x10)) BOUNCE(17);
+    if(!(pins&0x20)) BOUNCE(18);
+    if(!(pins&0x40)) BOUNCE(19);
+    if(!(pins&0x80)) BOUNCE(20);
 
     pins = PIND;
-    if( (pins&0x80)) BOUNCE(32);
+    if(!(pins&0x80)) BOUNCE(32);
 
     pins = PINE;
     if(!(pins&0x08)) BOUNCE(12);
@@ -148,25 +148,25 @@ ISR(TIMER1_COMPA_vect)
     if(!(pins&0x20)) BOUNCE(14);
 
     pins = PING;
-    if( (pins&0x01)) BOUNCE(29);
-    if( (pins&0x02)) BOUNCE(30);
-    if( (pins&0x04)) BOUNCE(31);
+    if(!(pins&0x01)) BOUNCE(29);
+    if(!(pins&0x02)) BOUNCE(30);
+    if(!(pins&0x04)) BOUNCE(31);
     if(!(pins&0x20)) BOUNCE(13);
 
     pins = PINH;
-    if( (pins&0x10)) BOUNCE(33);
-    if( (pins&0x20)) BOUNCE(34);
-    if( (pins&0x40)) BOUNCE(35);
+    if(!(pins&0x10)) BOUNCE(33);
+    if(!(pins&0x20)) BOUNCE(34);
+    if(!(pins&0x40)) BOUNCE(35);
 
     pins = PINL;
-    if( (pins&0x01)) BOUNCE(21);
-    if( (pins&0x02)) BOUNCE(22);
-    if( (pins&0x04)) BOUNCE(23);
-    if( (pins&0x08)) BOUNCE(24);
-    if( (pins&0x10)) BOUNCE(25);
-    if( (pins&0x20)) BOUNCE(26);
-    if( (pins&0x40)) BOUNCE(27);
-    if( (pins&0x80)) BOUNCE(28);
+    if(!(pins&0x01)) BOUNCE(21);
+    if(!(pins&0x02)) BOUNCE(22);
+    if(!(pins&0x04)) BOUNCE(23);
+    if(!(pins&0x08)) BOUNCE(24);
+    if(!(pins&0x10)) BOUNCE(25);
+    if(!(pins&0x20)) BOUNCE(26);
+    if(!(pins&0x40)) BOUNCE(27);
+    if(!(pins&0x80)) BOUNCE(28);
 
     milis++;
 }
@@ -613,21 +613,21 @@ int main(void)
     DDRA   = 0x00;
     PORTA  = 0xFF;
     DDRB   = 0x00;
-    PORTB  = 0xFA;
+    PORTB  = 0xFF;
     DDRC   = 0x00;
-    PORTC  = 0x07;
+    PORTC  = 0xFF;
     DDRD   = 0x00;
-    PORTD  = 0x00;
+    PORTD  = 0x80;
     DDRE   = 0x00;
     PORTE  = 0x38;
     DDRG   = 0x00;
-    PORTG  = 0x20;
+    PORTG  = 0x27;
     DDRH   = 0x00;
-    PORTH  = 0x00;
+    PORTH  = 0x70;
     DDRJ   = 0x00;
     PORTJ  = 0x03;
     DDRL   = 0x00;
-    PORTL  = 0x00;
+    PORTL  = 0xFF;
 
     TCCR3A = 0x00;
     TCCR4A = 0x01;
