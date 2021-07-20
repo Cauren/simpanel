@@ -135,12 +135,16 @@ namespace SimpanelConnect
             this.Dispatcher.Invoke(new Action(() => sim_connected()));
 
             sim.MapClientDataNameToID("simpanel.display", SC_CLIENTDATA.SPDisplayCD);
-            sim.CreateClientData(SC_CLIENTDATA.SPDisplayCD, 32, SIMCONNECT_CREATE_CLIENT_DATA_FLAG.READ_ONLY);
             sim.AddToClientDataDefinition(SC_DATA.SPDisplayData, 0, 32, 0, 0);
             sim.RegisterStruct<SIMCONNECT_RECV_CLIENT_DATA, SPDisplayStruct>(SC_DATA.SPDisplayData);
 
             sim.MapClientDataNameToID("simpanel.input", SC_CLIENTDATA.SPInputCD);
-            sim.CreateClientData(SC_CLIENTDATA.SPInputCD, 32, 0);
+            try
+            {
+                sim.CreateClientData(SC_CLIENTDATA.SPInputCD, 32, SIMCONNECT_CREATE_CLIENT_DATA_FLAG.READ_ONLY);
+            } catch
+            {
+            }
             sim.AddToClientDataDefinition(SC_DATA.SPInputData, 0, 32, 0, 0);
             sim.RegisterStruct<SIMCONNECT_RECV_CLIENT_DATA, SPInputStruct>(SC_DATA.SPInputData);
 
