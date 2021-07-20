@@ -13,3518 +13,2814 @@ Comment2 "CC-BY-SA 3.0"
 Comment3 ""
 Comment4 ""
 $EndDescr
+Wire Wire Line
+	20000 14500 20800 14500
+Connection ~ 20000 14500
 $Comp
-L eec:AS1130-BSST U1
-U 1 1 5FD03C01
-P 11850 3250
-F 0 "U1" H 12450 3515 50  0000 C CNN
-F 1 "AS1130-BSST" H 12450 3424 50  0000 C CNN
-F 2 "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm" H 11850 3650 50  0001 L CNN
-F 3 "http://www.ams.com/eng/content/download/185846/834724/105034" H 11850 3750 50  0001 L CNN
-F 4 "MO-150" H 11850 3850 50  0001 L CNN "Code  JEDEC"
-F 5 "Manufacturer URL" H 11850 3950 50  0001 L CNN "Component Link 1 Description"
-F 6 "www.ams.com" H 11850 4050 50  0001 L CNN "Component Link 1 URL"
-F 7 "Rev. 1.07" H 11850 4150 50  0001 L CNN "Datasheet Version"
-F 8 "true" H 11850 4250 50  0001 L CNN "Error Detection"
-F 9 "8-bit PWM & analog current control, dynamic headroom control" H 11850 4350 50  0001 L CNN "Features"
-F 10 "2.5" H 11850 4450 50  0001 L CNN "LED Current per Output mA"
-F 11 "2" H 11850 4550 50  0001 L CNN "LED to LED Matching "
-F 12 "Surface Mount" H 11850 4650 50  0001 L CNN "Mounting Technology"
-F 13 "132" H 11850 4750 50  0001 L CNN "Outputs"
-F 14 "28-Pin Shrink Small Outline Package, 10.2 x 5.3 mm Body, 0.65 mm Pitch" H 11850 4850 50  0001 L CNN "Package Description"
-F 15 "N/C, 07/2011" H 11850 4950 50  0001 L CNN "Package Version"
-F 16 "true" H 11850 5050 50  0001 L CNN "Read back"
-F 17 "2.7 to 5.5" H 11850 5150 50  0001 L CNN "Supply Voltage V"
-F 18 "IC" H 11850 5250 50  0001 L CNN "category"
-F 19 "4367283" H 11850 5350 50  0001 L CNN "ciiva ids"
-F 20 "598dcdd5055ccc55" H 11850 5450 50  0001 L CNN "library id"
-F 21 "AMS" H 11850 5550 50  0001 L CNN "manufacturer"
-F 22 "SSOP-28" H 11850 5650 50  0001 L CNN "package"
-F 23 "1394513892" H 11850 5750 50  0001 L CNN "release date"
-F 24 "660BAB0B-1A30-45A6-8177-846E59C4C6EC" H 11850 5850 50  0001 L CNN "vault revision"
-F 25 "yes" H 11850 5950 50  0001 L CNN "imported"
-	1    11850 3250
-	1    0    0    -1  
-$EndComp
-Connection ~ 22650 10000
-Wire Wire Line
-	22650 11250 22650 10000
-Wire Wire Line
-	22200 11250 22650 11250
-Connection ~ 22650 8050
-Wire Wire Line
-	22650 10000 22650 8050
-Wire Wire Line
-	22200 10000 22650 10000
-Wire Wire Line
-	22200 10950 22200 10850
-Wire Wire Line
-	22200 9700 22200 9600
-Connection ~ 22600 9400
-Wire Wire Line
-	22600 10650 22600 9400
-Wire Wire Line
-	22200 10650 22600 10650
-Connection ~ 22600 8150
-Wire Wire Line
-	22600 9400 22600 8150
-Wire Wire Line
-	22200 9400 22600 9400
-Wire Wire Line
-	20000 9500 20000 8250
-Connection ~ 20000 9500
-Wire Wire Line
-	20400 9500 20000 9500
-Wire Wire Line
-	19950 9700 19950 8450
-Connection ~ 19950 9700
-Wire Wire Line
-	20400 9700 19950 9700
-Wire Wire Line
-	19900 9800 19900 8550
-Connection ~ 19900 9800
-Wire Wire Line
-	20400 9800 19900 9800
-Connection ~ 20000 8250
-Wire Wire Line
-	20000 10750 20000 9500
-Wire Wire Line
-	20400 10750 20000 10750
-Connection ~ 19950 8450
-Wire Wire Line
-	19950 10950 19950 9700
-Wire Wire Line
-	20400 10950 19950 10950
-Connection ~ 19900 10500
-Wire Wire Line
-	19900 11050 19900 10500
-Wire Wire Line
-	20400 11050 19900 11050
-Connection ~ 19700 9300
-Wire Wire Line
-	19700 10550 19700 9300
-Wire Wire Line
-	20400 10550 19700 10550
-Connection ~ 19700 8050
-Wire Wire Line
-	19700 9300 19700 8050
-Wire Wire Line
-	20400 9300 19700 9300
-Connection ~ 19650 9400
-Wire Wire Line
-	19650 10650 19650 9400
-Wire Wire Line
-	20400 10650 19650 10650
-Wire Wire Line
-	19600 11000 19800 11000
-Wire Wire Line
-	19600 10600 20100 10600
-Wire Wire Line
-	19600 10500 19900 10500
-Wire Wire Line
-	19600 10700 19750 10700
-Wire Wire Line
-	17800 10700 17350 10700
-Wire Wire Line
-	17800 10900 17300 10900
-Wire Wire Line
-	17800 11000 17250 11000
-Connection ~ 17800 11200
-Wire Wire Line
-	17800 11200 17150 11200
-Wire Wire Line
-	17800 10500 17000 10500
-Wire Wire Line
-	17800 10600 16950 10600
-Wire Wire Line
-	17300 9650 17300 10900
-Wire Wire Line
-	17250 9750 17250 11000
-Wire Wire Line
-	16950 9350 16950 10600
-Connection ~ 19650 8150
-Wire Wire Line
-	19650 9400 19650 8150
-Wire Wire Line
-	20400 9400 19650 9400
-Wire Wire Line
-	20400 10100 20400 10000
-Wire Wire Line
-	20400 11350 20400 11250
-Connection ~ 22750 8350
-Connection ~ 22200 8350
-Wire Wire Line
-	22200 8350 22750 8350
-Wire Wire Line
-	22700 8750 22700 9300
-Connection ~ 22700 8750
-Wire Wire Line
-	22700 7500 22700 8750
-Wire Wire Line
-	22200 8750 22700 8750
-Connection ~ 22600 6800
-Wire Wire Line
-	22600 8150 22600 6800
-Wire Wire Line
-	22200 8150 22600 8150
-Connection ~ 20000 7000
-Wire Wire Line
-	20000 8250 20000 7000
-Wire Wire Line
-	20400 8250 20000 8250
-Connection ~ 19950 7200
-Wire Wire Line
-	19950 8450 19950 7200
-Wire Wire Line
-	20400 8450 19950 8450
-Wire Wire Line
-	19900 8550 19900 7300
-Connection ~ 19900 8550
-Wire Wire Line
-	20400 8550 19900 8550
-Wire Wire Line
-	19850 8500 19850 8750
-Wire Wire Line
-	19850 8750 19850 9250
-Connection ~ 19850 8750
-Connection ~ 20400 8750
-Wire Wire Line
-	20400 8750 19850 8750
-Connection ~ 22350 7300
-Wire Wire Line
-	22350 8550 22350 7300
-Wire Wire Line
-	22200 8550 22350 8550
-Connection ~ 22300 7000
-Wire Wire Line
-	22300 8250 22300 7000
-Wire Wire Line
-	22200 8250 22300 8250
-Connection ~ 19700 6800
-Wire Wire Line
-	19700 8050 19700 6800
-Wire Wire Line
-	20400 8050 19700 8050
-Connection ~ 19650 6900
-Wire Wire Line
-	19650 8150 19650 6900
-Wire Wire Line
-	20400 8150 19650 8150
-Wire Wire Line
-	22200 8450 22200 8350
-Wire Wire Line
-	20400 8850 20400 8750
-Wire Wire Line
-	22750 7100 22750 8350
-Connection ~ 22750 7100
-Connection ~ 22200 7100
-Wire Wire Line
-	22200 7100 22750 7100
-Connection ~ 22700 7500
-Wire Wire Line
-	22700 6250 22700 7500
-Wire Wire Line
-	22200 7500 22700 7500
-Wire Wire Line
-	22650 6900 22650 8050
-Connection ~ 22650 6900
-Wire Wire Line
-	22200 6900 22650 6900
-Connection ~ 20000 4700
-Wire Wire Line
-	20000 7000 20000 4700
-Wire Wire Line
-	20400 7000 20000 7000
-Connection ~ 19950 5950
-Wire Wire Line
-	19950 7200 19950 5950
-Wire Wire Line
-	20400 7200 19950 7200
-Wire Wire Line
-	19900 7300 19900 6050
-Connection ~ 19900 7300
-Wire Wire Line
-	20400 7300 19900 7300
-Wire Wire Line
-	19850 7500 19850 8500
-Connection ~ 19850 7500
-Connection ~ 20400 7500
-Wire Wire Line
-	20400 7500 19850 7500
-Wire Wire Line
-	22350 6050 22350 7300
-Connection ~ 22350 6050
-Wire Wire Line
-	22350 4800 22350 6050
-Wire Wire Line
-	22200 7300 22350 7300
-Connection ~ 22300 5750
-Wire Wire Line
-	22300 7000 22300 5750
-Wire Wire Line
-	22200 7000 22300 7000
-Connection ~ 19700 5550
-Wire Wire Line
-	19700 6800 19700 5550
-Wire Wire Line
-	20400 6800 19700 6800
-Connection ~ 19650 5650
-Wire Wire Line
-	19650 6900 19650 5650
-Wire Wire Line
-	20400 6900 19650 6900
-Wire Wire Line
-	22200 7200 22200 7100
-Wire Wire Line
-	20400 7600 20400 7500
-Wire Wire Line
-	22750 5850 22750 7100
-Connection ~ 22750 5850
-Connection ~ 22200 5850
-Wire Wire Line
-	22200 5850 22750 5850
-Wire Wire Line
-	22200 5950 22200 5850
-Connection ~ 22700 6250
-Wire Wire Line
-	22200 6250 22700 6250
-Wire Wire Line
-	22650 5650 22650 6900
-Connection ~ 22650 5650
-Wire Wire Line
-	22200 5650 22650 5650
-Connection ~ 20050 4500
-Wire Wire Line
-	20050 5750 20050 4500
-Wire Wire Line
-	20400 5750 20050 5750
-Wire Wire Line
-	20100 5600 20100 6850
-Wire Wire Line
-	19950 5950 19950 3550
-Wire Wire Line
-	20400 5950 19950 5950
-Wire Wire Line
-	20050 4500 20050 3650
-Wire Wire Line
-	20400 4500 20050 4500
-Wire Wire Line
-	20000 4700 20000 3600
-Wire Wire Line
-	20400 4700 20000 4700
-Wire Wire Line
-	19600 4350 20100 4350
-Wire Wire Line
-	20100 4350 20100 5600
-Connection ~ 20100 4350
-Wire Wire Line
-	19600 5600 20100 5600
-Connection ~ 20100 5600
-Wire Wire Line
-	19600 6850 20100 6850
-Wire Wire Line
-	20100 6850 20100 8100
-Connection ~ 20100 6850
-Wire Wire Line
-	19600 8100 20100 8100
-Wire Wire Line
-	20100 8100 20100 9350
-Connection ~ 20100 8100
-Wire Wire Line
-	19600 9350 20100 9350
-Wire Wire Line
-	20100 9350 20100 10600
-Connection ~ 20100 9350
-Wire Wire Line
-	19600 4950 20150 4950
-Wire Wire Line
-	20150 4950 20150 6200
-Connection ~ 20150 4950
-Wire Wire Line
-	19600 6200 20150 6200
-Wire Wire Line
-	20150 6200 20150 7450
-Connection ~ 20150 6200
-Wire Wire Line
-	19600 7450 20150 7450
-Wire Wire Line
-	20150 7450 20150 8700
-Connection ~ 20150 7450
-Wire Wire Line
-	19600 8700 20150 8700
-Wire Wire Line
-	20150 8700 20150 9950
-Connection ~ 20150 8700
-Wire Wire Line
-	19600 9950 20150 9950
-Wire Wire Line
-	19600 4550 20200 4550
-Wire Wire Line
-	20200 4550 20200 5800
-Connection ~ 20200 4550
-Wire Wire Line
-	19600 5800 20200 5800
-Wire Wire Line
-	20200 5800 20200 7050
-Connection ~ 20200 5800
-Wire Wire Line
-	19600 7050 20200 7050
-Wire Wire Line
-	20200 7050 20200 8300
-Connection ~ 20200 7050
-Wire Wire Line
-	19600 8300 20200 8300
-Wire Wire Line
-	20200 8300 20200 9550
-Connection ~ 20200 8300
-Wire Wire Line
-	19600 9550 20200 9550
-Wire Wire Line
-	19900 6050 19900 4800
-Connection ~ 19900 6050
-Wire Wire Line
-	20400 6050 19900 6050
-Wire Wire Line
-	19850 6250 19850 7250
-Connection ~ 19850 6250
-Connection ~ 20400 6250
-Wire Wire Line
-	20400 6250 19850 6250
-Wire Wire Line
-	19850 6000 19850 6250
-Wire Wire Line
-	20400 6350 20400 6250
-Connection ~ 22350 4800
-Wire Wire Line
-	22200 6050 22350 6050
-Connection ~ 22300 4500
-Wire Wire Line
-	22300 5750 22300 4500
-Wire Wire Line
-	22200 5750 22300 5750
-Connection ~ 19700 5500
-Wire Wire Line
-	19700 5550 19700 5500
-Wire Wire Line
-	20400 5550 19700 5550
-Connection ~ 19650 4400
-Wire Wire Line
-	19650 5650 19650 4400
-Wire Wire Line
-	20400 5650 19650 5650
-Wire Wire Line
-	22750 4600 22750 5850
-Connection ~ 22750 4600
-Connection ~ 22200 4600
-Wire Wire Line
-	22200 4600 22750 4600
-Wire Wire Line
-	22200 4700 22200 4600
-Wire Wire Line
-	22700 5000 22700 6250
-Connection ~ 22700 5000
-Wire Wire Line
-	22200 5000 22700 5000
-Wire Wire Line
-	22650 4400 22650 5650
-Connection ~ 22650 4400
-Wire Wire Line
-	22200 4400 22650 4400
-Connection ~ 19900 4800
-Wire Wire Line
-	20400 4800 19900 4800
-Wire Wire Line
-	19850 5000 19850 6000
-Connection ~ 19850 5000
-Connection ~ 20400 5000
-Wire Wire Line
-	20400 5000 19850 5000
-Wire Wire Line
-	20400 5100 20400 5000
-Wire Wire Line
-	22200 4800 22350 4800
-Wire Wire Line
-	22200 4500 22300 4500
-Wire Wire Line
-	19700 4300 19700 5500
-Connection ~ 19700 4300
-Wire Wire Line
-	20400 4300 19700 4300
-Connection ~ 19650 4250
-Wire Wire Line
-	19650 4400 19650 4250
-Wire Wire Line
-	20400 4400 19650 4400
-Connection ~ 17350 9450
-Wire Wire Line
-	17350 10700 17350 9450
-Connection ~ 17300 9650
-Connection ~ 17250 9750
-Connection ~ 19800 9750
-Wire Wire Line
-	19800 11000 19800 9750
-Wire Wire Line
-	17800 11300 17800 11200
-Wire Wire Line
-	19600 10900 19600 10800
-Connection ~ 19750 9450
-Wire Wire Line
-	19750 10700 19750 9450
-Connection ~ 17000 9250
-Wire Wire Line
-	17000 10500 17000 9250
-Connection ~ 16950 9350
-Connection ~ 19600 9550
-Wire Wire Line
-	19600 9650 19600 9550
-Connection ~ 17350 8200
-Wire Wire Line
-	17350 9450 17350 8200
-Wire Wire Line
-	17800 9450 17350 9450
-Connection ~ 17300 8400
-Wire Wire Line
-	17300 9650 17300 8400
-Wire Wire Line
-	17800 9650 17300 9650
-Connection ~ 17250 8500
-Wire Wire Line
-	17250 9750 17250 8500
-Wire Wire Line
-	17800 9750 17250 9750
-Connection ~ 17200 8700
-Connection ~ 17800 9950
-Wire Wire Line
-	17200 9950 17200 8700
-Wire Wire Line
-	17800 9950 17200 9950
-Wire Wire Line
-	17800 10050 17800 9950
-Connection ~ 19800 8000
-Wire Wire Line
-	19800 9750 19800 8000
-Wire Wire Line
-	19600 9750 19800 9750
-Wire Wire Line
-	19600 9450 19750 9450
-Connection ~ 17000 8000
-Wire Wire Line
-	17000 9250 17000 8000
-Wire Wire Line
-	17800 9250 17000 9250
-Connection ~ 16950 8100
-Wire Wire Line
-	16950 9350 16950 8100
-Wire Wire Line
-	17800 9350 16950 9350
-Connection ~ 19600 8300
-Wire Wire Line
-	19600 8400 19600 8300
-Connection ~ 17350 6950
-Wire Wire Line
-	17350 8200 17350 6950
-Wire Wire Line
-	17800 8200 17350 8200
-Connection ~ 17300 7150
-Wire Wire Line
-	17300 8400 17300 7150
-Wire Wire Line
-	17800 8400 17300 8400
-Connection ~ 17250 7250
-Wire Wire Line
-	17250 8500 17250 7250
-Wire Wire Line
-	17800 8500 17250 8500
-Connection ~ 17200 7450
-Connection ~ 17800 8700
-Wire Wire Line
-	17200 8700 17200 7450
-Wire Wire Line
-	17800 8700 17200 8700
-Wire Wire Line
-	17800 8800 17800 8700
-Connection ~ 19850 8500
-Wire Wire Line
-	19600 8500 19850 8500
-Connection ~ 19750 6750
-Wire Wire Line
-	17800 8000 17000 8000
-Wire Wire Line
-	17800 8100 16950 8100
-Connection ~ 19600 7050
-Wire Wire Line
-	17800 6950 17350 6950
-Wire Wire Line
-	17800 7150 17300 7150
-Wire Wire Line
-	17800 7250 17250 7250
-Connection ~ 17800 7450
-Wire Wire Line
-	17800 7450 17200 7450
-Wire Wire Line
-	19850 7250 19850 7500
-Connection ~ 19850 7250
-Wire Wire Line
-	19600 7250 19850 7250
-Wire Wire Line
-	19800 6950 19800 8000
-Connection ~ 19800 6950
-Wire Wire Line
-	19600 6950 19800 6950
-Wire Wire Line
-	17000 6750 17000 8000
-Connection ~ 17000 6750
-Wire Wire Line
-	17800 6750 17000 6750
-Wire Wire Line
-	16950 6850 16950 8100
-Connection ~ 16950 6850
-Wire Wire Line
-	17800 6850 16950 6850
-Connection ~ 19600 5800
-Wire Wire Line
-	17350 5700 17350 6950
-Connection ~ 17350 5700
-Wire Wire Line
-	17800 5700 17350 5700
-Wire Wire Line
-	17300 5900 17300 7150
-Connection ~ 17300 5900
-Wire Wire Line
-	17800 5900 17300 5900
-Wire Wire Line
-	17250 6000 17250 7250
-Connection ~ 17250 6000
-Wire Wire Line
-	17800 6000 17250 6000
-Wire Wire Line
-	17200 6200 17200 7450
-Connection ~ 17200 6200
-Connection ~ 17800 6200
-Wire Wire Line
-	17800 6200 17200 6200
-Connection ~ 19850 6000
-Wire Wire Line
-	19600 6000 19850 6000
-Wire Wire Line
-	19800 5700 19800 6950
-Connection ~ 19800 5700
-Wire Wire Line
-	19600 5700 19800 5700
-Wire Wire Line
-	17800 5500 17050 5500
-Connection ~ 16950 5600
-Wire Wire Line
-	17800 5600 16950 5600
-Connection ~ 19600 4550
-Wire Wire Line
-	17350 4450 17350 5700
-Connection ~ 17350 4450
-Wire Wire Line
-	17800 4450 17350 4450
-Wire Wire Line
-	17300 4650 17300 5900
-Connection ~ 17300 4650
-Wire Wire Line
-	17800 4650 17300 4650
-Wire Wire Line
-	17250 4750 17250 6000
-Connection ~ 17250 4750
-Wire Wire Line
-	17800 4750 17250 4750
-Wire Wire Line
-	17200 4950 17200 6200
-Connection ~ 17200 4950
-Connection ~ 17800 4950
-Wire Wire Line
-	17800 4950 17200 4950
-Wire Wire Line
-	19850 4750 19850 5000
-Connection ~ 19850 4750
-Wire Wire Line
-	19600 4750 19850 4750
-Wire Wire Line
-	19800 4450 19800 5700
-Connection ~ 19800 4450
-Wire Wire Line
-	19600 4450 19800 4450
-Wire Wire Line
-	19900 10500 19900 9800
-Wire Wire Line
-	17050 4250 17050 5500
-Connection ~ 17050 4250
-Wire Wire Line
-	17800 4250 17050 4250
-Wire Wire Line
-	17000 4350 17000 6750
-Connection ~ 17000 4350
-Wire Wire Line
-	17800 4350 17000 4350
-Wire Wire Line
-	22750 10550 22200 10550
-Wire Wire Line
-	22700 9300 22200 9300
-Wire Wire Line
-	22650 8050 22200 8050
-Wire Wire Line
-	22600 6800 22200 6800
-Wire Wire Line
-	22550 5550 22200 5550
-Wire Wire Line
-	22500 4300 22200 4300
-Wire Wire Line
-	19600 9250 19850 9250
-$Comp
-L LTP-587HR:LTP-587HR DS16
-U 1 1 5FD8D32B
-P 20400 10550
-F 0 "DS16" H 21300 10815 50  0000 C CNN
-F 1 "LTP-587HR" H 21300 10724 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 22050 10650 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 22050 10550 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 22050 10450 50  0001 L CNN "Description"
-F 5 "9.75" H 22050 10350 50  0001 L CNN "Height"
-F 6 "Lite-On" H 22050 10250 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 22050 10150 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 22050 10050 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 22050 9950 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 22050 9850 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 22050 9750 50  0001 L CNN "Mouser Price/Stock"
-	1    20400 10550
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS15
-U 1 1 5FD8B571
-P 20400 9300
-F 0 "DS15" H 21300 9565 50  0000 C CNN
-F 1 "LTP-587HR" H 21300 9474 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 22050 9400 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 22050 9300 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 22050 9200 50  0001 L CNN "Description"
-F 5 "9.75" H 22050 9100 50  0001 L CNN "Height"
-F 6 "Lite-On" H 22050 9000 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 22050 8900 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 22050 8800 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 22050 8700 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 22050 8600 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 22050 8500 50  0001 L CNN "Mouser Price/Stock"
-	1    20400 9300
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS14
-U 1 1 5FD8A45B
-P 20400 8050
-F 0 "DS14" H 21300 8315 50  0000 C CNN
-F 1 "LTP-587HR" H 21300 8224 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 22050 8150 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 22050 8050 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 22050 7950 50  0001 L CNN "Description"
-F 5 "9.75" H 22050 7850 50  0001 L CNN "Height"
-F 6 "Lite-On" H 22050 7750 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 22050 7650 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 22050 7550 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 22050 7450 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 22050 7350 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 22050 7250 50  0001 L CNN "Mouser Price/Stock"
-	1    20400 8050
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS13
-U 1 1 5FD88D7A
-P 20400 6800
-F 0 "DS13" H 21300 7065 50  0000 C CNN
-F 1 "LTP-587HR" H 21300 6974 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 22050 6900 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 22050 6800 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 22050 6700 50  0001 L CNN "Description"
-F 5 "9.75" H 22050 6600 50  0001 L CNN "Height"
-F 6 "Lite-On" H 22050 6500 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 22050 6400 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 22050 6300 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 22050 6200 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 22050 6100 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 22050 6000 50  0001 L CNN "Mouser Price/Stock"
-	1    20400 6800
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS12
-U 1 1 5FD87157
-P 20400 5550
-F 0 "DS12" H 21300 5815 50  0000 C CNN
-F 1 "LTP-587HR" H 21300 5724 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 22050 5650 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 22050 5550 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 22050 5450 50  0001 L CNN "Description"
-F 5 "9.75" H 22050 5350 50  0001 L CNN "Height"
-F 6 "Lite-On" H 22050 5250 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 22050 5150 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 22050 5050 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 22050 4950 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 22050 4850 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 22050 4750 50  0001 L CNN "Mouser Price/Stock"
-	1    20400 5550
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS11
-U 1 1 5FD8490A
-P 20400 4300
-F 0 "DS11" H 21300 4565 50  0000 C CNN
-F 1 "LTP-587HR" H 21300 4474 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 22050 4400 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 22050 4300 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 22050 4200 50  0001 L CNN "Description"
-F 5 "9.75" H 22050 4100 50  0001 L CNN "Height"
-F 6 "Lite-On" H 22050 4000 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 22050 3900 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 22050 3800 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 22050 3700 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 22050 3600 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 22050 3500 50  0001 L CNN "Mouser Price/Stock"
-	1    20400 4300
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS10
-U 1 1 5FD83301
-P 17800 10500
-F 0 "DS10" H 18700 10765 50  0000 C CNN
-F 1 "LTP-587HR" H 18700 10674 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 19450 10600 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 19450 10500 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 19450 10400 50  0001 L CNN "Description"
-F 5 "9.75" H 19450 10300 50  0001 L CNN "Height"
-F 6 "Lite-On" H 19450 10200 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 19450 10100 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 19450 10000 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 19450 9900 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 19450 9800 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 19450 9700 50  0001 L CNN "Mouser Price/Stock"
-	1    17800 10500
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS9
-U 1 1 5FD81C98
-P 17800 9250
-F 0 "DS9" H 18700 9515 50  0000 C CNN
-F 1 "LTP-587HR" H 18700 9424 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 19450 9350 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 19450 9250 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 19450 9150 50  0001 L CNN "Description"
-F 5 "9.75" H 19450 9050 50  0001 L CNN "Height"
-F 6 "Lite-On" H 19450 8950 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 19450 8850 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 19450 8750 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 19450 8650 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 19450 8550 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 19450 8450 50  0001 L CNN "Mouser Price/Stock"
-	1    17800 9250
+L power:GND #PWR0118
+U 1 1 6DF586B1
+P 20000 14500
+F 0 "#PWR0118" H 20000 14250 50  0001 C CNN
+F 1 "GND" H 20005 14327 50  0000 C CNN
+F 2 "" H 20000 14500 50  0001 C CNN
+F 3 "" H 20000 14500 50  0001 C CNN
+	1    20000 14500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	19600 8000 19800 8000
+	20000 14100 19700 14100
+Connection ~ 20000 14100
 $Comp
-L LTP-587HR:LTP-587HR DS8
-U 1 1 5FD5F104
-P 17800 8000
-F 0 "DS8" H 18700 8265 50  0000 C CNN
-F 1 "LTP-587HR" H 18700 8174 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 19450 8100 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 19450 8000 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 19450 7900 50  0001 L CNN "Description"
-F 5 "9.75" H 19450 7800 50  0001 L CNN "Height"
-F 6 "Lite-On" H 19450 7700 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 19450 7600 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 19450 7500 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 19450 7400 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 19450 7300 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 19450 7200 50  0001 L CNN "Mouser Price/Stock"
-	1    17800 8000
+L power:GND #PWR0109
+U 1 1 6DF576B9
+P 20000 14100
+F 0 "#PWR0109" H 20000 13850 50  0001 C CNN
+F 1 "GND" H 20005 13927 50  0000 C CNN
+F 2 "" H 20000 14100 50  0001 C CNN
+F 3 "" H 20000 14100 50  0001 C CNN
+	1    20000 14100
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	19600 6750 19750 6750
+	19700 14500 20000 14500
 Wire Wire Line
-	19600 7150 19600 7050
-Wire Wire Line
-	17800 7550 17800 7450
+	20800 14100 20000 14100
 $Comp
-L LTP-587HR:LTP-587HR DS7
-U 1 1 5FD42E11
-P 17800 6750
-F 0 "DS7" H 18700 7015 50  0000 C CNN
-F 1 "LTP-587HR" H 18700 6924 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 19450 6850 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 19450 6750 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 19450 6650 50  0001 L CNN "Description"
-F 5 "9.75" H 19450 6550 50  0001 L CNN "Height"
-F 6 "Lite-On" H 19450 6450 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 19450 6350 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 19450 6250 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 19450 6150 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 19450 6050 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 19450 5950 50  0001 L CNN "Mouser Price/Stock"
-	1    17800 6750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	19600 5900 19600 5800
-Wire Wire Line
-	17800 6300 17800 6200
-Wire Wire Line
-	19700 5500 19600 5500
-$Comp
-L LTP-587HR:LTP-587HR DS6
-U 1 1 5FD34550
-P 17800 5500
-F 0 "DS6" H 18700 5765 50  0000 C CNN
-F 1 "LTP-587HR" H 18700 5674 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 19450 5600 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 19450 5500 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 19450 5400 50  0001 L CNN "Description"
-F 5 "9.75" H 19450 5300 50  0001 L CNN "Height"
-F 6 "Lite-On" H 19450 5200 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 19450 5100 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 19450 5000 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 19450 4900 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 19450 4800 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 19450 4700 50  0001 L CNN "Mouser Price/Stock"
-	1    17800 5500
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	19600 4250 19650 4250
-Wire Wire Line
-	19600 4650 19600 4550
-Wire Wire Line
-	17800 5050 17800 4950
-$Comp
-L LTP-587HR:LTP-587HR DS5
-U 1 1 5FD155E2
-P 17800 4250
-F 0 "DS5" H 18700 4515 50  0000 C CNN
-F 1 "LTP-587HR" H 18700 4424 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 19450 4350 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 19450 4250 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 19450 4150 50  0001 L CNN "Description"
-F 5 "9.75" H 19450 4050 50  0001 L CNN "Height"
-F 6 "Lite-On" H 19450 3950 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 19450 3850 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 19450 3750 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 19450 3650 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 19450 3550 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 19450 3450 50  0001 L CNN "Mouser Price/Stock"
-	1    17800 4250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	22750 8350 22750 9600
-Wire Wire Line
-	16950 5600 16950 6850
-Wire Wire Line
-	16950 3250 16950 5600
-Wire Wire Line
-	17000 3300 17000 4350
-Wire Wire Line
-	17050 3350 17050 4250
-Wire Wire Line
-	19650 3250 19650 4250
-Wire Wire Line
-	16950 3250 19650 3250
-Wire Wire Line
-	19700 3300 19700 4300
-Wire Wire Line
-	17000 3300 19700 3300
-Wire Wire Line
-	19750 3350 19750 6750
-Wire Wire Line
-	17050 3350 19750 3350
-Wire Wire Line
-	19800 3400 19800 4450
-Wire Wire Line
-	19850 3450 19850 4750
-Wire Wire Line
-	19900 3500 19900 4800
-Wire Wire Line
-	20100 3700 20100 4350
-Wire Wire Line
-	20150 3750 20150 4950
-Wire Wire Line
-	20200 3800 20200 4550
-Wire Wire Line
-	17350 3650 20050 3650
-Wire Wire Line
-	17350 3650 17350 4450
-Wire Wire Line
-	17300 3600 20000 3600
-Wire Wire Line
-	17300 3600 17300 4650
-Wire Wire Line
-	17250 3550 19950 3550
-Wire Wire Line
-	17250 3550 17250 4750
-Wire Wire Line
-	17200 3500 19900 3500
-Wire Wire Line
-	17200 3500 17200 4950
-Wire Wire Line
-	17150 3450 19850 3450
-Wire Wire Line
-	17150 3450 17150 11200
-Wire Wire Line
-	20200 3800 22750 3800
-Connection ~ 20200 3800
-Wire Wire Line
-	22750 3800 22750 4600
-Wire Wire Line
-	20150 3750 22700 3750
-Connection ~ 20150 3750
-Wire Wire Line
-	22700 3750 22700 5000
-Wire Wire Line
-	22300 3350 19750 3350
-Wire Wire Line
-	22300 3350 22300 4500
-Connection ~ 19750 3350
-Wire Wire Line
-	22350 3400 19800 3400
-Wire Wire Line
-	22350 3400 22350 4800
-Connection ~ 19800 3400
-Wire Wire Line
-	22650 3700 20100 3700
-Wire Wire Line
-	22650 3700 22650 4400
-Connection ~ 20100 3700
-Wire Wire Line
-	22600 3650 20050 3650
-Wire Wire Line
-	22600 3650 22600 6800
-Connection ~ 20050 3650
-Wire Wire Line
-	22550 3600 20000 3600
-Wire Wire Line
-	22550 3600 22550 5550
-Connection ~ 20000 3600
-Wire Wire Line
-	22500 3550 19950 3550
-Wire Wire Line
-	22500 3550 22500 4300
-Connection ~ 19950 3550
-$Comp
-L LTP-587HR:LTP-587HR DS1
-U 1 1 60BD8C8F
-P 14300 4250
-F 0 "DS1" H 15200 4515 50  0000 C CNN
-F 1 "LTP-587HR" H 15200 4424 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 15950 4350 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 15950 4250 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 15950 4150 50  0001 L CNN "Description"
-F 5 "9.75" H 15950 4050 50  0001 L CNN "Height"
-F 6 "Lite-On" H 15950 3950 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 15950 3850 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 15950 3750 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 15950 3650 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 15950 3550 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 15950 3450 50  0001 L CNN "Mouser Price/Stock"
-	1    14300 4250
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS2
-U 1 1 60BDF276
-P 14300 5500
-F 0 "DS2" H 15200 5765 50  0000 C CNN
-F 1 "LTP-587HR" H 15200 5674 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 15950 5600 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 15950 5500 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 15950 5400 50  0001 L CNN "Description"
-F 5 "9.75" H 15950 5300 50  0001 L CNN "Height"
-F 6 "Lite-On" H 15950 5200 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 15950 5100 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 15950 5000 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 15950 4900 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 15950 4800 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 15950 4700 50  0001 L CNN "Mouser Price/Stock"
-	1    14300 5500
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS3
-U 1 1 60BE0973
-P 14300 6750
-F 0 "DS3" H 15200 7015 50  0000 C CNN
-F 1 "LTP-587HR" H 15200 6924 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 15950 6850 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 15950 6750 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 15950 6650 50  0001 L CNN "Description"
-F 5 "9.75" H 15950 6550 50  0001 L CNN "Height"
-F 6 "Lite-On" H 15950 6450 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 15950 6350 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 15950 6250 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 15950 6150 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 15950 6050 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 15950 5950 50  0001 L CNN "Mouser Price/Stock"
-	1    14300 6750
-	1    0    0    -1  
-$EndComp
-$Comp
-L LTP-587HR:LTP-587HR DS4
-U 1 1 60BE2D07
-P 14300 8000
-F 0 "DS4" H 15200 8265 50  0000 C CNN
-F 1 "LTP-587HR" H 15200 8174 50  0000 C CNN
-F 2 "LTP-587HR:DIPS1270W50P254L2500H975Q18N" H 15950 8100 50  0001 L CNN
-F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-97-273/P587hr.pdf" H 15950 8000 50  0001 L CNN
-F 4 "LED Displays & Accessories Hi-Eff Red" H 15950 7900 50  0001 L CNN "Description"
-F 5 "9.75" H 15950 7800 50  0001 L CNN "Height"
-F 6 "Lite-On" H 15950 7700 50  0001 L CNN "Manufacturer_Name"
-F 7 "LTP-587HR" H 15950 7600 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "LTP-587HR" H 15950 7500 50  0001 L CNN "Arrow Part Number"
-F 9 "https://www.arrow.com/en/products/ltp-587hr/lite-on-technology" H 15950 7400 50  0001 L CNN "Arrow Price/Stock"
-F 10 "859-LTP-587HR" H 15950 7300 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Lite-On/LTP-587HR?qs=gnaPJ2cis70An5vo3Hcuvw%3D%3D" H 15950 7200 50  0001 L CNN "Mouser Price/Stock"
-	1    14300 8000
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	14300 5050 14300 4950
-Wire Wire Line
-	14300 6300 14300 6200
-Wire Wire Line
-	14300 7550 14300 7450
-Wire Wire Line
-	16100 4650 16100 4550
-Wire Wire Line
-	16100 5900 16100 5800
-Wire Wire Line
-	16100 7150 16100 7050
-Wire Wire Line
-	16100 8400 16100 8300
-Wire Wire Line
-	14300 8800 14300 8700
-Wire Wire Line
-	16100 8000 16150 8000
-Wire Wire Line
-	16150 8000 16150 9100
-Wire Wire Line
-	16100 6750 16200 6750
-Wire Wire Line
-	16200 6750 16200 9150
-Wire Wire Line
-	16100 5500 16250 5500
-Wire Wire Line
-	16250 5500 16250 9200
-Wire Wire Line
-	16100 4250 16300 4250
-Wire Wire Line
-	16300 4250 16300 5700
-Wire Wire Line
-	14300 8100 13700 8100
-Wire Wire Line
-	13700 8100 13700 9150
-Wire Wire Line
-	13700 9150 16200 9150
-Wire Wire Line
-	14300 8000 13750 8000
-Wire Wire Line
-	13750 8000 13750 9200
-Wire Wire Line
-	16100 8200 16300 8200
-Connection ~ 16300 8200
-Wire Wire Line
-	16300 8200 16300 9250
-Wire Wire Line
-	16100 8500 16350 8500
-Wire Wire Line
-	16350 8500 16350 9300
-Wire Wire Line
-	14300 8700 13900 8700
-Wire Wire Line
-	13900 8700 13900 9350
-Connection ~ 14300 8700
-Wire Wire Line
-	14300 8500 13950 8500
-Wire Wire Line
-	13950 8500 13950 9400
-Wire Wire Line
-	14300 8400 14000 8400
-Wire Wire Line
-	14000 8400 14000 9450
-Wire Wire Line
-	14300 8200 14050 8200
-Wire Wire Line
-	14050 8200 14050 9500
-Wire Wire Line
-	16100 8100 16600 8100
-Wire Wire Line
-	16600 8100 16600 9550
-Wire Wire Line
-	16100 8700 16650 8700
-Wire Wire Line
-	16650 8700 16650 9600
-Wire Wire Line
-	16100 8300 16700 8300
-Wire Wire Line
-	16700 8300 16700 9650
-Connection ~ 16100 8300
-Wire Wire Line
-	14300 6850 13650 6850
-Wire Wire Line
-	13650 6850 13650 9100
-Wire Wire Line
-	13650 9100 16150 9100
-Wire Wire Line
-	14300 6750 13750 6750
-Wire Wire Line
-	13750 6750 13750 8000
-Connection ~ 13750 8000
-Wire Wire Line
-	16100 6950 16300 6950
-Connection ~ 16300 6950
-Wire Wire Line
-	16300 6950 16300 8200
-Wire Wire Line
-	16100 7250 16350 7250
-Wire Wire Line
-	16350 7250 16350 8500
-Connection ~ 16350 8500
-Wire Wire Line
-	14300 7450 13900 7450
-Wire Wire Line
-	13900 7450 13900 8700
-Connection ~ 14300 7450
-Connection ~ 13900 8700
-Wire Wire Line
-	14300 7250 13950 7250
-Wire Wire Line
-	13950 7250 13950 8500
-Connection ~ 13950 8500
-Wire Wire Line
-	14300 7150 14000 7150
-Wire Wire Line
-	14000 7150 14000 8400
-Connection ~ 14000 8400
-Wire Wire Line
-	14300 6950 14050 6950
-Wire Wire Line
-	14050 6950 14050 8200
-Connection ~ 14050 8200
-Wire Wire Line
-	16100 6850 16600 6850
-Wire Wire Line
-	16600 6850 16600 8100
-Connection ~ 16600 8100
-Wire Wire Line
-	16100 7450 16650 7450
-Wire Wire Line
-	16650 7450 16650 8700
-Connection ~ 16650 8700
-Wire Wire Line
-	16100 7050 16700 7050
-Wire Wire Line
-	16700 7050 16700 8300
-Connection ~ 16100 7050
-Connection ~ 16700 8300
-Wire Wire Line
-	14300 5600 13650 5600
-Wire Wire Line
-	13650 5600 13650 6850
-Connection ~ 13650 6850
-Wire Wire Line
-	14300 4350 13650 4350
-Connection ~ 13650 5600
-Wire Wire Line
-	14300 5500 13700 5500
-Connection ~ 13700 8100
-Wire Wire Line
-	14300 4250 13700 4250
-Wire Wire Line
-	13700 4250 13700 5500
-Connection ~ 13700 5500
-Wire Wire Line
-	16100 5700 16300 5700
-Connection ~ 16300 5700
-Wire Wire Line
-	16300 5700 16300 6950
-Wire Wire Line
-	16100 6000 16350 6000
-Wire Wire Line
-	16350 6000 16350 7250
-Connection ~ 16350 7250
-Wire Wire Line
-	14300 6200 13900 6200
-Wire Wire Line
-	13900 6200 13900 7450
-Connection ~ 14300 6200
-Connection ~ 13900 7450
-Wire Wire Line
-	14300 6000 13950 6000
-Connection ~ 13950 7250
-Wire Wire Line
-	14300 5900 14000 5900
-Connection ~ 14000 7150
-Wire Wire Line
-	14300 5700 14050 5700
-Connection ~ 14050 6950
-Wire Wire Line
-	14300 5050 13900 5050
-Connection ~ 14300 5050
-Connection ~ 13900 6200
-Wire Wire Line
-	14300 4750 13950 4750
-Wire Wire Line
-	13950 4750 13950 6000
-Connection ~ 13950 6000
-Wire Wire Line
-	14300 4650 14000 4650
-Wire Wire Line
-	14000 4650 14000 5900
-Connection ~ 14000 5900
-Wire Wire Line
-	14300 4450 14050 4450
-Wire Wire Line
-	14050 4450 14050 5700
-Connection ~ 14050 5700
-Wire Wire Line
-	16100 4450 16250 4450
-Wire Wire Line
-	16250 4450 16250 5500
-Connection ~ 16250 5500
-Wire Wire Line
-	16100 4750 16350 4750
-Wire Wire Line
-	16350 4750 16350 6000
-Connection ~ 16350 6000
-Wire Wire Line
-	16100 4350 16600 4350
-Wire Wire Line
-	16600 4350 16600 5600
-Connection ~ 16600 6850
-Wire Wire Line
-	16100 4950 16650 4950
-Wire Wire Line
-	16650 4950 16650 6200
-Connection ~ 16650 7450
-Wire Wire Line
-	16100 4550 16700 4550
-Wire Wire Line
-	16700 4550 16700 5800
-Connection ~ 16100 4550
-Connection ~ 16700 7050
-Wire Wire Line
-	12950 3250 16950 3250
-Connection ~ 16950 3250
-Wire Wire Line
-	12950 3350 13000 3350
-Wire Wire Line
-	13000 3350 13000 3300
-Wire Wire Line
-	13000 3300 17000 3300
-Connection ~ 17000 3300
-Wire Wire Line
-	12950 3450 13050 3450
-Wire Wire Line
-	13050 3450 13050 3350
-Wire Wire Line
-	13050 3350 17050 3350
-Connection ~ 17050 3350
-Wire Wire Line
-	12950 3550 13100 3550
-Wire Wire Line
-	13100 3550 13100 3400
-Wire Wire Line
-	13100 3400 19800 3400
-Wire Wire Line
-	12950 3650 13150 3650
-Wire Wire Line
-	13150 3650 13150 3450
-Wire Wire Line
-	13150 3450 17150 3450
-Connection ~ 17150 3450
-Wire Wire Line
-	12950 3750 13200 3750
-Wire Wire Line
-	13200 3750 13200 3500
-Wire Wire Line
-	13200 3500 17200 3500
-Connection ~ 17200 3500
-Wire Wire Line
-	12950 3850 13250 3850
-Wire Wire Line
-	13250 3850 13250 3550
-Wire Wire Line
-	13250 3550 17250 3550
-Connection ~ 17250 3550
-Wire Wire Line
-	12950 3950 13300 3950
-Wire Wire Line
-	13300 3950 13300 3600
-Wire Wire Line
-	13300 3600 17300 3600
-Connection ~ 17300 3600
-Wire Wire Line
-	12950 4050 13350 4050
-Wire Wire Line
-	13350 4050 13350 3650
-Wire Wire Line
-	13350 3650 17350 3650
-Connection ~ 17350 3650
-Wire Wire Line
-	12950 4150 13400 4150
-Wire Wire Line
-	13400 4150 13400 3700
-Wire Wire Line
-	13400 3700 20100 3700
-Wire Wire Line
-	12950 4250 13450 4250
-Wire Wire Line
-	13450 4250 13450 3750
-Wire Wire Line
-	13450 3750 20150 3750
-Wire Wire Line
-	12950 4350 13500 4350
-Wire Wire Line
-	13500 4350 13500 3800
-Wire Wire Line
-	13500 3800 20200 3800
-Wire Wire Line
-	13750 5650 13750 6750
-Connection ~ 13750 6750
-Wire Wire Line
-	13850 5850 13850 9300
-Wire Wire Line
-	14150 6450 14150 9600
-Wire Wire Line
-	14200 9650 14200 6550
-$Comp
-L eec:AS1130-BSST U2
-U 1 1 5FD05F4A
-P 11850 5450
-F 0 "U2" H 12450 5715 50  0000 C CNN
-F 1 "AS1130-BSST" H 12450 5624 50  0000 C CNN
-F 2 "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm" H 11850 5850 50  0001 L CNN
-F 3 "http://www.ams.com/eng/content/download/185846/834724/105034" H 11850 5950 50  0001 L CNN
-F 4 "MO-150" H 11850 6050 50  0001 L CNN "Code  JEDEC"
-F 5 "Manufacturer URL" H 11850 6150 50  0001 L CNN "Component Link 1 Description"
-F 6 "www.ams.com" H 11850 6250 50  0001 L CNN "Component Link 1 URL"
-F 7 "Rev. 1.07" H 11850 6350 50  0001 L CNN "Datasheet Version"
-F 8 "true" H 11850 6450 50  0001 L CNN "Error Detection"
-F 9 "8-bit PWM & analog current control, dynamic headroom control" H 11850 6550 50  0001 L CNN "Features"
-F 10 "2.5" H 11850 6650 50  0001 L CNN "LED Current per Output mA"
-F 11 "2" H 11850 6750 50  0001 L CNN "LED to LED Matching "
-F 12 "Surface Mount" H 11850 6850 50  0001 L CNN "Mounting Technology"
-F 13 "132" H 11850 6950 50  0001 L CNN "Outputs"
-F 14 "28-Pin Shrink Small Outline Package, 10.2 x 5.3 mm Body, 0.65 mm Pitch" H 11850 7050 50  0001 L CNN "Package Description"
-F 15 "N/C, 07/2011" H 11850 7150 50  0001 L CNN "Package Version"
-F 16 "true" H 11850 7250 50  0001 L CNN "Read back"
-F 17 "2.7 to 5.5" H 11850 7350 50  0001 L CNN "Supply Voltage V"
-F 18 "IC" H 11850 7450 50  0001 L CNN "category"
-F 19 "4367283" H 11850 7550 50  0001 L CNN "ciiva ids"
-F 20 "598dcdd5055ccc55" H 11850 7650 50  0001 L CNN "library id"
-F 21 "AMS" H 11850 7750 50  0001 L CNN "manufacturer"
-F 22 "SSOP-28" H 11850 7850 50  0001 L CNN "package"
-F 23 "1394513892" H 11850 7950 50  0001 L CNN "release date"
-F 24 "660BAB0B-1A30-45A6-8177-846E59C4C6EC" H 11850 8050 50  0001 L CNN "vault revision"
-F 25 "yes" H 11850 8150 50  0001 L CNN "imported"
-	1    11850 5450
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	13650 5450 13650 5600
-Wire Wire Line
-	13650 4350 13650 5450
-Connection ~ 13650 5450
-Wire Wire Line
-	12950 5450 13650 5450
-Wire Wire Line
-	13700 5550 13700 8100
-Wire Wire Line
-	13700 5500 13700 5550
-Connection ~ 13700 5550
-Wire Wire Line
-	12950 5550 13700 5550
-Wire Wire Line
-	12950 5650 13750 5650
-Wire Wire Line
-	12950 5750 13800 5750
-Wire Wire Line
-	12950 5850 13850 5850
-Wire Wire Line
-	13900 5950 13900 6200
-Wire Wire Line
-	13900 5050 13900 5950
-Connection ~ 13900 5950
-Wire Wire Line
-	12950 5950 13900 5950
-Wire Wire Line
-	13950 6050 13950 7250
-Wire Wire Line
-	13950 6000 13950 6050
-Connection ~ 13950 6050
-Wire Wire Line
-	12950 6050 13950 6050
-Wire Wire Line
-	14000 6150 14000 7150
-Wire Wire Line
-	14000 5900 14000 6150
-Connection ~ 14000 6150
-Wire Wire Line
-	12950 6150 14000 6150
-Wire Wire Line
-	14050 6250 14050 6950
-Wire Wire Line
-	14050 5700 14050 6250
-Connection ~ 14050 6250
-Wire Wire Line
-	12950 6250 14050 6250
-Wire Wire Line
-	12950 6350 14100 6350
-Wire Wire Line
-	12950 6450 14150 6450
-Wire Wire Line
-	14200 6550 12950 6550
-$Comp
-L B3J-2100:B3J-2100 S1
-U 1 1 61D48F9B
-P 11300 10000
-F 0 "S1" H 11900 10265 50  0000 C CNN
-F 1 "B3J-2100" H 11900 10174 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 12350 10100 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 12350 10000 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 12350 9900 50  0001 L CNN "Description"
-F 5 "10.5" H 12350 9800 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 12350 9700 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 12350 9600 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 12350 9500 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 12350 9400 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 12350 9300 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 12350 9200 50  0001 L CNN "Mouser Price/Stock"
-	1    11300 10000
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	13850 9300 12600 9300
-Wire Wire Line
-	12600 9300 12600 10100
-Wire Wire Line
-	12600 10100 12500 10100
-Connection ~ 13850 9300
-Wire Wire Line
-	12600 10100 12600 10750
-Wire Wire Line
-	12600 10750 12500 10750
-Connection ~ 12600 10100
-Wire Wire Line
-	12600 11450 12500 11450
-Wire Wire Line
-	12500 10200 12650 10200
-Wire Wire Line
-	12650 10200 12650 9100
-Wire Wire Line
-	12650 9100 13650 9100
-Connection ~ 13650 9100
-Wire Wire Line
-	12600 10750 12600 11450
-Connection ~ 12600 10750
-Wire Wire Line
-	12500 10850 12700 10850
-Wire Wire Line
-	12700 10850 12700 9150
-Wire Wire Line
-	12700 9150 13700 9150
-Connection ~ 13700 9150
-Wire Wire Line
-	12500 11550 12750 11550
-Wire Wire Line
-	12750 11550 12750 9200
-Wire Wire Line
-	12750 9200 13750 9200
-Connection ~ 13750 9200
-$Comp
-L arduino_shieldsNCL:ARDUINO_MEGA_SHIELD SHIELD1
-U 1 1 62867352
-P 7100 6700
-F 0 "SHIELD1" H 7050 9337 60  0000 C CNN
-F 1 "ARDUINO MEGA SHIELD" H 7050 9231 60  0000 C CNN
-F 2 "arduino_shields:ARDUINO MEGA SHIELD" H 7100 6700 50  0001 C CNN
-F 3 "" H 7100 6700 50  0001 C CNN
-	1    7100 6700
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	11950 3250 11850 3250
-Wire Wire Line
-	11850 3250 11850 5450
-Wire Wire Line
-	11850 5450 11950 5450
-Wire Wire Line
-	11950 5550 11800 5550
-Wire Wire Line
-	11800 5550 11800 3350
-Wire Wire Line
-	11800 3350 11950 3350
-$Comp
-L power:VDD #PWR0101
-U 1 1 62B22D1D
-P 11650 4550
-F 0 "#PWR0101" H 11650 4400 50  0001 C CNN
-F 1 "VDD" H 11665 4723 50  0000 C CNN
-F 2 "" H 11650 4550 50  0001 C CNN
-F 3 "" H 11650 4550 50  0001 C CNN
-	1    11650 4550
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VDD #PWR0102
-U 1 1 62B23991
-P 11700 6750
-F 0 "#PWR0102" H 11700 6600 50  0001 C CNN
-F 1 "VDD" H 11715 6923 50  0000 C CNN
-F 2 "" H 11700 6750 50  0001 C CNN
-F 3 "" H 11700 6750 50  0001 C CNN
-	1    11700 6750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	11700 6750 11950 6750
-Connection ~ 11950 4650
-Wire Wire Line
-	11950 4650 11950 4550
-Connection ~ 11950 4750
-Wire Wire Line
-	11950 4750 11950 4650
-Wire Wire Line
-	11950 4850 11950 4750
-Wire Wire Line
-	11950 4550 11650 4550
-Connection ~ 11950 4550
-$Comp
-L power:GND #PWR0103
-U 1 1 62CBA5C1
-P 13050 5050
-F 0 "#PWR0103" H 13050 4800 50  0001 C CNN
-F 1 "GND" H 13055 4877 50  0000 C CNN
-F 2 "" H 13050 5050 50  0001 C CNN
-F 3 "" H 13050 5050 50  0001 C CNN
-	1    13050 5050
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR0104
-U 1 1 62CBB729
-P 13050 7250
-F 0 "#PWR0104" H 13050 7000 50  0001 C CNN
-F 1 "GND" H 13055 7077 50  0000 C CNN
-F 2 "" H 13050 7250 50  0001 C CNN
-F 3 "" H 13050 7250 50  0001 C CNN
-	1    13050 7250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	13050 7250 13050 7150
-Wire Wire Line
-	13050 7150 12950 7150
-Wire Wire Line
-	13050 5050 13050 4950
-Wire Wire Line
-	13050 4950 12950 4950
-$Comp
-L B3J-2100:B3J-2100 S3
-U 1 1 61D4C095
-P 11300 11350
-F 0 "S3" H 11900 11615 50  0000 C CNN
-F 1 "B3J-2100" H 11900 11524 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 12350 11450 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 12350 11350 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 12350 11250 50  0001 L CNN "Description"
-F 5 "10.5" H 12350 11150 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 12350 11050 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 12350 10950 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 12350 10850 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 12350 10750 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 12350 10650 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 12350 10550 50  0001 L CNN "Mouser Price/Stock"
-	1    11300 11350
-	1    0    0    -1  
-$EndComp
-$Comp
-L B3J-2100:B3J-2100 S2
-U 1 1 61D4A935
-P 11300 10650
-F 0 "S2" H 11900 10915 50  0000 C CNN
-F 1 "B3J-2100" H 11900 10824 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 12350 10750 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 12350 10650 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 12350 10550 50  0001 L CNN "Description"
-F 5 "10.5" H 12350 10450 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 12350 10350 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 12350 10250 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 12350 10150 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 12350 10050 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 12350 9950 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 12350 9850 50  0001 L CNN "Mouser Price/Stock"
-	1    11300 10650
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	19750 6750 19750 8200
-Wire Wire Line
-	19600 8200 19750 8200
-Connection ~ 19750 8200
-Wire Wire Line
-	19750 8200 19750 9450
-Wire Wire Line
-	22200 9500 22300 9500
-Wire Wire Line
-	22300 9500 22300 8250
-Connection ~ 22300 8250
-Wire Wire Line
-	22200 9800 22350 9800
-Wire Wire Line
-	22350 9800 22350 8550
-Connection ~ 22350 8550
-Wire Wire Line
-	22200 10750 22300 10750
-Wire Wire Line
-	22300 10750 22300 9500
-Connection ~ 22300 9500
-Wire Wire Line
-	22200 11050 22350 11050
-Wire Wire Line
-	22350 11050 22350 9800
-Connection ~ 22350 9800
-Wire Wire Line
-	22200 9600 22750 9600
-Connection ~ 22200 9600
-Connection ~ 22750 9600
-Wire Wire Line
-	22750 9600 22750 10550
-Wire Wire Line
-	22200 10850 22700 10850
-Wire Wire Line
-	22700 10850 22700 9300
-Connection ~ 22200 10850
-Connection ~ 22700 9300
-Wire Wire Line
-	20400 10000 19850 10000
-Wire Wire Line
-	19850 10000 19850 9250
-Connection ~ 20400 10000
-Connection ~ 19850 9250
-Wire Wire Line
-	20400 11250 19850 11250
-Wire Wire Line
-	19850 11250 19850 10000
-Connection ~ 20400 11250
-Connection ~ 19850 10000
-Wire Wire Line
-	19600 10800 20200 10800
-Wire Wire Line
-	20200 10800 20200 9550
-Connection ~ 19600 10800
-Connection ~ 20200 9550
-Wire Wire Line
-	19600 11200 20150 11200
-Wire Wire Line
-	20150 11200 20150 9950
-Connection ~ 20150 9950
-Wire Wire Line
-	16100 5800 16700 5800
-Connection ~ 16100 5800
-Connection ~ 16700 5800
-Wire Wire Line
-	16700 5800 16700 7050
-Wire Wire Line
-	16100 6200 16650 6200
-Connection ~ 16650 6200
-Wire Wire Line
-	16650 6200 16650 7450
-Wire Wire Line
-	16100 5600 16600 5600
-Connection ~ 16600 5600
-Wire Wire Line
-	16600 5600 16600 6850
-Wire Wire Line
-	14100 6350 14100 9550
-Wire Wire Line
-	13800 5750 13800 9250
-Wire Wire Line
-	13750 9200 16250 9200
-$Comp
-L power:GND #PWR0105
-U 1 1 635F5BAC
-P 11200 11750
-F 0 "#PWR0105" H 11200 11500 50  0001 C CNN
-F 1 "GND" H 11205 11577 50  0000 C CNN
-F 2 "" H 11200 11750 50  0001 C CNN
-F 3 "" H 11200 11750 50  0001 C CNN
-	1    11200 11750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	11300 11450 11300 11350
-Wire Wire Line
-	11300 10750 11300 10650
-Wire Wire Line
-	11300 10100 11300 10000
-Wire Wire Line
-	11300 10000 11200 10000
-Wire Wire Line
-	11200 10000 11200 10650
-Connection ~ 11300 10000
-Wire Wire Line
-	11300 10650 11200 10650
-Connection ~ 11300 10650
-Connection ~ 11200 10650
-Wire Wire Line
-	11200 10650 11200 11350
-Wire Wire Line
-	11300 11350 11200 11350
-Connection ~ 11300 11350
-Connection ~ 11200 11350
-Wire Wire Line
-	11200 11350 11200 11750
-Wire Wire Line
-	8000 6750 11550 6750
-Wire Wire Line
-	11550 6750 11550 5550
-Wire Wire Line
-	11550 5550 11800 5550
-Connection ~ 11800 5550
-Wire Wire Line
-	8000 6850 11600 6850
-Wire Wire Line
-	11600 6850 11600 5450
-Wire Wire Line
-	11600 5450 11850 5450
-Connection ~ 11850 5450
-Wire Wire Line
-	11300 10200 10900 10200
-Wire Wire Line
-	10900 10200 10900 7350
-Wire Wire Line
-	10900 7350 8000 7350
-Wire Wire Line
-	11300 10850 10850 10850
-Wire Wire Line
-	10850 10850 10850 7450
-Wire Wire Line
-	10850 7450 8000 7450
-Wire Wire Line
-	11300 11550 10800 11550
-Wire Wire Line
-	10800 11550 10800 7550
-Wire Wire Line
-	10800 7550 8000 7550
-Wire Wire Line
-	12800 10200 12800 12700
-Wire Wire Line
-	12800 12700 10750 12700
-Wire Wire Line
-	10750 12700 10750 7650
-Wire Wire Line
-	10750 7650 8000 7650
-Wire Wire Line
-	12850 10850 12850 12750
-Wire Wire Line
-	12850 12750 10700 12750
-Wire Wire Line
-	10700 12750 10700 7750
-Wire Wire Line
-	10700 7750 8000 7750
-Wire Wire Line
-	12900 12800 10650 12800
-Wire Wire Line
-	10650 12800 10650 7850
-Wire Wire Line
-	10650 7850 8000 7850
-Wire Wire Line
-	10600 12850 10600 7950
-Wire Wire Line
-	10600 7950 8000 7950
-Wire Wire Line
-	16700 9650 16450 9650
-Wire Wire Line
-	13100 12150 13100 12850
-Wire Wire Line
-	12900 11500 12900 12800
-Wire Wire Line
-	13000 10650 13000 11300
-Connection ~ 13000 10650
-Connection ~ 13100 10650
-Wire Wire Line
-	13100 10650 13000 10650
-Wire Wire Line
-	13000 11300 13000 11950
-Connection ~ 13000 11300
-Connection ~ 13100 11300
-Wire Wire Line
-	13100 11300 13000 11300
-Wire Wire Line
-	13000 11950 13000 12350
-Connection ~ 13000 11950
-Connection ~ 13100 11950
-Wire Wire Line
-	13100 11950 13000 11950
-Connection ~ 13100 10000
-Wire Wire Line
-	13000 10000 13000 10650
-Wire Wire Line
-	13100 10000 13000 10000
-Wire Wire Line
-	13100 10100 13100 10000
-Wire Wire Line
-	13100 10750 13100 10650
-Wire Wire Line
-	13100 11400 13100 11300
-Wire Wire Line
-	13100 12050 13100 11950
-Connection ~ 14850 10650
-Connection ~ 14950 10000
-Wire Wire Line
-	14850 10000 14850 10650
-Wire Wire Line
-	14950 10000 14850 10000
-Wire Wire Line
-	14950 10000 14950 10100
-Connection ~ 14850 11300
-Connection ~ 14950 10650
-Wire Wire Line
-	14850 10650 14850 11300
-Wire Wire Line
-	14950 10650 14850 10650
-Wire Wire Line
-	14950 10750 14950 10650
-Connection ~ 14850 11950
-Connection ~ 14950 11300
-Wire Wire Line
-	14850 11300 14850 11950
-Wire Wire Line
-	14950 11300 14850 11300
-Wire Wire Line
-	14950 11400 14950 11300
-Connection ~ 14950 11950
-Wire Wire Line
-	14950 12050 14950 11950
-Wire Wire Line
-	14850 11950 14850 12350
-Wire Wire Line
-	14950 11950 14850 11950
-$Comp
-L power:GND #PWR0106
-U 1 1 635F7775
-P 14850 12350
-F 0 "#PWR0106" H 14850 12100 50  0001 C CNN
-F 1 "GND" H 14855 12177 50  0000 C CNN
-F 2 "" H 14850 12350 50  0001 C CNN
-F 3 "" H 14850 12350 50  0001 C CNN
-	1    14850 12350
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR0107
-U 1 1 635F6729
-P 13000 12350
-F 0 "#PWR0107" H 13000 12100 50  0001 C CNN
-F 1 "GND" H 13005 12177 50  0000 C CNN
-F 2 "" H 13000 12350 50  0001 C CNN
-F 3 "" H 13000 12350 50  0001 C CNN
-	1    13000 12350
-	1    0    0    -1  
-$EndComp
-$Comp
-L B3J-2100:B3J-2100 S4
-U 1 1 61D44595
-P 13100 10000
-F 0 "S4" H 13700 10265 50  0000 C CNN
-F 1 "B3J-2100" H 13700 10174 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 14150 10100 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 14150 10000 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 14150 9900 50  0001 L CNN "Description"
-F 5 "10.5" H 14150 9800 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 14150 9700 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 14150 9600 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 14150 9500 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 14150 9400 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 14150 9300 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 14150 9200 50  0001 L CNN "Mouser Price/Stock"
-	1    13100 10000
-	1    0    0    -1  
-$EndComp
-$Comp
-L B3J-2100:B3J-2100 S5
-U 1 1 61D45775
-P 13100 10650
-F 0 "S5" H 13700 10915 50  0000 C CNN
-F 1 "B3J-2100" H 13700 10824 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 14150 10750 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 14150 10650 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 14150 10550 50  0001 L CNN "Description"
-F 5 "10.5" H 14150 10450 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 14150 10350 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 14150 10250 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 14150 10150 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 14150 10050 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 14150 9950 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 14150 9850 50  0001 L CNN "Mouser Price/Stock"
-	1    13100 10650
-	1    0    0    -1  
-$EndComp
-$Comp
-L B3J-2100:B3J-2100 S6
-U 1 1 61D46961
-P 13100 11300
-F 0 "S6" H 13700 11565 50  0000 C CNN
-F 1 "B3J-2100" H 13700 11474 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 14150 11400 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 14150 11300 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 14150 11200 50  0001 L CNN "Description"
-F 5 "10.5" H 14150 11100 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 14150 11000 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 14150 10900 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 14150 10800 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 14150 10700 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 14150 10600 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 14150 10500 50  0001 L CNN "Mouser Price/Stock"
-	1    13100 11300
-	1    0    0    -1  
-$EndComp
-$Comp
-L B3J-2100:B3J-2100 S7
-U 1 1 61D48065
-P 13100 11950
-F 0 "S7" H 13700 12215 50  0000 C CNN
-F 1 "B3J-2100" H 13700 12124 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 14150 12050 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 14150 11950 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 14150 11850 50  0001 L CNN "Description"
-F 5 "10.5" H 14150 11750 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 14150 11650 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 14150 11550 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 14150 11450 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 14150 11350 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 14150 11250 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 14150 11150 50  0001 L CNN "Mouser Price/Stock"
-	1    13100 11950
-	1    0    0    -1  
-$EndComp
-$Comp
-L B3J-2100:B3J-2100 S8
-U 1 1 61D3E5A5
-P 14950 10000
-F 0 "S8" H 15550 10265 50  0000 C CNN
-F 1 "B3J-2100" H 15550 10174 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 16000 10100 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 16000 10000 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 16000 9900 50  0001 L CNN "Description"
-F 5 "10.5" H 16000 9800 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 16000 9700 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 16000 9600 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 16000 9500 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 16000 9400 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 16000 9300 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 16000 9200 50  0001 L CNN "Mouser Price/Stock"
-	1    14950 10000
-	1    0    0    -1  
-$EndComp
-$Comp
-L B3J-2100:B3J-2100 S9
-U 1 1 61D40CBA
-P 14950 10650
-F 0 "S9" H 15550 10915 50  0000 C CNN
-F 1 "B3J-2100" H 15550 10824 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 16000 10750 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 16000 10650 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 16000 10550 50  0001 L CNN "Description"
-F 5 "10.5" H 16000 10450 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 16000 10350 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 16000 10250 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 16000 10150 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 16000 10050 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 16000 9950 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 16000 9850 50  0001 L CNN "Mouser Price/Stock"
-	1    14950 10650
-	1    0    0    -1  
-$EndComp
-$Comp
-L B3J-2100:B3J-2100 S10
-U 1 1 61D41FFD
-P 14950 11300
-F 0 "S10" H 15550 11565 50  0000 C CNN
-F 1 "B3J-2100" H 15550 11474 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 16000 11400 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 16000 11300 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 16000 11200 50  0001 L CNN "Description"
-F 5 "10.5" H 16000 11100 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 16000 11000 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 16000 10900 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 16000 10800 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 16000 10700 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 16000 10600 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 16000 10500 50  0001 L CNN "Mouser Price/Stock"
-	1    14950 11300
-	1    0    0    -1  
-$EndComp
-$Comp
-L B3J-2100:B3J-2100 S11
-U 1 1 61D431B8
-P 14950 11950
-F 0 "S11" H 15550 12215 50  0000 C CNN
-F 1 "B3J-2100" H 15550 12124 50  0000 C CNN
-F 2 "B3J-2100:B3J2100" H 16000 12050 50  0001 L CNN
-F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 16000 11950 50  0001 L CNN
-F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 16000 11850 50  0001 L CNN "Description"
-F 5 "10.5" H 16000 11750 50  0001 L CNN "Height"
-F 6 "Omron Electronics" H 16000 11650 50  0001 L CNN "Manufacturer_Name"
-F 7 "B3J-2100" H 16000 11550 50  0001 L CNN "Manufacturer_Part_Number"
-F 8 "" H 16000 11450 50  0001 L CNN "Arrow Part Number"
-F 9 "" H 16000 11350 50  0001 L CNN "Arrow Price/Stock"
-F 10 "653-B3J-2100" H 16000 11250 50  0001 L CNN "Mouser Part Number"
-F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 16000 11150 50  0001 L CNN "Mouser Price/Stock"
-	1    14950 11950
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	16150 11400 16250 11400
-Wire Wire Line
-	16150 10750 16250 10750
-Wire Wire Line
-	16150 10100 16250 10100
-Wire Wire Line
-	16450 12150 16450 9650
-Wire Wire Line
-	16400 11500 16400 9600
-Wire Wire Line
-	16350 10850 16350 9550
-Wire Wire Line
-	16250 10100 16250 10750
-Connection ~ 16250 10750
-Wire Wire Line
-	16250 10750 16250 11400
-Connection ~ 16250 11400
-Wire Wire Line
-	16250 11400 16250 12050
-Wire Wire Line
-	16250 12050 16150 12050
-Wire Wire Line
-	14600 12150 14600 9450
-Wire Wire Line
-	14000 9450 14600 9450
-Wire Wire Line
-	14550 11500 14550 9400
-Wire Wire Line
-	13950 9400 14550 9400
-Wire Wire Line
-	14500 10850 14500 9350
-Wire Wire Line
-	13900 9350 14500 9350
-Wire Wire Line
-	14450 10200 14450 9250
-Connection ~ 14450 9250
-Wire Wire Line
-	14450 9250 16300 9250
-Wire Wire Line
-	13800 9250 14450 9250
-Wire Wire Line
-	14400 9300 14400 10100
-Connection ~ 14400 9300
-Wire Wire Line
-	13850 9300 14400 9300
-Wire Wire Line
-	12800 10200 13100 10200
-Wire Wire Line
-	12850 10850 13100 10850
-Wire Wire Line
-	12900 11500 13100 11500
-Wire Wire Line
-	10600 12850 13100 12850
-Wire Wire Line
-	14300 12150 14600 12150
-Wire Wire Line
-	14300 12050 14400 12050
-Wire Wire Line
-	14300 11500 14550 11500
-Wire Wire Line
-	14300 11400 14400 11400
-Connection ~ 14400 11400
-Wire Wire Line
-	14400 11400 14400 12050
-Wire Wire Line
-	14300 10850 14500 10850
-Wire Wire Line
-	14300 10750 14400 10750
-Connection ~ 14400 10750
-Wire Wire Line
-	14400 10750 14400 11400
-Wire Wire Line
-	14300 10200 14450 10200
-Wire Wire Line
-	14300 10100 14400 10100
-Connection ~ 14400 10100
-Wire Wire Line
-	14400 10100 14400 10750
-Wire Wire Line
-	14650 10200 14650 12900
-Wire Wire Line
-	14700 10850 14700 12950
-Connection ~ 16450 9650
-Wire Wire Line
-	14200 9650 16450 9650
-Connection ~ 16400 9600
-Wire Wire Line
-	16400 9600 16650 9600
-Wire Wire Line
-	14150 9600 16400 9600
-Connection ~ 16350 9550
-Wire Wire Line
-	16350 9550 16600 9550
-Wire Wire Line
-	14100 9550 16350 9550
-Wire Wire Line
-	16150 12150 16450 12150
-Wire Wire Line
-	16150 11500 16400 11500
-Wire Wire Line
-	16150 10850 16350 10850
-Wire Wire Line
-	16150 10200 16300 10200
-Wire Wire Line
-	14400 9300 16250 9300
-Wire Wire Line
-	16300 10200 16300 9500
-Wire Wire Line
-	14050 9500 16300 9500
-Wire Wire Line
-	16250 10100 16250 9300
-Connection ~ 16250 10100
-Connection ~ 16250 9300
-Wire Wire Line
-	16250 9300 16350 9300
-Wire Wire Line
-	14650 10200 14950 10200
-Wire Wire Line
-	14700 10850 14950 10850
-Wire Wire Line
-	14950 11500 14750 11500
-Wire Wire Line
-	14750 11500 14750 13000
-Wire Wire Line
-	10550 12900 10550 8050
-Wire Wire Line
-	10550 8050 8000 8050
-Wire Wire Line
-	10550 12900 14650 12900
-Wire Wire Line
-	10500 12950 10500 8900
-Wire Wire Line
-	10500 8900 8000 8900
-Wire Wire Line
-	10500 12950 14700 12950
-Wire Wire Line
-	10450 13000 10450 8800
-Wire Wire Line
-	10450 8800 8000 8800
-Wire Wire Line
-	10450 13000 14750 13000
-Wire Wire Line
-	14950 12150 14950 13050
-Wire Wire Line
-	14950 13050 10400 13050
-Wire Wire Line
-	10400 13050 10400 8700
-Wire Wire Line
-	10400 8700 8000 8700
-$Comp
-L 4xxx:4504 U5
-U 1 1 663F2E1B
-P 3250 5350
-F 0 "U5" H 3250 4361 50  0000 C CNN
-F 1 "4504" H 3250 4270 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm" H 3250 4050 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/cd4504b.pdf" H 2600 5000 50  0001 C CNN
-	1    3250 5350
-	1    0    0    -1  
-$EndComp
-$Comp
-L 4xxx:4504 U4
-U 1 1 666D5823
-P 3250 7450
-F 0 "U4" H 3250 6461 50  0000 C CNN
-F 1 "4504" H 3250 6370 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm" H 3250 6150 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/cd4504b.pdf" H 2600 7100 50  0001 C CNN
-	1    3250 7450
-	1    0    0    -1  
-$EndComp
-$Comp
-L 4xxx:4504 U3
-U 1 1 666D7DCA
-P 3250 9550
-F 0 "U3" H 3250 8561 50  0000 C CNN
-F 1 "4504" H 3250 8470 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm" H 3250 8250 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/cd4504b.pdf" H 2600 9200 50  0001 C CNN
-	1    3250 9550
-	1    0    0    -1  
-$EndComp
-$Comp
-L 4xxx:4504 U6
-U 1 1 666DA20D
-P 3250 3250
-F 0 "U6" H 3250 2261 50  0000 C CNN
-F 1 "4504" H 3250 2170 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm" H 3250 1950 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/cd4504b.pdf" H 2600 2900 50  0001 C CNN
-	1    3250 3250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8000 8600 8200 8600
-Wire Wire Line
-	8200 8600 8200 9450
-Wire Wire Line
-	3850 9450 3850 9250
-Wire Wire Line
-	3850 9250 3700 9250
-Wire Wire Line
-	8000 8500 8250 8500
-Wire Wire Line
-	8250 8500 8250 9500
-Wire Wire Line
-	3800 9500 3800 9450
-Wire Wire Line
-	3800 9450 3700 9450
-Wire Wire Line
-	8000 8400 8300 8400
-Wire Wire Line
-	8300 8400 8300 9550
-Wire Wire Line
-	3800 9550 3800 9650
-Wire Wire Line
-	3800 9650 3700 9650
-Wire Wire Line
-	8000 8300 8350 8300
-Wire Wire Line
-	8350 8300 8350 9600
-Wire Wire Line
-	3850 9600 3850 9850
-Wire Wire Line
-	3850 9850 3700 9850
-Wire Wire Line
-	8000 8200 8400 8200
-Wire Wire Line
-	3900 9650 3900 10050
-Wire Wire Line
-	3900 10050 3700 10050
-Wire Wire Line
-	3900 9150 3900 9050
-Wire Wire Line
-	3900 9050 3700 9050
-Wire Wire Line
-	3950 9050 3950 7950
-Wire Wire Line
-	3950 7950 3700 7950
-Wire Wire Line
-	4000 8950 4000 7750
-Wire Wire Line
-	4000 7750 3700 7750
-Wire Wire Line
-	4050 8850 4050 7550
-Wire Wire Line
-	4050 7550 3700 7550
-Wire Wire Line
-	4100 8700 4100 7350
-Wire Wire Line
-	4100 7350 3700 7350
-Wire Wire Line
-	4150 8600 4150 7150
-Wire Wire Line
-	4150 7150 3700 7150
-Wire Wire Line
-	4200 8500 4200 6950
-Wire Wire Line
-	4200 6950 3700 6950
-Wire Wire Line
-	4250 8400 4250 5850
-Wire Wire Line
-	4250 5850 3700 5850
-Wire Wire Line
-	4300 8300 4300 5650
-Wire Wire Line
-	4300 5650 3700 5650
-Wire Wire Line
-	4350 8200 4350 5450
-Wire Wire Line
-	4350 5450 3700 5450
-Wire Wire Line
-	4400 5250 3700 5250
-Wire Wire Line
-	4450 8000 4450 5050
-Wire Wire Line
-	4450 5050 3700 5050
-Wire Wire Line
-	4450 8000 6100 8000
-Wire Wire Line
-	6100 8100 4400 8100
-Wire Wire Line
-	4400 5250 4400 8100
-Wire Wire Line
-	4350 8200 6100 8200
-Wire Wire Line
-	4300 8300 6100 8300
-Wire Wire Line
-	4250 8400 6100 8400
-Wire Wire Line
-	4200 8500 6100 8500
-Wire Wire Line
-	4150 8600 6100 8600
-Wire Wire Line
-	4100 8700 6100 8700
-Wire Wire Line
-	4050 8850 6100 8850
-Wire Wire Line
-	4000 8950 6100 8950
-Wire Wire Line
-	3950 9050 6100 9050
-Wire Wire Line
-	3900 9150 6100 9150
-Wire Wire Line
-	3850 9450 8200 9450
-Wire Wire Line
-	3800 9500 8250 9500
-Wire Wire Line
-	3800 9550 8300 9550
-Wire Wire Line
-	3850 9600 8350 9600
-Wire Wire Line
-	3900 9650 8400 9650
-Wire Wire Line
-	8400 8200 8400 9650
-Wire Wire Line
-	4500 4850 3700 4850
-Wire Wire Line
-	4550 3750 3700 3750
-Wire Wire Line
-	8000 4550 8200 4550
-Wire Wire Line
-	8000 4850 8200 4850
-Wire Wire Line
-	4500 7750 4500 4850
-Wire Wire Line
-	4500 7750 6100 7750
-Wire Wire Line
-	4550 7550 4550 3750
-Wire Wire Line
-	4550 7550 6100 7550
-Wire Wire Line
-	8000 4950 8400 4950
-Wire Wire Line
-	8400 4950 8400 3550
-Wire Wire Line
-	3700 3550 8400 3550
-Wire Wire Line
-	8000 5050 8450 5050
-Wire Wire Line
-	8450 5050 8450 3350
-Wire Wire Line
-	3700 3350 8450 3350
-Wire Wire Line
-	8000 5250 8500 5250
-Wire Wire Line
-	8500 5250 8500 3150
-Wire Wire Line
-	8500 3150 3700 3150
-$Comp
-L pecr11:PEC11R-4220F-S0024 ENC1
-U 1 1 6922AA5D
-P 10650 6350
-F 0 "ENC1" H 11350 5385 50  0000 C CNN
-F 1 "PEC11R-4220F-S0024" H 11350 5476 50  0000 C CNN
-F 2 "pecr11:Bourns-PEC11R-4220F-S0024-0-0-0" H 10650 6750 50  0001 L CNN
-F 3 "https://www.bourns.com/docs/product-datasheets/pec11r.pdf?sfvrsn=bb617cbf_6" H 10650 6850 50  0001 L CNN
-F 4 "Enc" H 10650 6950 50  0001 L CNN "category"
-F 5 "10mA" H 10650 7050 50  0001 L CNN "current rating"
-F 6 "Yes" H 10650 7150 50  0001 L CNN "detend"
-F 7 "Electromechanical" H 10650 7250 50  0001 L CNN "device class L1"
-F 8 "Switches" H 10650 7350 50  0001 L CNN "device class L2"
-F 9 "Encoders" H 10650 7450 50  0001 L CNN "device class L3"
-F 10 "ROTARY ENCODER MECHANICAL 24PPR" H 10650 7550 50  0001 L CNN "digikey description"
-F 11 "PEC11R-4220F-S0024-ND" H 10650 7650 50  0001 L CNN "digikey part number"
-F 12 "Incremental" H 10650 7750 50  0001 L CNN "encoder type"
-F 13 "27.3mm" H 10650 7850 50  0001 L CNN "height"
-F 14 "yes" H 10650 7950 50  0001 L CNN "lead free"
-F 15 "456a2eefc9d34d73" H 10650 8050 50  0001 L CNN "library id"
-F 16 "Bourns" H 10650 8150 50  0001 L CNN "manufacturer"
-F 17 "Encoders 20mm SHAFT w/SWITCH" H 10650 8250 50  0001 L CNN "mouser description"
-F 18 "652-PEC11R-4220F-S24" H 10650 8350 50  0001 L CNN "mouser part number"
-F 19 "1" H 10650 8450 50  0001 L CNN "number of circuits"
-F 20 "ENC_PTH_12MM5_13MM4" H 10650 8550 50  0001 L CNN "package"
-F 21 "24" H 10650 8650 50  0001 L CNN "pulses per rev"
-F 22 "yes" H 10650 8750 50  0001 L CNN "rohs"
-F 23 "+70°C" H 10650 8850 50  0001 L CNN "temperature range high"
-F 24 "30°C" H 10650 8950 50  0001 L CNN "temperature range low"
-F 25 "5V" H 10650 9050 50  0001 L CNN "voltage rating DC"
-	1    10650 6350
-	-1   0    0    1   
-$EndComp
-$Comp
-L pecr11:PEC11R-4220F-S0024 ENC2
-U 1 1 6922EC85
-P 10650 5200
-F 0 "ENC2" H 11350 4235 50  0000 C CNN
-F 1 "PEC11R-4220F-S0024" H 11350 4326 50  0000 C CNN
-F 2 "pecr11:Bourns-PEC11R-4220F-S0024-0-0-0" H 10650 5600 50  0001 L CNN
-F 3 "https://www.bourns.com/docs/product-datasheets/pec11r.pdf?sfvrsn=bb617cbf_6" H 10650 5700 50  0001 L CNN
-F 4 "Enc" H 10650 5800 50  0001 L CNN "category"
-F 5 "10mA" H 10650 5900 50  0001 L CNN "current rating"
-F 6 "Yes" H 10650 6000 50  0001 L CNN "detend"
-F 7 "Electromechanical" H 10650 6100 50  0001 L CNN "device class L1"
-F 8 "Switches" H 10650 6200 50  0001 L CNN "device class L2"
-F 9 "Encoders" H 10650 6300 50  0001 L CNN "device class L3"
-F 10 "ROTARY ENCODER MECHANICAL 24PPR" H 10650 6400 50  0001 L CNN "digikey description"
-F 11 "PEC11R-4220F-S0024-ND" H 10650 6500 50  0001 L CNN "digikey part number"
-F 12 "Incremental" H 10650 6600 50  0001 L CNN "encoder type"
-F 13 "27.3mm" H 10650 6700 50  0001 L CNN "height"
-F 14 "yes" H 10650 6800 50  0001 L CNN "lead free"
-F 15 "456a2eefc9d34d73" H 10650 6900 50  0001 L CNN "library id"
-F 16 "Bourns" H 10650 7000 50  0001 L CNN "manufacturer"
-F 17 "Encoders 20mm SHAFT w/SWITCH" H 10650 7100 50  0001 L CNN "mouser description"
-F 18 "652-PEC11R-4220F-S24" H 10650 7200 50  0001 L CNN "mouser part number"
-F 19 "1" H 10650 7300 50  0001 L CNN "number of circuits"
-F 20 "ENC_PTH_12MM5_13MM4" H 10650 7400 50  0001 L CNN "package"
-F 21 "24" H 10650 7500 50  0001 L CNN "pulses per rev"
-F 22 "yes" H 10650 7600 50  0001 L CNN "rohs"
-F 23 "+70°C" H 10650 7700 50  0001 L CNN "temperature range high"
-F 24 "30°C" H 10650 7800 50  0001 L CNN "temperature range low"
-F 25 "5V" H 10650 7900 50  0001 L CNN "voltage rating DC"
-	1    10650 5200
-	-1   0    0    1   
-$EndComp
-$Comp
-L pecr11:PEC11R-4220F-S0024 ENC3
-U 1 1 69231399
-P 10650 4050
-F 0 "ENC3" H 11350 3085 50  0000 C CNN
-F 1 "PEC11R-4220F-S0024" H 11350 3176 50  0000 C CNN
-F 2 "pecr11:Bourns-PEC11R-4220F-S0024-0-0-0" H 10650 4450 50  0001 L CNN
-F 3 "https://www.bourns.com/docs/product-datasheets/pec11r.pdf?sfvrsn=bb617cbf_6" H 10650 4550 50  0001 L CNN
-F 4 "Enc" H 10650 4650 50  0001 L CNN "category"
-F 5 "10mA" H 10650 4750 50  0001 L CNN "current rating"
-F 6 "Yes" H 10650 4850 50  0001 L CNN "detend"
-F 7 "Electromechanical" H 10650 4950 50  0001 L CNN "device class L1"
-F 8 "Switches" H 10650 5050 50  0001 L CNN "device class L2"
-F 9 "Encoders" H 10650 5150 50  0001 L CNN "device class L3"
-F 10 "ROTARY ENCODER MECHANICAL 24PPR" H 10650 5250 50  0001 L CNN "digikey description"
-F 11 "PEC11R-4220F-S0024-ND" H 10650 5350 50  0001 L CNN "digikey part number"
-F 12 "Incremental" H 10650 5450 50  0001 L CNN "encoder type"
-F 13 "27.3mm" H 10650 5550 50  0001 L CNN "height"
-F 14 "yes" H 10650 5650 50  0001 L CNN "lead free"
-F 15 "456a2eefc9d34d73" H 10650 5750 50  0001 L CNN "library id"
-F 16 "Bourns" H 10650 5850 50  0001 L CNN "manufacturer"
-F 17 "Encoders 20mm SHAFT w/SWITCH" H 10650 5950 50  0001 L CNN "mouser description"
-F 18 "652-PEC11R-4220F-S24" H 10650 6050 50  0001 L CNN "mouser part number"
-F 19 "1" H 10650 6150 50  0001 L CNN "number of circuits"
-F 20 "ENC_PTH_12MM5_13MM4" H 10650 6250 50  0001 L CNN "package"
-F 21 "24" H 10650 6350 50  0001 L CNN "pulses per rev"
-F 22 "yes" H 10650 6450 50  0001 L CNN "rohs"
-F 23 "+70°C" H 10650 6550 50  0001 L CNN "temperature range high"
-F 24 "30°C" H 10650 6650 50  0001 L CNN "temperature range low"
-F 25 "5V" H 10650 6750 50  0001 L CNN "voltage rating DC"
-	1    10650 4050
-	-1   0    0    1   
-$EndComp
-$Comp
-L pecr11:PEC11R-4220F-S0024 ENC4
-U 1 1 69233DD6
-P 10650 2900
-F 0 "ENC4" H 11350 1935 50  0000 C CNN
-F 1 "PEC11R-4220F-S0024" H 11350 2026 50  0000 C CNN
-F 2 "pecr11:Bourns-PEC11R-4220F-S0024-0-0-0" H 10650 3300 50  0001 L CNN
-F 3 "https://www.bourns.com/docs/product-datasheets/pec11r.pdf?sfvrsn=bb617cbf_6" H 10650 3400 50  0001 L CNN
-F 4 "Enc" H 10650 3500 50  0001 L CNN "category"
-F 5 "10mA" H 10650 3600 50  0001 L CNN "current rating"
-F 6 "Yes" H 10650 3700 50  0001 L CNN "detend"
-F 7 "Electromechanical" H 10650 3800 50  0001 L CNN "device class L1"
-F 8 "Switches" H 10650 3900 50  0001 L CNN "device class L2"
-F 9 "Encoders" H 10650 4000 50  0001 L CNN "device class L3"
-F 10 "ROTARY ENCODER MECHANICAL 24PPR" H 10650 4100 50  0001 L CNN "digikey description"
-F 11 "PEC11R-4220F-S0024-ND" H 10650 4200 50  0001 L CNN "digikey part number"
-F 12 "Incremental" H 10650 4300 50  0001 L CNN "encoder type"
-F 13 "27.3mm" H 10650 4400 50  0001 L CNN "height"
-F 14 "yes" H 10650 4500 50  0001 L CNN "lead free"
-F 15 "456a2eefc9d34d73" H 10650 4600 50  0001 L CNN "library id"
-F 16 "Bourns" H 10650 4700 50  0001 L CNN "manufacturer"
-F 17 "Encoders 20mm SHAFT w/SWITCH" H 10650 4800 50  0001 L CNN "mouser description"
-F 18 "652-PEC11R-4220F-S24" H 10650 4900 50  0001 L CNN "mouser part number"
-F 19 "1" H 10650 5000 50  0001 L CNN "number of circuits"
-F 20 "ENC_PTH_12MM5_13MM4" H 10650 5100 50  0001 L CNN "package"
-F 21 "24" H 10650 5200 50  0001 L CNN "pulses per rev"
-F 22 "yes" H 10650 5300 50  0001 L CNN "rohs"
-F 23 "+70°C" H 10650 5400 50  0001 L CNN "temperature range high"
-F 24 "30°C" H 10650 5500 50  0001 L CNN "temperature range low"
-F 25 "5V" H 10650 5600 50  0001 L CNN "voltage rating DC"
-	1    10650 2900
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	8000 6250 9350 6250
-Wire Wire Line
-	8000 6150 9350 6150
-Wire Wire Line
-	9350 5100 8200 5100
-Wire Wire Line
-	8200 5100 8200 4850
-Wire Wire Line
-	8250 5000 8250 4750
-Wire Wire Line
-	8000 4750 8250 4750
-Wire Wire Line
-	9350 3950 8250 3950
-Wire Wire Line
-	8250 3950 8250 4650
-Wire Wire Line
-	8000 4650 8250 4650
-Wire Wire Line
-	8200 4550 8200 3850
-Wire Wire Line
-	8200 3850 9350 3850
-Wire Wire Line
-	5750 7650 5750 2800
-Wire Wire Line
-	5750 2800 9350 2800
-Wire Wire Line
-	5750 7650 6100 7650
-Wire Wire Line
-	9350 2700 5700 2700
-Wire Wire Line
-	5700 2700 5700 7850
-Wire Wire Line
-	5700 7850 6100 7850
-Wire Wire Line
-	10750 6350 10750 6550
-Wire Wire Line
-	10750 6550 8400 6550
-Wire Wire Line
-	8400 6550 8400 5450
-Wire Wire Line
-	8400 5450 8000 5450
-Wire Wire Line
-	10550 6350 10750 6350
-Wire Wire Line
-	10550 5200 10800 5200
-Wire Wire Line
-	10800 5200 10800 6600
-Wire Wire Line
-	10800 6600 8350 6600
-Wire Wire Line
-	8350 6600 8350 5550
-Wire Wire Line
-	8350 5550 8000 5550
-Wire Wire Line
-	10550 4050 10850 4050
-Wire Wire Line
-	10850 4050 10850 6650
-Wire Wire Line
-	10850 6650 8300 6650
-Wire Wire Line
-	8300 6650 8300 5650
-Wire Wire Line
-	8300 5650 8000 5650
-Wire Wire Line
-	10550 2900 10900 2900
-Wire Wire Line
-	10900 2900 10900 6700
-Wire Wire Line
-	10900 6700 8250 6700
-Wire Wire Line
-	8250 6700 8250 5750
-Wire Wire Line
-	8250 5750 8000 5750
-$Comp
-L power:GND #PWR0108
-U 1 1 6A3B2D86
-P 10650 6100
-F 0 "#PWR0108" H 10650 5850 50  0001 C CNN
-F 1 "GND" H 10655 5927 50  0000 C CNN
-F 2 "" H 10650 6100 50  0001 C CNN
-F 3 "" H 10650 6100 50  0001 C CNN
-	1    10650 6100
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	10550 5950 10650 5950
-Wire Wire Line
-	10650 5950 10650 6100
-Wire Wire Line
-	10650 5950 10650 5750
-Wire Wire Line
-	10650 5750 10550 5750
-Connection ~ 10650 5950
-Wire Wire Line
-	10650 5750 10650 5650
-Wire Wire Line
-	10650 5650 10550 5650
-Connection ~ 10650 5750
-Wire Wire Line
-	10650 5650 10650 4800
-Wire Wire Line
-	10650 4800 10550 4800
-Connection ~ 10650 5650
-Wire Wire Line
-	10650 4800 10650 4600
-Wire Wire Line
-	10650 2200 10550 2200
-Connection ~ 10650 4800
-Wire Wire Line
-	10550 2300 10650 2300
-Connection ~ 10650 2300
-Wire Wire Line
-	10650 2300 10650 2200
-Wire Wire Line
-	10550 2500 10650 2500
-Connection ~ 10650 2500
-Wire Wire Line
-	10650 2500 10650 2300
-Wire Wire Line
-	10550 3350 10650 3350
-Connection ~ 10650 3350
-Wire Wire Line
-	10650 3350 10650 2500
-Wire Wire Line
-	10550 3450 10650 3450
-Connection ~ 10650 3450
-Wire Wire Line
-	10650 3450 10650 3350
-Wire Wire Line
-	10550 3650 10650 3650
-Connection ~ 10650 3650
-Wire Wire Line
-	10650 3650 10650 3450
-Wire Wire Line
-	10550 4500 10650 4500
-Connection ~ 10650 4500
-Wire Wire Line
-	10650 4500 10650 3650
-Wire Wire Line
-	10550 4600 10650 4600
-Connection ~ 10650 4600
-Wire Wire Line
-	10650 4600 10650 4500
-Wire Wire Line
-	9350 5850 9250 5850
-Connection ~ 10650 2200
-Wire Wire Line
-	9350 2400 9250 2400
-Connection ~ 9250 2400
-Wire Wire Line
-	9350 3550 9250 3550
-Connection ~ 9250 3550
-Wire Wire Line
-	9250 3550 9250 2400
-Wire Wire Line
-	9350 4700 9250 4700
-Connection ~ 9250 4700
-Wire Wire Line
-	9250 4700 9250 4450
-$Comp
-L power:VDD #PWR0110
-U 1 1 6B221F44
-P 3450 6550
-F 0 "#PWR0110" H 3450 6400 50  0001 C CNN
-F 1 "VDD" H 3465 6723 50  0000 C CNN
-F 2 "" H 3450 6550 50  0001 C CNN
-F 3 "" H 3450 6550 50  0001 C CNN
-	1    3450 6550
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VDD #PWR0111
-U 1 1 6B222BD6
-P 3450 4450
-F 0 "#PWR0111" H 3450 4300 50  0001 C CNN
-F 1 "VDD" H 3465 4623 50  0000 C CNN
-F 2 "" H 3450 4450 50  0001 C CNN
-F 3 "" H 3450 4450 50  0001 C CNN
-	1    3450 4450
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VDD #PWR0112
-U 1 1 6B223A4B
-P 3450 2350
-F 0 "#PWR0112" H 3450 2200 50  0001 C CNN
-F 1 "VDD" H 3465 2523 50  0000 C CNN
-F 2 "" H 3450 2350 50  0001 C CNN
-F 3 "" H 3450 2350 50  0001 C CNN
-	1    3450 2350
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3350 2350 3450 2350
-Wire Wire Line
-	3350 4450 3450 4450
-Wire Wire Line
-	3350 6550 3450 6550
-$Comp
-L power:VDD #PWR0113
-U 1 1 6B4D3381
-P 3450 8650
-F 0 "#PWR0113" H 3450 8500 50  0001 C CNN
-F 1 "VDD" H 3465 8823 50  0000 C CNN
-F 2 "" H 3450 8650 50  0001 C CNN
-F 3 "" H 3450 8650 50  0001 C CNN
-	1    3450 8650
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR0114
-U 1 1 6B4D3F4C
-P 2600 10750
-F 0 "#PWR0114" H 2600 10500 50  0001 C CNN
-F 1 "GND" H 2605 10577 50  0000 C CNN
-F 2 "" H 2600 10750 50  0001 C CNN
-F 3 "" H 2600 10750 50  0001 C CNN
-	1    2600 10750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2600 10750 2600 10450
-Wire Wire Line
-	2600 4150 3250 4150
-Wire Wire Line
-	3250 6250 2600 6250
-Connection ~ 2600 6250
-Wire Wire Line
-	2600 6250 2600 4150
-Wire Wire Line
-	3250 8350 2600 8350
-Connection ~ 2600 8350
-Wire Wire Line
-	2600 8350 2600 6250
-Wire Wire Line
-	3250 10450 2600 10450
-Connection ~ 2600 10450
-Wire Wire Line
-	2600 10450 2600 8350
-Wire Wire Line
-	3350 8650 3450 8650
-$Comp
-L power:VCC #PWR0115
-U 1 1 6B95D924
-P 2250 2350
-F 0 "#PWR0115" H 2250 2200 50  0001 C CNN
-F 1 "VCC" H 2265 2523 50  0000 C CNN
-F 2 "" H 2250 2350 50  0001 C CNN
-F 3 "" H 2250 2350 50  0001 C CNN
-	1    2250 2350
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3150 2350 2250 2350
-Wire Wire Line
-	2250 2350 2250 4450
-Wire Wire Line
-	2250 8650 3150 8650
-Connection ~ 2250 2350
-Wire Wire Line
-	3150 6550 2250 6550
-Connection ~ 2250 6550
-Wire Wire Line
-	2250 6550 2250 8650
-Wire Wire Line
-	3150 4450 2250 4450
-Connection ~ 2250 4450
-Wire Wire Line
-	2250 4450 2250 6550
-$Comp
-L power:VCC #PWR0116
-U 1 1 6BD1282F
-P 5550 4600
-F 0 "#PWR0116" H 5550 4450 50  0001 C CNN
-F 1 "VCC" H 5565 4773 50  0000 C CNN
-F 2 "" H 5550 4600 50  0001 C CNN
-F 3 "" H 5550 4600 50  0001 C CNN
-	1    5550 4600
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6100 5250 5550 5250
-Wire Wire Line
-	5550 5250 5550 4600
-$Comp
-L power:GND #PWR0117
-U 1 1 6BEF56D9
-P 6000 9800
-F 0 "#PWR0117" H 6000 9550 50  0001 C CNN
-F 1 "GND" H 6005 9627 50  0000 C CNN
-F 2 "" H 6000 9800 50  0001 C CNN
-F 3 "" H 6000 9800 50  0001 C CNN
-	1    6000 9800
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6000 9800 6000 7400
-Wire Wire Line
-	6000 5050 6100 5050
-Wire Wire Line
-	6100 5150 6000 5150
-Connection ~ 6000 5150
-Wire Wire Line
-	6000 5150 6000 5050
-Wire Wire Line
-	6100 7300 6000 7300
-Connection ~ 6000 7300
-Wire Wire Line
-	6000 7300 6000 5150
-Wire Wire Line
-	6100 7400 6000 7400
-Connection ~ 6000 7400
-Wire Wire Line
-	6000 7400 6000 7300
-Wire Wire Line
-	8000 4450 9250 4450
-Connection ~ 9250 4450
-Wire Wire Line
-	9250 4450 9250 3550
-$Comp
-L power:GND #PWR0119
-U 1 1 6C78DAD7
-P 11900 6400
-F 0 "#PWR0119" H 11900 6150 50  0001 C CNN
-F 1 "GND" H 11905 6227 50  0000 C CNN
-F 2 "" H 11900 6400 50  0001 C CNN
-F 3 "" H 11900 6400 50  0001 C CNN
-	1    11900 6400
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	11900 6400 11900 6350
-Wire Wire Line
-	11900 6350 11950 6350
-Wire Wire Line
-	11500 1750 11500 3550
-Wire Wire Line
-	11500 3550 11950 3550
-Wire Wire Line
-	11500 3550 11500 5750
-Wire Wire Line
-	11500 5750 11950 5750
-Connection ~ 11500 3550
-Wire Wire Line
-	6100 4750 6100 1750
-Wire Wire Line
-	6100 1750 11500 1750
-Wire Wire Line
-	11950 3950 11450 3950
-Wire Wire Line
-	11450 3950 11450 6150
-Wire Wire Line
-	11450 6150 11950 6150
-Wire Wire Line
-	8000 6550 8200 6550
-Wire Wire Line
-	8200 6550 8200 6500
-Wire Wire Line
-	8200 6500 10950 6500
-Wire Wire Line
-	10950 6500 10950 3750
-Wire Wire Line
-	10950 3750 11950 3750
-Wire Wire Line
-	8000 6650 8200 6650
-Wire Wire Line
-	8200 6650 8200 6800
-Wire Wire Line
-	8200 6800 11000 6800
-Wire Wire Line
-	11000 6800 11000 5950
-Wire Wire Line
-	11000 5950 11950 5950
-Wire Wire Line
-	9250 1850 10650 1850
-Wire Wire Line
-	10650 1850 10650 2200
-Wire Wire Line
-	9250 1850 9250 2400
-NoConn ~ 11950 4150
-NoConn ~ 14300 4550
-NoConn ~ 14300 4850
-NoConn ~ 16100 4850
-NoConn ~ 16100 5050
-NoConn ~ 16100 6100
-NoConn ~ 16100 6300
-NoConn ~ 14300 6100
-NoConn ~ 14300 5800
-NoConn ~ 17800 4550
-NoConn ~ 17800 4850
-NoConn ~ 17800 5800
-NoConn ~ 17800 6100
-NoConn ~ 19600 6100
-NoConn ~ 19600 6300
-NoConn ~ 19600 5050
-NoConn ~ 19600 4850
-NoConn ~ 20400 4900
-NoConn ~ 20400 4600
-NoConn ~ 22200 4900
-NoConn ~ 22200 5100
-NoConn ~ 22200 6150
-NoConn ~ 22200 6350
-NoConn ~ 20400 6150
-NoConn ~ 20400 5850
-NoConn ~ 20400 7100
-NoConn ~ 20400 7400
-NoConn ~ 22200 7400
-NoConn ~ 22200 7600
-NoConn ~ 22200 8650
-NoConn ~ 22200 8850
-NoConn ~ 20400 8650
-NoConn ~ 20400 8350
-NoConn ~ 19600 7350
-NoConn ~ 19600 7550
-NoConn ~ 19600 8600
-NoConn ~ 19600 8800
-NoConn ~ 17800 8600
-NoConn ~ 17800 8300
-NoConn ~ 17800 7350
-NoConn ~ 17800 7050
-NoConn ~ 16100 7350
-NoConn ~ 16100 7550
-NoConn ~ 14300 7350
-NoConn ~ 14300 7050
-NoConn ~ 14300 8600
-NoConn ~ 14300 8300
-NoConn ~ 16100 8600
-NoConn ~ 16100 8800
-NoConn ~ 17800 9550
-NoConn ~ 17800 9850
-NoConn ~ 17800 10800
-NoConn ~ 17800 11100
-NoConn ~ 19600 11300
-NoConn ~ 19600 11100
-NoConn ~ 20400 11150
-NoConn ~ 20400 10850
-NoConn ~ 22200 11350
-NoConn ~ 22200 11150
-NoConn ~ 22200 10100
-NoConn ~ 22200 9900
-NoConn ~ 20400 9900
-NoConn ~ 20400 9600
-NoConn ~ 16150 10000
-NoConn ~ 16150 10650
-NoConn ~ 16150 11300
-NoConn ~ 16150 11950
-NoConn ~ 14300 11950
-NoConn ~ 14300 11300
-NoConn ~ 14300 10650
-NoConn ~ 14300 10000
-NoConn ~ 12500 11350
-NoConn ~ 12500 10650
-NoConn ~ 12500 10000
-NoConn ~ 8000 5950
-NoConn ~ 8000 5850
-NoConn ~ 6100 7050
-NoConn ~ 6100 6950
-NoConn ~ 6100 6850
-NoConn ~ 6100 6750
-NoConn ~ 6100 6650
-NoConn ~ 6100 6550
-NoConn ~ 6100 6450
-NoConn ~ 6100 6350
-NoConn ~ 6100 6150
-NoConn ~ 6100 6050
-NoConn ~ 6100 5950
-NoConn ~ 6100 5850
-NoConn ~ 6100 5750
-NoConn ~ 6100 5650
-NoConn ~ 6100 5550
-NoConn ~ 6100 5450
-NoConn ~ 6100 4850
-NoConn ~ 8000 4350
-NoConn ~ 3700 2750
-NoConn ~ 3700 2950
-NoConn ~ 2800 2950
-NoConn ~ 2800 2750
-Text Label 13450 3250 0    20   ~ 0
-U1CS0
-Text Label 13450 3300 0    20   ~ 0
-U1CS1
-Text Label 13450 3350 0    20   ~ 0
-U1CS2
-Text Label 13450 3400 0    20   ~ 0
-U1CS3
-Text Label 13450 3450 0    20   ~ 0
-U1CS4
-Text Label 13450 3500 0    20   ~ 0
-U1CS5
-Text Label 13450 3550 0    20   ~ 0
-U1CS6
-Text Label 13450 3600 0    20   ~ 0
-U1CS7
-Text Label 13450 3650 0    20   ~ 0
-U1CS8
-Text Label 13450 3700 0    20   ~ 0
-U1CS9
-Text Label 13500 3750 0    20   ~ 0
-U1CS10
-Text Label 13550 3800 0    20   ~ 0
-U1CS11
-Text Label 8000 6850 0    20   ~ 0
-SCL
-Text Label 8000 6750 0    20   ~ 0
-SDA
-Text Label 9250 6150 0    20   ~ 0
-ENC1B
-Text Label 9250 6250 0    20   ~ 0
-ENC1A
-Wire Wire Line
-	9250 5850 9250 4700
-Wire Wire Line
-	9350 5000 8250 5000
-Text Label 9100 5000 0    20   ~ 0
-ENC2B
-Text Label 9100 5100 0    20   ~ 0
-ENC2A
-Text Label 9100 3850 0    20   ~ 0
-ENC3B
-Text Label 9100 3950 0    20   ~ 0
-ENC3A
-Text Label 9100 2700 0    20   ~ 0
-ENC4B
-Text Label 9100 2800 0    20   ~ 0
-ENC4A
-Text Label 10700 5200 0    20   ~ 0
-ENC2S
-Text Label 10650 6350 0    20   ~ 0
-ENC1S
-Text Label 10750 4050 0    20   ~ 0
-ENC3S
-Text Label 10800 2900 0    20   ~ 0
-ENC4S
-Text Label 13350 5450 0    20   ~ 0
-U2CS0
-Text Label 13350 5550 0    20   ~ 0
-U2CS1
-Text Label 13350 5650 0    20   ~ 0
-U2CS2
-Text Label 13350 5750 0    20   ~ 0
-U2CS3
-Text Label 13350 5850 0    20   ~ 0
-U2CS4
-Text Label 13350 5950 0    20   ~ 0
-U2CS5
-Text Label 13350 6050 0    20   ~ 0
-U2CS6
-Text Label 13350 6150 0    20   ~ 0
-U2CS7
-Text Label 13350 6250 0    20   ~ 0
-U2CS8
-Text Label 13350 6350 0    20   ~ 0
-U2CS9
-Text Label 13350 6450 0    20   ~ 0
-U2CS10
-Text Label 13350 6550 0    20   ~ 0
-U2CS11
-Text Label 11850 5950 0    20   ~ 0
-U2IRQ
-Text Label 11850 6150 0    20   ~ 0
-SYNC
-Text Label 11850 5750 0    20   ~ 0
-RST
-Text Label 11700 3750 0    20   ~ 0
-U1IRQ
-Text Label 11000 10200 0    20   ~ 0
-SW1
-Text Label 11000 10850 0    20   ~ 0
-SW2
-Text Label 11000 11550 0    20   ~ 0
-SW3
-Text Label 13050 10200 0    20   ~ 0
-SW4
-Text Label 13050 10850 0    20   ~ 0
-SW5
-Text Label 13050 11500 0    20   ~ 0
-SW6
-Text Label 13000 12850 0    20   ~ 0
-SW7
-Text Label 14900 10200 0    20   ~ 0
-SW8
-Text Label 14900 10850 0    20   ~ 0
-SW9
-Text Label 14900 11500 0    20   ~ 0
-SW10
-Text Label 14800 13050 0    20   ~ 0
-SW11
-NoConn ~ 8000 7200
-NoConn ~ 8000 7100
-NoConn ~ 8000 6450
-NoConn ~ 8000 6350
-NoConn ~ 8000 5350
-NoConn ~ 6100 4950
-Wire Wire Line
-	1050 5450 1050 3350
-Wire Wire Line
-	1750 5450 1850 5450
-Wire Wire Line
-	1000 5550 1000 3550
-Wire Wire Line
-	1000 3550 2800 3550
-Wire Wire Line
-	1750 5550 1900 5550
-Wire Wire Line
-	1900 5550 1900 3750
-Wire Wire Line
-	1900 3750 2800 3750
-Wire Wire Line
-	950  5650 950  4850
-Wire Wire Line
-	950  4850 2800 4850
-Wire Wire Line
-	1750 5750 2000 5750
-Wire Wire Line
-	1750 5850 2800 5850
-Wire Wire Line
-	1750 5950 2200 5950
-Wire Wire Line
-	1750 6050 2150 6050
-Wire Wire Line
-	2150 6050 2150 7150
-Wire Wire Line
-	2100 6150 2100 7950
-Wire Wire Line
-	2100 7950 2800 7950
-Wire Wire Line
-	1750 6250 2050 6250
-Wire Wire Line
-	2000 6350 2000 9250
-Wire Wire Line
-	1950 6450 1950 10050
-Wire Wire Line
-	1950 10050 2800 10050
-Wire Wire Line
-	1250 5350 1250 4450
-Wire Wire Line
-	1250 4450 1750 4450
-Connection ~ 1750 4450
-Wire Wire Line
-	1750 4450 2250 4450
-Wire Wire Line
-	1750 4450 1750 5350
-Wire Wire Line
-	1250 6450 1150 6450
-Wire Wire Line
-	1150 6450 1150 9850
-Wire Wire Line
-	1150 9850 2800 9850
-Wire Wire Line
-	1050 6250 1050 9050
-Wire Wire Line
-	1050 9050 2800 9050
-Wire Wire Line
-	1000 6150 1000 7750
-Wire Wire Line
-	1000 7750 2800 7750
-Wire Wire Line
-	900  5950 900  6950
-Wire Wire Line
-	900  6950 2800 6950
-Wire Wire Line
-	850  6900 2350 6900
-Wire Wire Line
-	2350 6900 2350 5650
-Wire Wire Line
-	2350 5650 2800 5650
-Wire Wire Line
-	800  5750 800  6850
-Wire Wire Line
-	800  6850 2300 6850
-Wire Wire Line
-	2300 6850 2300 5450
-Wire Wire Line
-	2000 5050 2800 5050
-Wire Wire Line
-	2000 5050 2000 5750
-Wire Wire Line
-	2200 5950 2200 7350
-Wire Wire Line
-	2800 7150 2150 7150
-Wire Wire Line
-	2050 6250 2050 9450
-Wire Wire Line
-	2800 9250 2000 9250
-Wire Wire Line
-	2800 9450 2050 9450
-Wire Wire Line
-	2800 9650 1100 9650
-Wire Wire Line
-	1100 6350 1100 9650
-Wire Wire Line
-	2800 7350 2200 7350
-Wire Wire Line
-	2800 5450 2300 5450
-Wire Wire Line
-	2800 3150 1850 3150
-Wire Wire Line
-	1850 3150 1850 5450
-Wire Wire Line
-	2800 3350 1050 3350
-Wire Wire Line
-	2800 7550 950  7550
-Wire Wire Line
-	2800 5250 1950 5250
-Wire Wire Line
-	1950 5250 1950 5650
-Wire Wire Line
-	11950 6850 11700 6850
-Wire Wire Line
-	11700 6850 11700 6750
-Connection ~ 11700 6750
-Wire Wire Line
-	11950 6950 11700 6950
-Wire Wire Line
-	11700 6950 11700 6850
-Connection ~ 11700 6850
-Wire Wire Line
-	11950 7050 11700 7050
-Wire Wire Line
-	11700 7050 11700 6950
-Connection ~ 11700 6950
-Wire Wire Line
-	12950 6950 13050 6950
-Wire Wire Line
-	13050 6950 13050 7150
-Connection ~ 13050 7150
-Wire Wire Line
-	12950 6850 13050 6850
-Wire Wire Line
-	13050 6850 13050 6950
-Connection ~ 13050 6950
-Wire Wire Line
-	12950 6750 13050 6750
-Wire Wire Line
-	13050 6750 13050 6850
-Connection ~ 13050 6850
-NoConn ~ 12950 7050
-NoConn ~ 11950 7150
-Wire Wire Line
-	12950 4550 13050 4550
-Wire Wire Line
-	13050 4550 13050 4750
-Connection ~ 13050 4950
-Wire Wire Line
-	12950 4850 13050 4850
-Connection ~ 13050 4850
-Wire Wire Line
-	13050 4850 13050 4950
-Wire Wire Line
-	12950 4750 13050 4750
-Connection ~ 13050 4750
-Wire Wire Line
-	13050 4750 13050 4850
-NoConn ~ 12950 4650
-NoConn ~ 11950 4950
-$Comp
-L Mechanical:MountingHole_Pad H1
-U 1 1 6D94AB69
-P 1350 1150
-F 0 "H1" H 1450 1199 50  0001 L CNN
-F 1 "MountingHole_Pad" H 1450 1153 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 1350 1150 50  0001 C CNN
-F 3 "~" H 1350 1150 50  0001 C CNN
-	1    1350 1150
-	1    0    0    -1  
-$EndComp
-$Comp
-L Mechanical:MountingHole_Pad H2
-U 1 1 6D94B9A4
-P 1350 1550
-F 0 "H2" H 1450 1599 50  0001 L CNN
-F 1 "MountingHole_Pad" H 1450 1553 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 1350 1550 50  0001 C CNN
-F 3 "~" H 1350 1550 50  0001 C CNN
-	1    1350 1550
+L Mechanical:MountingHole_Pad H4
+U 1 1 6D94D501
+P 20800 14400
+F 0 "H4" H 20900 14449 50  0001 L CNN
+F 1 "MountingHole_Pad" H 20900 14403 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 20800 14400 50  0001 C CNN
+F 3 "~" H 20800 14400 50  0001 C CNN
+	1    20800 14400
 	1    0    0    -1  
 $EndComp
 $Comp
 L Mechanical:MountingHole_Pad H3
 U 1 1 6D94C676
-P 2450 1150
-F 0 "H3" H 2550 1199 50  0001 L CNN
-F 1 "MountingHole_Pad" H 2550 1153 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 2450 1150 50  0001 C CNN
-F 3 "~" H 2450 1150 50  0001 C CNN
-	1    2450 1150
+P 20800 14000
+F 0 "H3" H 20900 14049 50  0001 L CNN
+F 1 "MountingHole_Pad" H 20900 14003 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 20800 14000 50  0001 C CNN
+F 3 "~" H 20800 14000 50  0001 C CNN
+	1    20800 14000
 	1    0    0    -1  
 $EndComp
 $Comp
-L Mechanical:MountingHole_Pad H4
-U 1 1 6D94D501
-P 2450 1550
-F 0 "H4" H 2550 1599 50  0001 L CNN
-F 1 "MountingHole_Pad" H 2550 1553 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 2450 1550 50  0001 C CNN
-F 3 "~" H 2450 1550 50  0001 C CNN
-	1    2450 1550
+L Mechanical:MountingHole_Pad H2
+U 1 1 6D94B9A4
+P 19700 14400
+F 0 "H2" H 19800 14449 50  0001 L CNN
+F 1 "MountingHole_Pad" H 19800 14403 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 19700 14400 50  0001 C CNN
+F 3 "~" H 19700 14400 50  0001 C CNN
+	1    19700 14400
 	1    0    0    -1  
 $EndComp
 $Comp
-L Mechanical:MountingHole_Pad H5
-U 1 1 6D94E4A4
-P 3550 1150
-F 0 "H5" H 3650 1199 50  0001 L CNN
-F 1 "MountingHole_Pad" H 3650 1153 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 3550 1150 50  0001 C CNN
-F 3 "~" H 3550 1150 50  0001 C CNN
-	1    3550 1150
+L Mechanical:MountingHole_Pad H1
+U 1 1 6D94AB69
+P 19700 14000
+F 0 "H1" H 19800 14049 50  0001 L CNN
+F 1 "MountingHole_Pad" H 19800 14003 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 19700 14000 50  0001 C CNN
+F 3 "~" H 19700 14000 50  0001 C CNN
+	1    19700 14000
+	1    0    0    -1  
+$EndComp
+Text Label 19200 12900 0    20   ~ 0
+SW11
+Text Label 19300 11350 0    20   ~ 0
+SW10
+Text Label 19300 10700 0    20   ~ 0
+SW9
+Text Label 19300 10050 0    20   ~ 0
+SW8
+Text Label 17400 12700 0    20   ~ 0
+SW7
+Text Label 17450 11350 0    20   ~ 0
+SW6
+Text Label 17450 10700 0    20   ~ 0
+SW5
+Text Label 17450 10050 0    20   ~ 0
+SW4
+Text Label 15400 11400 0    20   ~ 0
+SW3
+NoConn ~ 16900 9850
+NoConn ~ 16900 10500
+NoConn ~ 16900 11200
+NoConn ~ 18700 9850
+NoConn ~ 18700 10500
+NoConn ~ 18700 11150
+NoConn ~ 18700 11800
+NoConn ~ 20550 11800
+NoConn ~ 20550 11150
+NoConn ~ 20550 10500
+NoConn ~ 20550 9850
+Wire Wire Line
+	11500 3800 11500 6000
+Wire Wire Line
+	19350 12900 14800 12900
+Wire Wire Line
+	19350 12000 19350 12900
+Wire Wire Line
+	14850 12850 19150 12850
+Wire Wire Line
+	14900 12800 19100 12800
+Wire Wire Line
+	14950 12750 19050 12750
+Wire Wire Line
+	19150 11350 19150 12850
+Wire Wire Line
+	19350 11350 19150 11350
+Wire Wire Line
+	19100 10700 19350 10700
+Wire Wire Line
+	19050 10050 19350 10050
+Wire Wire Line
+	19100 10700 19100 12800
+Wire Wire Line
+	19050 10050 19050 12750
+Wire Wire Line
+	15000 12700 17500 12700
+Wire Wire Line
+	17300 11350 17500 11350
+Wire Wire Line
+	17250 10700 17500 10700
+Wire Wire Line
+	17200 10050 17500 10050
+$Comp
+L B3J-2100:B3J-2100 SW11
+U 1 1 61D431B8
+P 19350 11800
+F 0 "SW11" H 19950 12065 50  0000 C CNN
+F 1 "B3J-2100" H 19950 11974 50  0000 C CNN
+F 2 "simpanel:B3J2100" H 20400 11900 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 20400 11800 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 20400 11700 50  0001 L CNN "Description"
+F 5 "10.5" H 20400 11600 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 20400 11500 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 20400 11400 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 20400 11300 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 20400 11200 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 20400 11100 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 20400 11000 50  0001 L CNN "Mouser Price/Stock"
+	1    19350 11800
 	1    0    0    -1  
 $EndComp
 $Comp
-L Mechanical:MountingHole_Pad H6
-U 1 1 6D94F272
-P 3550 1550
-F 0 "H6" H 3650 1599 50  0001 L CNN
-F 1 "MountingHole_Pad" H 3650 1553 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.7mm_Pad_Via" H 3550 1550 50  0001 C CNN
-F 3 "~" H 3550 1550 50  0001 C CNN
-	1    3550 1550
+L B3J-2100:B3J-2100 SW10
+U 1 1 61D41FFD
+P 19350 11150
+F 0 "SW10" H 19950 11415 50  0000 C CNN
+F 1 "B3J-2100" H 19950 11324 50  0000 C CNN
+F 2 "B3J-2100:B3J2100" H 20400 11250 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 20400 11150 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 20400 11050 50  0001 L CNN "Description"
+F 5 "10.5" H 20400 10950 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 20400 10850 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 20400 10750 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 20400 10650 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 20400 10550 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 20400 10450 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 20400 10350 50  0001 L CNN "Mouser Price/Stock"
+	1    19350 11150
+	1    0    0    -1  
+$EndComp
+$Comp
+L B3J-2100:B3J-2100 SW9
+U 1 1 61D40CBA
+P 19350 10500
+F 0 "SW9" H 19950 10765 50  0000 C CNN
+F 1 "B3J-2100" H 19950 10674 50  0000 C CNN
+F 2 "B3J-2100:B3J2100" H 20400 10600 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 20400 10500 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 20400 10400 50  0001 L CNN "Description"
+F 5 "10.5" H 20400 10300 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 20400 10200 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 20400 10100 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 20400 10000 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 20400 9900 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 20400 9800 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 20400 9700 50  0001 L CNN "Mouser Price/Stock"
+	1    19350 10500
+	1    0    0    -1  
+$EndComp
+$Comp
+L B3J-2100:B3J-2100 SW8
+U 1 1 61D3E5A5
+P 19350 9850
+F 0 "SW8" H 19950 10115 50  0000 C CNN
+F 1 "B3J-2100" H 19950 10024 50  0000 C CNN
+F 2 "B3J-2100:B3J2100" H 20400 9950 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 20400 9850 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 20400 9750 50  0001 L CNN "Description"
+F 5 "10.5" H 20400 9650 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 20400 9550 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 20400 9450 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 20400 9350 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 20400 9250 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 20400 9150 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 20400 9050 50  0001 L CNN "Mouser Price/Stock"
+	1    19350 9850
+	1    0    0    -1  
+$EndComp
+$Comp
+L B3J-2100:B3J-2100 SW7
+U 1 1 61D48065
+P 17500 11800
+F 0 "SW7" H 18100 12065 50  0000 C CNN
+F 1 "B3J-2100" H 18100 11974 50  0000 C CNN
+F 2 "B3J-2100:B3J2100" H 18550 11900 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 18550 11800 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 18550 11700 50  0001 L CNN "Description"
+F 5 "10.5" H 18550 11600 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 18550 11500 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 18550 11400 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 18550 11300 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 18550 11200 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 18550 11100 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 18550 11000 50  0001 L CNN "Mouser Price/Stock"
+	1    17500 11800
+	1    0    0    -1  
+$EndComp
+$Comp
+L B3J-2100:B3J-2100 SW6
+U 1 1 61D46961
+P 17500 11150
+F 0 "SW6" H 18100 11415 50  0000 C CNN
+F 1 "B3J-2100" H 18100 11324 50  0000 C CNN
+F 2 "B3J-2100:B3J2100" H 18550 11250 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 18550 11150 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 18550 11050 50  0001 L CNN "Description"
+F 5 "10.5" H 18550 10950 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 18550 10850 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 18550 10750 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 18550 10650 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 18550 10550 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 18550 10450 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 18550 10350 50  0001 L CNN "Mouser Price/Stock"
+	1    17500 11150
+	1    0    0    -1  
+$EndComp
+$Comp
+L B3J-2100:B3J-2100 SW5
+U 1 1 61D45775
+P 17500 10500
+F 0 "SW5" H 18100 10765 50  0000 C CNN
+F 1 "B3J-2100" H 18100 10674 50  0000 C CNN
+F 2 "B3J-2100:B3J2100" H 18550 10600 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 18550 10500 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 18550 10400 50  0001 L CNN "Description"
+F 5 "10.5" H 18550 10300 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 18550 10200 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 18550 10100 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 18550 10000 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 18550 9900 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 18550 9800 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 18550 9700 50  0001 L CNN "Mouser Price/Stock"
+	1    17500 10500
+	1    0    0    -1  
+$EndComp
+$Comp
+L B3J-2100:B3J-2100 SW4
+U 1 1 61D44595
+P 17500 9850
+F 0 "SW4" H 18100 10115 50  0000 C CNN
+F 1 "B3J-2100" H 18100 10024 50  0000 C CNN
+F 2 "B3J-2100:B3J2100" H 18550 9950 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 18550 9850 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 18550 9750 50  0001 L CNN "Description"
+F 5 "10.5" H 18550 9650 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 18550 9550 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 18550 9450 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 18550 9350 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 18550 9250 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 18550 9150 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 18550 9050 50  0001 L CNN "Mouser Price/Stock"
+	1    17500 9850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0107
+U 1 1 635F6729
+P 17400 12200
+F 0 "#PWR0107" H 17400 11950 50  0001 C CNN
+F 1 "GND" H 17405 12027 50  0000 C CNN
+F 2 "" H 17400 12200 50  0001 C CNN
+F 3 "" H 17400 12200 50  0001 C CNN
+	1    17400 12200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0106
+U 1 1 635F7775
+P 19250 12200
+F 0 "#PWR0106" H 19250 11950 50  0001 C CNN
+F 1 "GND" H 19255 12027 50  0000 C CNN
+F 2 "" H 19250 12200 50  0001 C CNN
+F 3 "" H 19250 12200 50  0001 C CNN
+	1    19250 12200
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3550 1250 2450 1250
+	19350 11800 19250 11800
 Wire Wire Line
-	2450 1250 1650 1250
-Connection ~ 2450 1250
+	19250 11800 19250 12200
 Wire Wire Line
-	1350 1650 1650 1650
+	19350 11900 19350 11800
+Connection ~ 19350 11800
 Wire Wire Line
-	2450 1650 3550 1650
-Connection ~ 2450 1650
+	19350 11250 19350 11150
+Wire Wire Line
+	19350 11150 19250 11150
+Wire Wire Line
+	19250 11150 19250 11800
+Connection ~ 19350 11150
+Connection ~ 19250 11800
+Wire Wire Line
+	19350 10600 19350 10500
+Wire Wire Line
+	19350 10500 19250 10500
+Wire Wire Line
+	19250 10500 19250 11150
+Connection ~ 19350 10500
+Connection ~ 19250 11150
+Wire Wire Line
+	19350 9850 19350 9950
+Wire Wire Line
+	19350 9850 19250 9850
+Wire Wire Line
+	19250 9850 19250 10500
+Connection ~ 19350 9850
+Connection ~ 19250 10500
+Wire Wire Line
+	17500 11900 17500 11800
+Wire Wire Line
+	17500 11250 17500 11150
+Wire Wire Line
+	17500 10600 17500 10500
+Wire Wire Line
+	17500 9950 17500 9850
+Wire Wire Line
+	17500 9850 17400 9850
+Wire Wire Line
+	17400 9850 17400 10500
+Connection ~ 17500 9850
+Wire Wire Line
+	17500 11800 17400 11800
+Connection ~ 17500 11800
+Connection ~ 17400 11800
+Wire Wire Line
+	17400 11800 17400 12200
+Wire Wire Line
+	17500 11150 17400 11150
+Connection ~ 17500 11150
+Connection ~ 17400 11150
+Wire Wire Line
+	17400 11150 17400 11800
+Wire Wire Line
+	17500 10500 17400 10500
+Connection ~ 17500 10500
+Connection ~ 17400 10500
+Wire Wire Line
+	17400 10500 17400 11150
+Wire Wire Line
+	17300 11350 17300 12650
+Wire Wire Line
+	17500 12000 17500 12700
+Wire Wire Line
+	17300 12650 15050 12650
+Wire Wire Line
+	17250 12600 15100 12600
+Wire Wire Line
+	17250 10700 17250 12600
+Wire Wire Line
+	17200 12550 15150 12550
+Wire Wire Line
+	17200 10050 17200 12550
+Wire Wire Line
+	15700 11400 15200 11400
+Wire Wire Line
+	15600 11200 15600 11600
+Connection ~ 15600 11200
+Connection ~ 15700 11200
+Wire Wire Line
+	15700 11200 15600 11200
+Wire Wire Line
+	15600 10500 15600 11200
+Connection ~ 15600 10500
+Connection ~ 15700 10500
+Wire Wire Line
+	15700 10500 15600 10500
+Connection ~ 15700 9850
+Wire Wire Line
+	15600 9850 15600 10500
+Wire Wire Line
+	15700 9850 15600 9850
+Wire Wire Line
+	15700 9950 15700 9850
+Wire Wire Line
+	15700 10600 15700 10500
+Wire Wire Line
+	15700 11300 15700 11200
 $Comp
-L power:GND #PWR0109
-U 1 1 6DF576B9
-P 1650 1250
-F 0 "#PWR0109" H 1650 1000 50  0001 C CNN
-F 1 "GND" H 1655 1077 50  0000 C CNN
-F 2 "" H 1650 1250 50  0001 C CNN
-F 3 "" H 1650 1250 50  0001 C CNN
-	1    1650 1250
+L power:GND #PWR0105
+U 1 1 635F5BAC
+P 15600 11600
+F 0 "#PWR0105" H 15600 11350 50  0001 C CNN
+F 1 "GND" H 15605 11427 50  0000 C CNN
+F 2 "" H 15600 11600 50  0001 C CNN
+F 3 "" H 15600 11600 50  0001 C CNN
+	1    15600 11600
 	1    0    0    -1  
 $EndComp
-Connection ~ 1650 1250
-Wire Wire Line
-	1650 1250 1350 1250
 $Comp
-L power:GND #PWR0118
-U 1 1 6DF586B1
-P 1650 1650
-F 0 "#PWR0118" H 1650 1400 50  0001 C CNN
-F 1 "GND" H 1655 1477 50  0000 C CNN
-F 2 "" H 1650 1650 50  0001 C CNN
-F 3 "" H 1650 1650 50  0001 C CNN
-	1    1650 1650
+L B3J-2100:B3J-2100 SW2
+U 1 1 61D4A935
+P 15700 10500
+F 0 "SW2" H 16300 10765 50  0000 C CNN
+F 1 "B3J-2100" H 16300 10674 50  0000 C CNN
+F 2 "B3J-2100:B3J2100" H 16750 10600 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 16750 10500 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 16750 10400 50  0001 L CNN "Description"
+F 5 "10.5" H 16750 10300 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 16750 10200 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 16750 10100 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 16750 10000 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 16750 9900 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 16750 9800 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 16750 9700 50  0001 L CNN "Mouser Price/Stock"
+	1    15700 10500
 	1    0    0    -1  
 $EndComp
-Connection ~ 1650 1650
-Wire Wire Line
-	1650 1650 2450 1650
 $Comp
-L Connector:Screw_Terminal_01x03 J1
-U 1 1 6E344525
-P 4950 1350
-F 0 "J1" H 4868 1025 50  0000 C CNN
-F 1 "Power" H 4868 1116 50  0000 C CNN
-F 2 "Connector_Molex:Molex_Micro-Fit_3.0_43650-0300_1x03_P3.00mm_Horizontal" H 4950 1350 50  0001 C CNN
-F 3 "~" H 4950 1350 50  0001 C CNN
-	1    4950 1350
+L B3J-2100:B3J-2100 SW3
+U 1 1 61D4C095
+P 15700 11200
+F 0 "SW3" H 16300 11465 50  0000 C CNN
+F 1 "B3J-2100" H 16300 11374 50  0000 C CNN
+F 2 "B3J-2100:B3J2100" H 16750 11300 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 16750 11200 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 16750 11100 50  0001 L CNN "Description"
+F 5 "10.5" H 16750 11000 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 16750 10900 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 16750 10800 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 16750 10700 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 16750 10600 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 16750 10500 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 16750 10400 50  0001 L CNN "Mouser Price/Stock"
+	1    15700 11200
+	1    0    0    -1  
+$EndComp
+$Comp
+L B3J-2100:B3J-2100 SW1
+U 1 1 61D48F9B
+P 15700 9850
+F 0 "SW1" H 16300 10115 50  0000 C CNN
+F 1 "B3J-2100" H 16300 10024 50  0000 C CNN
+F 2 "simpanel:B3J2100" H 16750 9950 50  0001 L CNN
+F 3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-20/DSA-391676.pdf" H 16750 9850 50  0001 L CNN
+F 4 "Tactile Switches TACTILE SWITCH Mechanical Key Switch (Hinged)" H 16750 9750 50  0001 L CNN "Description"
+F 5 "10.5" H 16750 9650 50  0001 L CNN "Height"
+F 6 "Omron Electronics" H 16750 9550 50  0001 L CNN "Manufacturer_Name"
+F 7 "B3J-2100" H 16750 9450 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 16750 9350 50  0001 L CNN "Arrow Part Number"
+F 9 "" H 16750 9250 50  0001 L CNN "Arrow Price/Stock"
+F 10 "653-B3J-2100" H 16750 9150 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.co.uk/ProductDetail/Omron-Electronics/B3J-2100?qs=yi%2F4cWNpNMyoOIlU7jaueg%3D%3D" H 16750 9050 50  0001 L CNN "Mouser Price/Stock"
+	1    15700 9850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11550 3400 11550 5600
+$Comp
+L eec:AS1130-BSST U2
+U 1 1 5FD03C01
+P 11900 3100
+F 0 "U2" H 12500 3365 50  0000 C CNN
+F 1 "AS1130-BSST" H 12500 3274 50  0000 C CNN
+F 2 "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm" H 11900 3500 50  0001 L CNN
+F 3 "http://www.ams.com/eng/content/download/185846/834724/105034" H 11900 3600 50  0001 L CNN
+F 4 "MO-150" H 11900 3700 50  0001 L CNN "Code  JEDEC"
+F 5 "Manufacturer URL" H 11900 3800 50  0001 L CNN "Component Link 1 Description"
+F 6 "www.ams.com" H 11900 3900 50  0001 L CNN "Component Link 1 URL"
+F 7 "Rev. 1.07" H 11900 4000 50  0001 L CNN "Datasheet Version"
+F 8 "true" H 11900 4100 50  0001 L CNN "Error Detection"
+F 9 "8-bit PWM & analog current control, dynamic headroom control" H 11900 4200 50  0001 L CNN "Features"
+F 10 "2.5" H 11900 4300 50  0001 L CNN "LED Current per Output mA"
+F 11 "2" H 11900 4400 50  0001 L CNN "LED to LED Matching "
+F 12 "Surface Mount" H 11900 4500 50  0001 L CNN "Mounting Technology"
+F 13 "132" H 11900 4600 50  0001 L CNN "Outputs"
+F 14 "28-Pin Shrink Small Outline Package, 10.2 x 5.3 mm Body, 0.65 mm Pitch" H 11900 4700 50  0001 L CNN "Package Description"
+F 15 "N/C, 07/2011" H 11900 4800 50  0001 L CNN "Package Version"
+F 16 "true" H 11900 4900 50  0001 L CNN "Read back"
+F 17 "2.7 to 5.5" H 11900 5000 50  0001 L CNN "Supply Voltage V"
+F 18 "IC" H 11900 5100 50  0001 L CNN "category"
+F 19 "4367283" H 11900 5200 50  0001 L CNN "ciiva ids"
+F 20 "598dcdd5055ccc55" H 11900 5300 50  0001 L CNN "library id"
+F 21 "AMS" H 11900 5400 50  0001 L CNN "manufacturer"
+F 22 "SSOP-28" H 11900 5500 50  0001 L CNN "package"
+F 23 "1394513892" H 11900 5600 50  0001 L CNN "release date"
+F 24 "660BAB0B-1A30-45A6-8177-846E59C4C6EC" H 11900 5700 50  0001 L CNN "vault revision"
+F 25 "yes" H 11900 5800 50  0001 L CNN "imported"
+	1    11900 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L eec:AS1130-BSST U3
+U 1 1 5FD05F4A
+P 11900 5300
+F 0 "U3" H 12500 5565 50  0000 C CNN
+F 1 "AS1130-BSST" H 12500 5474 50  0000 C CNN
+F 2 "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm" H 11900 5700 50  0001 L CNN
+F 3 "http://www.ams.com/eng/content/download/185846/834724/105034" H 11900 5800 50  0001 L CNN
+F 4 "MO-150" H 11900 5900 50  0001 L CNN "Code  JEDEC"
+F 5 "Manufacturer URL" H 11900 6000 50  0001 L CNN "Component Link 1 Description"
+F 6 "www.ams.com" H 11900 6100 50  0001 L CNN "Component Link 1 URL"
+F 7 "Rev. 1.07" H 11900 6200 50  0001 L CNN "Datasheet Version"
+F 8 "true" H 11900 6300 50  0001 L CNN "Error Detection"
+F 9 "8-bit PWM & analog current control, dynamic headroom control" H 11900 6400 50  0001 L CNN "Features"
+F 10 "2.5" H 11900 6500 50  0001 L CNN "LED Current per Output mA"
+F 11 "2" H 11900 6600 50  0001 L CNN "LED to LED Matching "
+F 12 "Surface Mount" H 11900 6700 50  0001 L CNN "Mounting Technology"
+F 13 "132" H 11900 6800 50  0001 L CNN "Outputs"
+F 14 "28-Pin Shrink Small Outline Package, 10.2 x 5.3 mm Body, 0.65 mm Pitch" H 11900 6900 50  0001 L CNN "Package Description"
+F 15 "N/C, 07/2011" H 11900 7000 50  0001 L CNN "Package Version"
+F 16 "true" H 11900 7100 50  0001 L CNN "Read back"
+F 17 "2.7 to 5.5" H 11900 7200 50  0001 L CNN "Supply Voltage V"
+F 18 "IC" H 11900 7300 50  0001 L CNN "category"
+F 19 "4367283" H 11900 7400 50  0001 L CNN "ciiva ids"
+F 20 "598dcdd5055ccc55" H 11900 7500 50  0001 L CNN "library id"
+F 21 "AMS" H 11900 7600 50  0001 L CNN "manufacturer"
+F 22 "SSOP-28" H 11900 7700 50  0001 L CNN "package"
+F 23 "1394513892" H 11900 7800 50  0001 L CNN "release date"
+F 24 "660BAB0B-1A30-45A6-8177-846E59C4C6EC" H 11900 7900 50  0001 L CNN "vault revision"
+F 25 "yes" H 11900 8000 50  0001 L CNN "imported"
+	1    11900 5300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11750 6600 12000 6600
+Connection ~ 12000 4500
+Wire Wire Line
+	12000 4500 12000 4400
+Connection ~ 12000 4600
+Wire Wire Line
+	12000 4600 12000 4500
+Wire Wire Line
+	12000 4700 12000 4600
+$Comp
+L power:GND #PWR0103
+U 1 1 62CBA5C1
+P 13100 4900
+F 0 "#PWR0103" H 13100 4650 50  0001 C CNN
+F 1 "GND" H 13105 4727 50  0000 C CNN
+F 2 "" H 13100 4900 50  0001 C CNN
+F 3 "" H 13100 4900 50  0001 C CNN
+	1    13100 4900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0104
+U 1 1 62CBB729
+P 13100 7100
+F 0 "#PWR0104" H 13100 6850 50  0001 C CNN
+F 1 "GND" H 13105 6927 50  0000 C CNN
+F 2 "" H 13100 7100 50  0001 C CNN
+F 3 "" H 13100 7100 50  0001 C CNN
+	1    13100 7100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13100 7100 13100 7000
+Wire Wire Line
+	13100 7000 13000 7000
+Wire Wire Line
+	13100 4900 13100 4800
+Wire Wire Line
+	13100 4800 13000 4800
+$Comp
+L power:GND #PWR0119
+U 1 1 6C78DAD7
+P 11950 6250
+F 0 "#PWR0119" H 11950 6000 50  0001 C CNN
+F 1 "GND" H 11955 6077 50  0000 C CNN
+F 2 "" H 11950 6250 50  0001 C CNN
+F 3 "" H 11950 6250 50  0001 C CNN
+	1    11950 6250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11950 6250 11950 6200
+Wire Wire Line
+	11950 6200 12000 6200
+Wire Wire Line
+	11550 3400 12000 3400
+Wire Wire Line
+	11550 5600 12000 5600
+Wire Wire Line
+	12000 3800 11500 3800
+Wire Wire Line
+	11500 6000 12000 6000
+NoConn ~ 12000 4000
+Wire Wire Line
+	12000 6700 11750 6700
+Wire Wire Line
+	11750 6700 11750 6600
+Wire Wire Line
+	12000 6800 11750 6800
+Wire Wire Line
+	11750 6800 11750 6700
+Connection ~ 11750 6700
+Wire Wire Line
+	12000 6900 11750 6900
+Wire Wire Line
+	11750 6900 11750 6800
+Connection ~ 11750 6800
+Wire Wire Line
+	13000 6800 13100 6800
+Wire Wire Line
+	13100 6800 13100 6900
+Connection ~ 13100 7000
+Wire Wire Line
+	13000 6700 13100 6700
+Wire Wire Line
+	13100 6700 13100 6800
+Connection ~ 13100 6800
+Wire Wire Line
+	13000 6600 13100 6600
+Wire Wire Line
+	13100 6600 13100 6700
+Connection ~ 13100 6700
+Wire Wire Line
+	13000 4400 13100 4400
+Wire Wire Line
+	13100 4400 13100 4500
+Connection ~ 13100 4800
+Wire Wire Line
+	13000 4700 13100 4700
+Connection ~ 13100 4700
+Wire Wire Line
+	13100 4700 13100 4800
+Wire Wire Line
+	13000 4600 13100 4600
+Connection ~ 13100 4600
+Wire Wire Line
+	13100 4600 13100 4700
+Wire Wire Line
+	10200 10050 15700 10050
+Wire Wire Line
+	15700 10700 15250 10700
+Wire Wire Line
+	15250 10700 15250 10100
+Wire Wire Line
+	15250 10100 10150 10100
+Wire Wire Line
+	15200 11400 15200 10150
+Wire Wire Line
+	15200 10150 10100 10150
+Wire Wire Line
+	15150 12550 15150 10200
+Wire Wire Line
+	15100 12600 15100 10250
+Wire Wire Line
+	15050 12650 15050 10300
+Wire Wire Line
+	15000 12700 15000 10350
+Wire Wire Line
+	14950 12750 14950 10400
+Wire Wire Line
+	14900 12800 14900 10450
+Wire Wire Line
+	14850 12850 14850 10500
+Wire Wire Line
+	14800 12900 14800 10550
+Wire Wire Line
+	10050 10200 15150 10200
+Wire Wire Line
+	10000 10250 15100 10250
+Wire Wire Line
+	9950 10300 15050 10300
+Wire Wire Line
+	9900 10350 15000 10350
+Wire Wire Line
+	9850 10400 14950 10400
+Wire Wire Line
+	9800 10450 14900 10450
+Wire Wire Line
+	9750 10500 14850 10500
+Wire Wire Line
+	9700 10550 14800 10550
+Wire Wire Line
+	11600 5400 12000 5400
+Wire Wire Line
+	11600 3200 12000 3200
+Wire Wire Line
+	11650 5300 12000 5300
+Wire Wire Line
+	11650 3100 12000 3100
+Wire Wire Line
+	11850 4400 12000 4400
+Connection ~ 12000 4400
+$Comp
+L pecr11:PEC11R-4220F-S0024 ENC1
+U 1 1 6922AA5D
+P 14200 15400
+F 0 "ENC1" H 14900 14435 50  0000 C CNN
+F 1 "PEC11R-4220F-S0024" H 14900 14526 50  0000 C CNN
+F 2 "pecr11:Bourns-PEC11R-4220F-S0024-0-0-0" H 14200 15800 50  0001 L CNN
+F 3 "https://www.bourns.com/docs/product-datasheets/pec11r.pdf?sfvrsn=bb617cbf_6" H 14200 15900 50  0001 L CNN
+F 4 "Enc" H 14200 16000 50  0001 L CNN "category"
+F 5 "10mA" H 14200 16100 50  0001 L CNN "current rating"
+F 6 "Yes" H 14200 16200 50  0001 L CNN "detend"
+F 7 "Electromechanical" H 14200 16300 50  0001 L CNN "device class L1"
+F 8 "Switches" H 14200 16400 50  0001 L CNN "device class L2"
+F 9 "Encoders" H 14200 16500 50  0001 L CNN "device class L3"
+F 10 "ROTARY ENCODER MECHANICAL 24PPR" H 14200 16600 50  0001 L CNN "digikey description"
+F 11 "PEC11R-4220F-S0024-ND" H 14200 16700 50  0001 L CNN "digikey part number"
+F 12 "Incremental" H 14200 16800 50  0001 L CNN "encoder type"
+F 13 "27.3mm" H 14200 16900 50  0001 L CNN "height"
+F 14 "yes" H 14200 17000 50  0001 L CNN "lead free"
+F 15 "456a2eefc9d34d73" H 14200 17100 50  0001 L CNN "library id"
+F 16 "Bourns" H 14200 17200 50  0001 L CNN "manufacturer"
+F 17 "Encoders 20mm SHAFT w/SWITCH" H 14200 17300 50  0001 L CNN "mouser description"
+F 18 "652-PEC11R-4220F-S24" H 14200 17400 50  0001 L CNN "mouser part number"
+F 19 "1" H 14200 17500 50  0001 L CNN "number of circuits"
+F 20 "ENC_PTH_12MM5_13MM4" H 14200 17600 50  0001 L CNN "package"
+F 21 "24" H 14200 17700 50  0001 L CNN "pulses per rev"
+F 22 "yes" H 14200 17800 50  0001 L CNN "rohs"
+F 23 "+70°C" H 14200 17900 50  0001 L CNN "temperature range high"
+F 24 "30°C" H 14200 18000 50  0001 L CNN "temperature range low"
+F 25 "5V" H 14200 18100 50  0001 L CNN "voltage rating DC"
+	1    14200 15400
 	-1   0    0    1   
 $EndComp
 $Comp
-L power:GND #PWR0120
-U 1 1 6E346166
-P 5250 1450
-F 0 "#PWR0120" H 5250 1200 50  0001 C CNN
-F 1 "GND" H 5255 1277 50  0000 C CNN
-F 2 "" H 5250 1450 50  0001 C CNN
-F 3 "" H 5250 1450 50  0001 C CNN
-	1    5250 1450
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VCC #PWR0121
-U 1 1 6E347053
-P 5250 1250
-F 0 "#PWR0121" H 5250 1100 50  0001 C CNN
-F 1 "VCC" H 5265 1423 50  0000 C CNN
-F 2 "" H 5250 1250 50  0001 C CNN
-F 3 "" H 5250 1250 50  0001 C CNN
-	1    5250 1250
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VDD #PWR0122
-U 1 1 6E6ED952
-P 5450 1250
-F 0 "#PWR0122" H 5450 1100 50  0001 C CNN
-F 1 "VDD" H 5465 1423 50  0000 C CNN
-F 2 "" H 5450 1250 50  0001 C CNN
-F 3 "" H 5450 1250 50  0001 C CNN
-	1    5450 1250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5150 1250 5250 1250
-Wire Wire Line
-	5150 1350 5450 1350
-Wire Wire Line
-	5450 1350 5450 1250
-Wire Wire Line
-	5150 1450 5250 1450
-Wire Wire Line
-	1750 6350 2000 6350
-Wire Wire Line
-	1750 6450 1950 6450
-Wire Wire Line
-	1050 5450 1250 5450
-Wire Wire Line
-	1250 5550 1000 5550
-Wire Wire Line
-	1250 5750 800  5750
-Wire Wire Line
-	1250 5850 850  5850
-Wire Wire Line
-	1250 5950 900  5950
-Wire Wire Line
-	1250 6050 950  6050
-Wire Wire Line
-	1250 6250 1050 6250
-Wire Wire Line
-	1250 6350 1100 6350
-Wire Wire Line
-	850  5850 850  6900
-Wire Wire Line
-	950  6050 950  7550
-Wire Wire Line
-	1250 6150 1000 6150
-Wire Wire Line
-	1750 6150 2100 6150
-Wire Wire Line
-	1250 5650 950  5650
-Wire Wire Line
-	1750 5650 1950 5650
-$Comp
-L Connector_Generic:Conn_02x12_Top_Bottom J2
-U 1 1 6EC2077D
-P 1550 5950
-F 0 "J2" H 1600 6667 50  0000 C CNN
-F 1 "Conn_02x12_Top_Bottom" H 1600 6576 50  0000 C CNN
-F 2 "Connector_Molex:Molex_Micro-Fit_3.0_43045-2400_2x12_P3.00mm_Horizontal" H 1550 5950 50  0001 C CNN
-F 3 "~" H 1550 5950 50  0001 C CNN
-	1    1550 5950
+L pecr11:PEC11R-4220F-S0024 ENC2
+U 1 1 6922EC85
+P 14200 14250
+F 0 "ENC2" H 14900 13285 50  0000 C CNN
+F 1 "PEC11R-4220F-S0024" H 14900 13376 50  0000 C CNN
+F 2 "pecr11:Bourns-PEC11R-4220F-S0024-0-0-0" H 14200 14650 50  0001 L CNN
+F 3 "https://www.bourns.com/docs/product-datasheets/pec11r.pdf?sfvrsn=bb617cbf_6" H 14200 14750 50  0001 L CNN
+F 4 "Enc" H 14200 14850 50  0001 L CNN "category"
+F 5 "10mA" H 14200 14950 50  0001 L CNN "current rating"
+F 6 "Yes" H 14200 15050 50  0001 L CNN "detend"
+F 7 "Electromechanical" H 14200 15150 50  0001 L CNN "device class L1"
+F 8 "Switches" H 14200 15250 50  0001 L CNN "device class L2"
+F 9 "Encoders" H 14200 15350 50  0001 L CNN "device class L3"
+F 10 "ROTARY ENCODER MECHANICAL 24PPR" H 14200 15450 50  0001 L CNN "digikey description"
+F 11 "PEC11R-4220F-S0024-ND" H 14200 15550 50  0001 L CNN "digikey part number"
+F 12 "Incremental" H 14200 15650 50  0001 L CNN "encoder type"
+F 13 "27.3mm" H 14200 15750 50  0001 L CNN "height"
+F 14 "yes" H 14200 15850 50  0001 L CNN "lead free"
+F 15 "456a2eefc9d34d73" H 14200 15950 50  0001 L CNN "library id"
+F 16 "Bourns" H 14200 16050 50  0001 L CNN "manufacturer"
+F 17 "Encoders 20mm SHAFT w/SWITCH" H 14200 16150 50  0001 L CNN "mouser description"
+F 18 "652-PEC11R-4220F-S24" H 14200 16250 50  0001 L CNN "mouser part number"
+F 19 "1" H 14200 16350 50  0001 L CNN "number of circuits"
+F 20 "ENC_PTH_12MM5_13MM4" H 14200 16450 50  0001 L CNN "package"
+F 21 "24" H 14200 16550 50  0001 L CNN "pulses per rev"
+F 22 "yes" H 14200 16650 50  0001 L CNN "rohs"
+F 23 "+70°C" H 14200 16750 50  0001 L CNN "temperature range high"
+F 24 "30°C" H 14200 16850 50  0001 L CNN "temperature range low"
+F 25 "5V" H 14200 16950 50  0001 L CNN "voltage rating DC"
+	1    14200 14250
 	-1   0    0    1   
 $EndComp
+$Comp
+L pecr11:PEC11R-4220F-S0024 ENC3
+U 1 1 69231399
+P 14200 13100
+F 0 "ENC3" H 14900 12135 50  0000 C CNN
+F 1 "PEC11R-4220F-S0024" H 14900 12226 50  0000 C CNN
+F 2 "pecr11:Bourns-PEC11R-4220F-S0024-0-0-0" H 14200 13500 50  0001 L CNN
+F 3 "https://www.bourns.com/docs/product-datasheets/pec11r.pdf?sfvrsn=bb617cbf_6" H 14200 13600 50  0001 L CNN
+F 4 "Enc" H 14200 13700 50  0001 L CNN "category"
+F 5 "10mA" H 14200 13800 50  0001 L CNN "current rating"
+F 6 "Yes" H 14200 13900 50  0001 L CNN "detend"
+F 7 "Electromechanical" H 14200 14000 50  0001 L CNN "device class L1"
+F 8 "Switches" H 14200 14100 50  0001 L CNN "device class L2"
+F 9 "Encoders" H 14200 14200 50  0001 L CNN "device class L3"
+F 10 "ROTARY ENCODER MECHANICAL 24PPR" H 14200 14300 50  0001 L CNN "digikey description"
+F 11 "PEC11R-4220F-S0024-ND" H 14200 14400 50  0001 L CNN "digikey part number"
+F 12 "Incremental" H 14200 14500 50  0001 L CNN "encoder type"
+F 13 "27.3mm" H 14200 14600 50  0001 L CNN "height"
+F 14 "yes" H 14200 14700 50  0001 L CNN "lead free"
+F 15 "456a2eefc9d34d73" H 14200 14800 50  0001 L CNN "library id"
+F 16 "Bourns" H 14200 14900 50  0001 L CNN "manufacturer"
+F 17 "Encoders 20mm SHAFT w/SWITCH" H 14200 15000 50  0001 L CNN "mouser description"
+F 18 "652-PEC11R-4220F-S24" H 14200 15100 50  0001 L CNN "mouser part number"
+F 19 "1" H 14200 15200 50  0001 L CNN "number of circuits"
+F 20 "ENC_PTH_12MM5_13MM4" H 14200 15300 50  0001 L CNN "package"
+F 21 "24" H 14200 15400 50  0001 L CNN "pulses per rev"
+F 22 "yes" H 14200 15500 50  0001 L CNN "rohs"
+F 23 "+70°C" H 14200 15600 50  0001 L CNN "temperature range high"
+F 24 "30°C" H 14200 15700 50  0001 L CNN "temperature range low"
+F 25 "5V" H 14200 15800 50  0001 L CNN "voltage rating DC"
+	1    14200 13100
+	-1   0    0    1   
+$EndComp
+$Comp
+L pecr11:PEC11R-4220F-S0024 ENC4
+U 1 1 69233DD6
+P 14200 11950
+F 0 "ENC4" H 14900 10985 50  0000 C CNN
+F 1 "PEC11R-4220F-S0024" H 14900 11076 50  0000 C CNN
+F 2 "pecr11:Bourns-PEC11R-4220F-S0024-0-0-0" H 14200 12350 50  0001 L CNN
+F 3 "https://www.bourns.com/docs/product-datasheets/pec11r.pdf?sfvrsn=bb617cbf_6" H 14200 12450 50  0001 L CNN
+F 4 "Enc" H 14200 12550 50  0001 L CNN "category"
+F 5 "10mA" H 14200 12650 50  0001 L CNN "current rating"
+F 6 "Yes" H 14200 12750 50  0001 L CNN "detend"
+F 7 "Electromechanical" H 14200 12850 50  0001 L CNN "device class L1"
+F 8 "Switches" H 14200 12950 50  0001 L CNN "device class L2"
+F 9 "Encoders" H 14200 13050 50  0001 L CNN "device class L3"
+F 10 "ROTARY ENCODER MECHANICAL 24PPR" H 14200 13150 50  0001 L CNN "digikey description"
+F 11 "PEC11R-4220F-S0024-ND" H 14200 13250 50  0001 L CNN "digikey part number"
+F 12 "Incremental" H 14200 13350 50  0001 L CNN "encoder type"
+F 13 "27.3mm" H 14200 13450 50  0001 L CNN "height"
+F 14 "yes" H 14200 13550 50  0001 L CNN "lead free"
+F 15 "456a2eefc9d34d73" H 14200 13650 50  0001 L CNN "library id"
+F 16 "Bourns" H 14200 13750 50  0001 L CNN "manufacturer"
+F 17 "Encoders 20mm SHAFT w/SWITCH" H 14200 13850 50  0001 L CNN "mouser description"
+F 18 "652-PEC11R-4220F-S24" H 14200 13950 50  0001 L CNN "mouser part number"
+F 19 "1" H 14200 14050 50  0001 L CNN "number of circuits"
+F 20 "ENC_PTH_12MM5_13MM4" H 14200 14150 50  0001 L CNN "package"
+F 21 "24" H 14200 14250 50  0001 L CNN "pulses per rev"
+F 22 "yes" H 14200 14350 50  0001 L CNN "rohs"
+F 23 "+70°C" H 14200 14450 50  0001 L CNN "temperature range high"
+F 24 "30°C" H 14200 14550 50  0001 L CNN "temperature range low"
+F 25 "5V" H 14200 14650 50  0001 L CNN "voltage rating DC"
+	1    14200 11950
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	14100 11950 14450 11950
+$Comp
+L power:GND #PWR0108
+U 1 1 6A3B2D86
+P 14200 15150
+F 0 "#PWR0108" H 14200 14900 50  0001 C CNN
+F 1 "GND" H 14205 14977 50  0000 C CNN
+F 2 "" H 14200 15150 50  0001 C CNN
+F 3 "" H 14200 15150 50  0001 C CNN
+	1    14200 15150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	14100 15000 14200 15000
+Wire Wire Line
+	14200 15000 14200 15150
+Wire Wire Line
+	14200 15000 14200 14800
+Wire Wire Line
+	14200 14800 14100 14800
+Connection ~ 14200 15000
+Wire Wire Line
+	14200 14800 14200 14700
+Wire Wire Line
+	14200 14700 14100 14700
+Connection ~ 14200 14800
+Wire Wire Line
+	14200 14700 14200 13850
+Wire Wire Line
+	14200 13850 14100 13850
+Connection ~ 14200 14700
+Wire Wire Line
+	14200 13850 14200 13650
+Wire Wire Line
+	14200 11250 14100 11250
+Connection ~ 14200 13850
+Wire Wire Line
+	14100 11350 14200 11350
+Connection ~ 14200 11350
+Wire Wire Line
+	14200 11350 14200 11250
+Wire Wire Line
+	14100 11550 14200 11550
+Connection ~ 14200 11550
+Wire Wire Line
+	14200 11550 14200 11350
+Wire Wire Line
+	14100 12400 14200 12400
+Connection ~ 14200 12400
+Wire Wire Line
+	14200 12400 14200 11550
+Wire Wire Line
+	14100 12500 14200 12500
+Connection ~ 14200 12500
+Wire Wire Line
+	14200 12500 14200 12400
+Wire Wire Line
+	14100 12700 14200 12700
+Connection ~ 14200 12700
+Wire Wire Line
+	14200 12700 14200 12500
+Wire Wire Line
+	14100 13550 14200 13550
+Connection ~ 14200 13550
+Wire Wire Line
+	14200 13550 14200 12700
+Wire Wire Line
+	14100 13650 14200 13650
+Connection ~ 14200 13650
+Wire Wire Line
+	14200 13650 14200 13550
+Wire Wire Line
+	12900 14900 12800 14900
+Connection ~ 14200 11250
+Wire Wire Line
+	12900 11450 12800 11450
+Connection ~ 12800 11450
+Wire Wire Line
+	12900 12600 12800 12600
+Connection ~ 12800 12600
+Wire Wire Line
+	12800 12600 12800 11450
+Wire Wire Line
+	12900 13750 12800 13750
+Connection ~ 12800 13750
+Wire Wire Line
+	12800 10900 14200 10900
+Wire Wire Line
+	14200 10900 14200 11250
+Wire Wire Line
+	12800 10900 12800 11450
+Text Label 12800 15200 0    20   ~ 0
+ENC1B
+Text Label 12800 15300 0    20   ~ 0
+ENC1A
+Wire Wire Line
+	12800 14900 12800 13750
+Text Label 12650 14050 0    20   ~ 0
+ENC2B
+Text Label 12650 14150 0    20   ~ 0
+ENC2A
+Text Label 12650 12900 0    20   ~ 0
+ENC3B
+Text Label 12650 13000 0    20   ~ 0
+ENC3A
+Text Label 12650 11750 0    20   ~ 0
+ENC4B
+Text Label 12650 11850 0    20   ~ 0
+ENC4A
+Text Label 14250 14250 0    20   ~ 0
+ENC2S
+Text Label 14200 15400 0    20   ~ 0
+ENC1S
+Text Label 14300 13100 0    20   ~ 0
+ENC3S
+Text Label 14350 11950 0    20   ~ 0
+ENC4S
+Wire Wire Line
+	12800 12600 12800 13750
+Wire Wire Line
+	14450 10750 14450 11950
+Wire Wire Line
+	14500 10700 14500 13100
+Wire Wire Line
+	14100 13100 14500 13100
+Wire Wire Line
+	14550 10650 14550 14250
+Wire Wire Line
+	14100 14250 14550 14250
+Wire Wire Line
+	14600 10600 14600 15400
+Wire Wire Line
+	14100 15400 14600 15400
+Wire Wire Line
+	12650 11750 12900 11750
+Wire Wire Line
+	12600 11850 12900 11850
+Wire Wire Line
+	12550 12900 12900 12900
+Wire Wire Line
+	12500 13000 12900 13000
+Wire Wire Line
+	12450 14050 12900 14050
+Wire Wire Line
+	12400 14150 12900 14150
+Wire Wire Line
+	12350 15200 12900 15200
+Wire Wire Line
+	12300 15300 12900 15300
+Wire Wire Line
+	9650 10600 14600 10600
+Wire Wire Line
+	9600 10650 14550 10650
+Wire Wire Line
+	9550 10700 14500 10700
+Wire Wire Line
+	9500 10750 14450 10750
+Wire Wire Line
+	9450 10800 12650 10800
+Wire Wire Line
+	12650 10800 12650 11750
+Wire Wire Line
+	9400 10850 12600 10850
+Wire Wire Line
+	12600 10850 12600 11850
+Wire Wire Line
+	9350 10900 12550 10900
+Wire Wire Line
+	12550 10900 12550 12900
+Wire Wire Line
+	9300 10950 12500 10950
+Wire Wire Line
+	12500 10950 12500 13000
+Wire Wire Line
+	9250 11000 12450 11000
+Wire Wire Line
+	12450 11000 12450 14050
+Wire Wire Line
+	9200 11050 12400 11050
+Wire Wire Line
+	12400 11050 12400 14150
+Wire Wire Line
+	9150 11100 12350 11100
+Wire Wire Line
+	12350 11100 12350 15200
+Wire Wire Line
+	9100 11150 12300 11150
+Wire Wire Line
+	12300 11150 12300 15300
+Wire Wire Line
+	11850 4400 11850 4300
+Connection ~ 11750 6600
+Text Label 15400 10700 0    20   ~ 0
+SW2
+Text Label 15400 10050 0    20   ~ 0
+SW1
+$Comp
+L Device:Varistor_US R4
+U 1 1 62660EE0
+P 2025 4825
+F 0 "R4" V 1983 4933 45  0000 L CNN
+F 1 "CG0603MLC-05E" V 2067 4933 45  0001 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 2055 4975 20  0001 C CNN
+F 3 "" H 2025 4825 60  0001 C CNN
+	1    2025 4825
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Varistor_US R3
+U 1 1 624B63EE
+P 1775 4825
+F 0 "R3" V 1733 4933 45  0000 C CNN
+F 1 "CG0603MLC-05E" V 1817 4933 45  0001 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 1805 4975 20  0001 C CNN
+F 3 "" H 1775 4825 60  0001 C CNN
+	1    1775 4825
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_US R1
+U 1 1 627F8818
+P 2775 4175
+F 0 "R1" V 2570 4175 50  0000 C CNN
+F 1 "22" V 2661 4175 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 2815 4165 50  0001 C CNN
+F 3 "~" H 2775 4175 50  0001 C CNN
+	1    2775 4175
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_US R2
+U 1 1 62814B5B
+P 3075 4275
+F 0 "R2" V 2870 4275 50  0000 C CNN
+F 1 "22" V 2961 4275 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 3115 4265 50  0001 C CNN
+F 3 "~" H 3075 4275 50  0001 C CNN
+	1    3075 4275
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3225 4275 5175 4275
+Wire Wire Line
+	3400 4375 3400 3975
+Wire Wire Line
+	3400 3975 5175 3975
+$Comp
+L Device:Ferrite_Bead_Small FB1
+U 1 1 62A41C41
+P 2300 5175
+F 0 "FB1" V 2063 5175 50  0000 C CNN
+F 1 "BLM21" V 2154 5175 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 2230 5175 50  0001 C CNN
+F 3 "~" H 2300 5175 50  0001 C CNN
+	1    2300 5175
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2550 5175 2400 5175
+Wire Wire Line
+	800  4375 800  4275
+Wire Wire Line
+	1775 4275 2925 4275
+Wire Wire Line
+	1700 4175 2025 4175
+Connection ~ 2025 4175
+Wire Wire Line
+	2025 4175 2625 4175
+Wire Wire Line
+	2925 4175 5175 4175
+$Comp
+L power:GND #PWR0101
+U 1 1 62B7230F
+P 2550 5300
+F 0 "#PWR0101" H 2550 5050 50  0001 C CNN
+F 1 "GND" H 2555 5127 50  0000 C CNN
+F 2 "" H 2550 5300 50  0001 C CNN
+F 3 "" H 2550 5300 50  0001 C CNN
+	1    2550 5300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2550 5175 2550 5300
+Connection ~ 2550 5175
+Wire Wire Line
+	800  4375 800  5175
+Connection ~ 800  4375
+Wire Wire Line
+	800  5175 1775 5175
+Wire Wire Line
+	1775 4275 1775 4675
+Wire Wire Line
+	2025 4175 2025 4675
+Wire Wire Line
+	2025 4975 2025 5175
+Connection ~ 2025 5175
+Wire Wire Line
+	2025 5175 2200 5175
+Wire Wire Line
+	1775 4975 1775 5175
+Connection ~ 1775 5175
+Wire Wire Line
+	1775 5175 2025 5175
+$Comp
+L power:VCC #PWR0111
+U 1 1 62C7E4FE
+P 3700 4575
+F 0 "#PWR0111" H 3700 4425 50  0001 C CNN
+F 1 "VCC" H 3715 4748 50  0000 C CNN
+F 2 "" H 3700 4575 50  0001 C CNN
+F 3 "" H 3700 4575 50  0001 C CNN
+	1    3700 4575
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 4775 3700 4575
+$Comp
+L Device:CP1 C1
+U 1 1 62CBD24D
+P 2775 4975
+F 0 "C1" H 2890 5021 50  0000 L CNN
+F 1 "47µf" H 2890 4930 50  0000 L CNN
+F 2 "Capacitor_SMD:C_Elec_4x5.4" H 2775 4975 50  0001 C CNN
+F 3 "~" H 2775 4975 50  0001 C CNN
+	1    2775 4975
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 62CBDDD2
+P 3225 4975
+F 0 "C2" H 3340 5021 50  0000 L CNN
+F 1 "100nf" H 3340 4930 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3263 4825 50  0001 C CNN
+F 3 "~" H 3225 4975 50  0001 C CNN
+	1    3225 4975
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3900 4825 3900 4475
+Wire Wire Line
+	3900 4475 5175 4475
+Wire Wire Line
+	2550 5175 2775 5175
+Wire Wire Line
+	3900 5175 3900 5125
+Wire Wire Line
+	3225 5125 3225 5175
+Wire Wire Line
+	2775 5125 2775 5175
+Connection ~ 2775 5175
+Wire Wire Line
+	2775 4825 2775 4775
+Connection ~ 2775 4775
+Wire Wire Line
+	3225 4825 3225 4775
+Wire Wire Line
+	5875 2875 5875 2800
+Wire Wire Line
+	5675 2800 5675 2875
+Wire Wire Line
+	5775 2875 5775 2800
+Wire Wire Line
+	5875 2800 5775 2800
+Wire Wire Line
+	5775 2800 5675 2800
+Connection ~ 5775 2800
+$Comp
+L power:VCC #PWR0112
+U 1 1 62DECD03
+P 5675 2675
+F 0 "#PWR0112" H 5675 2525 50  0001 C CNN
+F 1 "VCC" H 5690 2848 50  0000 C CNN
+F 2 "" H 5675 2675 50  0001 C CNN
+F 3 "" H 5675 2675 50  0001 C CNN
+	1    5675 2675
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5675 2800 5675 2675
+Connection ~ 5675 2800
+$Comp
+L Device:C C3
+U 1 1 62CBEB08
+P 3900 4975
+F 0 "C3" H 4015 5021 50  0000 L CNN
+F 1 "1µf" H 4015 4930 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3938 4825 50  0001 C CNN
+F 3 "~" H 3900 4975 50  0001 C CNN
+	1    3900 4975
+	1    0    0    -1  
+$EndComp
+Connection ~ 3225 4775
+Connection ~ 3225 5175
+Wire Wire Line
+	3225 5175 3900 5175
+Wire Wire Line
+	2775 5175 3225 5175
+Wire Wire Line
+	2775 4775 3225 4775
+$Comp
+L Device:Crystal Y1
+U 1 1 62E3E8E9
+P 4675 3475
+F 0 "Y1" V 4721 3344 50  0000 R CNN
+F 1 "16MHz" V 4630 3344 50  0000 R CNN
+F 2 "Crystal:Crystal_SMD_HC49-SD" H 4675 3475 50  0001 C CNN
+F 3 "~" H 4675 3475 50  0001 C CNN
+F 4 "C110562" V 4675 3475 50  0001 C CNN "LCSC"
+	1    4675 3475
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4675 3325 5075 3325
+Wire Wire Line
+	5075 3325 5075 3375
+Wire Wire Line
+	5075 3375 5175 3375
+Wire Wire Line
+	4675 3625 5075 3625
+Wire Wire Line
+	5075 3625 5075 3575
+Wire Wire Line
+	5075 3575 5175 3575
+$Comp
+L Device:C C5
+U 1 1 62E86B2A
+P 4350 3625
+F 0 "C5" V 4098 3625 50  0000 C CNN
+F 1 "22pf" V 4189 3625 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4388 3475 50  0001 C CNN
+F 3 "~" H 4350 3625 50  0001 C CNN
+	1    4350 3625
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C C4
+U 1 1 62E87B53
+P 4350 3325
+F 0 "C4" V 4098 3325 50  0000 C CNN
+F 1 "22pf" V 4189 3325 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4388 3175 50  0001 C CNN
+F 3 "~" H 4350 3325 50  0001 C CNN
+	1    4350 3325
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4500 3325 4675 3325
+Connection ~ 4675 3325
+Wire Wire Line
+	4500 3625 4675 3625
+Connection ~ 4675 3625
+Wire Wire Line
+	4200 3325 4200 3625
+Wire Wire Line
+	4200 3750 4200 3625
+Connection ~ 4200 3625
+$Comp
+L power:GND #PWR0113
+U 1 1 62EEA58A
+P 4200 3750
+F 0 "#PWR0113" H 4200 3500 50  0001 C CNN
+F 1 "GND" H 4205 3577 50  0000 C CNN
+F 2 "" H 4200 3750 50  0001 C CNN
+F 3 "" H 4200 3750 50  0001 C CNN
+	1    4200 3750
+	1    0    0    -1  
+$EndComp
+NoConn ~ 5175 3775
+Wire Wire Line
+	5775 6875 5675 6875
+$Comp
+L power:GND #PWR0114
+U 1 1 62F1CC44
+P 6225 6900
+F 0 "#PWR0114" H 6225 6650 50  0001 C CNN
+F 1 "GND" H 6230 6727 50  0000 C CNN
+F 2 "" H 6225 6900 50  0001 C CNN
+F 3 "" H 6225 6900 50  0001 C CNN
+	1    6225 6900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5775 6875 6225 6875
+Wire Wire Line
+	6225 6875 6225 6900
+Connection ~ 5775 6875
+Wire Wire Line
+	9100 11150 9100 3175
+Wire Wire Line
+	9100 3175 6375 3175
+Wire Wire Line
+	9150 11100 9150 3275
+Wire Wire Line
+	9150 3275 6375 3275
+Wire Wire Line
+	9200 11050 9200 3375
+Wire Wire Line
+	9200 3375 6375 3375
+Wire Wire Line
+	9250 11000 9250 3475
+Wire Wire Line
+	9250 3475 6375 3475
+Wire Wire Line
+	9300 10950 9300 3575
+Wire Wire Line
+	9300 3575 6375 3575
+Wire Wire Line
+	9350 10900 9350 3675
+Wire Wire Line
+	9350 3675 6375 3675
+Wire Wire Line
+	9400 10850 9400 3775
+Wire Wire Line
+	9400 3775 6375 3775
+Wire Wire Line
+	9450 10800 9450 3875
+Wire Wire Line
+	9450 3875 6375 3875
+Wire Wire Line
+	11600 5975 11600 5400
+Connection ~ 11600 5400
+Wire Wire Line
+	6375 5975 11600 5975
+Wire Wire Line
+	11600 3200 11600 5400
+Wire Wire Line
+	11775 6175 11775 5800
+Wire Wire Line
+	11775 5800 12000 5800
+Wire Wire Line
+	6375 6175 11775 6175
+Wire Wire Line
+	11725 6075 11725 3600
+Wire Wire Line
+	11725 3600 12000 3600
+Wire Wire Line
+	6375 6075 11725 6075
+Wire Wire Line
+	11650 5300 11650 5875
+Connection ~ 11650 5300
+Wire Wire Line
+	6375 5875 11650 5875
+Wire Wire Line
+	11650 3100 11650 5300
+Wire Wire Line
+	9700 10550 9700 4475
+Wire Wire Line
+	9700 4475 6375 4475
+Wire Wire Line
+	9750 10500 9750 4575
+Wire Wire Line
+	9750 4575 6375 4575
+Wire Wire Line
+	9800 10450 9800 4675
+Wire Wire Line
+	9800 4675 6375 4675
+Wire Wire Line
+	9850 10400 9850 4775
+Wire Wire Line
+	9850 4775 6375 4775
+Wire Wire Line
+	9900 10350 9900 4975
+Wire Wire Line
+	9950 10300 9950 5075
+Wire Wire Line
+	10000 10250 10000 5175
+Wire Wire Line
+	10050 10200 10050 5275
+Wire Wire Line
+	10100 10150 10100 5375
+Wire Wire Line
+	10150 10100 10150 5475
+Wire Wire Line
+	10200 10050 10200 5575
+Wire Wire Line
+	9900 4975 6375 4975
+Wire Wire Line
+	9950 5075 6375 5075
+Wire Wire Line
+	10000 5175 6375 5175
+Wire Wire Line
+	10050 5275 6375 5275
+Wire Wire Line
+	10100 5375 6375 5375
+Wire Wire Line
+	10150 5475 6375 5475
+Wire Wire Line
+	10200 5575 6375 5575
+Wire Wire Line
+	9500 10750 9500 4375
+Wire Wire Line
+	9500 4375 6950 4375
+Wire Wire Line
+	9550 10700 9550 4275
+Wire Wire Line
+	9550 4275 6900 4275
+Wire Wire Line
+	9600 10650 9600 4175
+Wire Wire Line
+	9600 4175 6850 4175
+Wire Wire Line
+	9650 10600 9650 4075
+Wire Wire Line
+	9650 4075 6375 4075
+$Comp
+L Display_Character:SLR0363DWC1BD U4
+U 1 1 63417190
+P 16225 4225
+F 0 "U4" H 16175 4842 50  0000 C CNN
+F 1 "SLR0363DWC1BD" H 16175 4751 50  0000 C CNN
+F 2 "simpanel:SLR0363DWC1BD" H 16175 4725 50  0001 C CNN
+F 3 "" H 16175 4725 50  0001 C CNN
+	1    16225 4225
+	1    0    0    -1  
+$EndComp
+$Comp
+L Display_Character:SLR0363DWC1BD U6
+U 1 1 6341B94D
+P 19900 4200
+F 0 "U6" H 19850 4817 50  0000 C CNN
+F 1 "SLR0363DWC1BD" H 19850 4726 50  0000 C CNN
+F 2 "simpanel:SLR0363DWC1BD" H 19850 4700 50  0001 C CNN
+F 3 "" H 19850 4700 50  0001 C CNN
+	1    19900 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Display_Character:SLR0363DWC1BD U5
+U 1 1 634832BD
+P 16250 5450
+F 0 "U5" H 16200 6067 50  0000 C CNN
+F 1 "SLR0363DWC1BD" H 16200 5976 50  0000 C CNN
+F 2 "simpanel:SLR0363DWC1BD" H 16200 5950 50  0001 C CNN
+F 3 "" H 16200 5950 50  0001 C CNN
+	1    16250 5450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Display_Character:SLR0363DWC1BD U7
+U 1 1 634832C3
+P 19925 5425
+F 0 "U7" H 19875 6042 50  0000 C CNN
+F 1 "SLR0363DWC1BD" H 19875 5951 50  0000 C CNN
+F 2 "simpanel:SLR0363DWC1BD" H 19875 5925 50  0001 C CNN
+F 3 "" H 19875 5925 50  0001 C CNN
+	1    19925 5425
+	1    0    0    -1  
+$EndComp
+$Comp
+L Display_Character:SLR0363DWC1BD U8
+U 1 1 634A62BF
+P 16250 7500
+F 0 "U8" H 16200 8117 50  0000 C CNN
+F 1 "SLR0363DWC1BD" H 16200 8026 50  0000 C CNN
+F 2 "simpanel:SLR0363DWC1BD" H 16200 8000 50  0001 C CNN
+F 3 "" H 16200 8000 50  0001 C CNN
+	1    16250 7500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Display_Character:SLR0363DWC1BD U9
+U 1 1 634A62C5
+P 19925 7475
+F 0 "U9" H 19875 8092 50  0000 C CNN
+F 1 "SLR0363DWC1BD" H 19875 8001 50  0000 C CNN
+F 2 "simpanel:SLR0363DWC1BD" H 19875 7975 50  0001 C CNN
+F 3 "" H 19875 7975 50  0001 C CNN
+	1    19925 7475
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	20950 4350 21025 4350
+Wire Wire Line
+	13050 2950 13050 3100
+Wire Wire Line
+	13050 3100 13000 3100
+Wire Wire Line
+	13000 3200 13100 3200
+Wire Wire Line
+	13100 3200 13100 3000
+Wire Wire Line
+	13100 3000 14900 3000
+Wire Wire Line
+	18650 3000 18650 4050
+Wire Wire Line
+	18650 4050 18750 4050
+Wire Wire Line
+	18750 3950 18700 3950
+Wire Wire Line
+	18700 3950 18700 2950
+Wire Wire Line
+	13050 2950 14950 2950
+Wire Wire Line
+	13000 3300 13150 3300
+Wire Wire Line
+	13150 3300 13150 3050
+Wire Wire Line
+	13150 3050 14850 3050
+Wire Wire Line
+	18600 3050 18600 4150
+Wire Wire Line
+	18600 4150 18750 4150
+Wire Wire Line
+	13000 3400 13200 3400
+Wire Wire Line
+	13200 3400 13200 3100
+Wire Wire Line
+	18550 3100 18550 4250
+Wire Wire Line
+	18550 4250 18750 4250
+Wire Wire Line
+	13000 3500 13250 3500
+Wire Wire Line
+	13250 3500 13250 3150
+Wire Wire Line
+	13250 3150 14750 3150
+Wire Wire Line
+	18500 3150 18500 4350
+Wire Wire Line
+	18500 4350 18750 4350
+Wire Wire Line
+	13000 3600 13300 3600
+Wire Wire Line
+	13300 3600 13300 3200
+Wire Wire Line
+	13300 3200 14700 3200
+Wire Wire Line
+	18450 3200 18450 4450
+Wire Wire Line
+	18450 4450 18750 4450
+Wire Wire Line
+	17275 4375 17325 4375
+Wire Wire Line
+	17325 4375 17325 2950
+Connection ~ 17325 2950
+Wire Wire Line
+	17325 2950 18700 2950
+Wire Wire Line
+	17275 4475 17375 4475
+Wire Wire Line
+	17375 4475 17375 3000
+Connection ~ 17375 3000
+Wire Wire Line
+	17375 3000 18650 3000
+Wire Wire Line
+	17275 4575 17425 4575
+Wire Wire Line
+	17425 4575 17425 3050
+Connection ~ 17425 3050
+Wire Wire Line
+	17425 3050 18600 3050
+Wire Wire Line
+	13200 3100 14800 3100
+Wire Wire Line
+	17300 5600 17475 5600
+Wire Wire Line
+	17475 5600 17475 3100
+Connection ~ 17475 3100
+Wire Wire Line
+	17475 3100 18550 3100
+Wire Wire Line
+	17300 5700 17525 5700
+Wire Wire Line
+	17525 5700 17525 3150
+Connection ~ 17525 3150
+Wire Wire Line
+	17525 3150 18500 3150
+Wire Wire Line
+	17300 5800 17575 5800
+Wire Wire Line
+	17575 5800 17575 3200
+Connection ~ 17575 3200
+Wire Wire Line
+	17575 3200 18450 3200
+Wire Wire Line
+	21025 4350 21025 3250
+Wire Wire Line
+	13350 3250 13350 3700
+Wire Wire Line
+	13350 3700 13000 3700
+Wire Wire Line
+	20950 4450 21075 4450
+Wire Wire Line
+	21075 4450 21075 3300
+Wire Wire Line
+	21075 3300 18350 3300
+Wire Wire Line
+	13400 3300 13400 3800
+Wire Wire Line
+	13400 3800 13000 3800
+Wire Wire Line
+	20950 4550 21125 4550
+Wire Wire Line
+	21125 4550 21125 3350
+Wire Wire Line
+	21125 3350 14550 3350
+Wire Wire Line
+	13450 3350 13450 3900
+Wire Wire Line
+	13450 3900 13000 3900
+Wire Wire Line
+	20975 5575 21175 5575
+Wire Wire Line
+	21175 5575 21175 3400
+Wire Wire Line
+	21175 3400 18300 3400
+Wire Wire Line
+	13500 3400 13500 4000
+Wire Wire Line
+	13500 4000 13000 4000
+Wire Wire Line
+	20975 5675 21225 5675
+Wire Wire Line
+	21225 5675 21225 3450
+Wire Wire Line
+	21225 3450 18250 3450
+Wire Wire Line
+	13550 3450 13550 4100
+Wire Wire Line
+	13550 4100 13000 4100
+Wire Wire Line
+	20975 5775 21275 5775
+Wire Wire Line
+	21275 5775 21275 3500
+Wire Wire Line
+	21275 3500 13600 3500
+Wire Wire Line
+	13600 3500 13600 4200
+Wire Wire Line
+	13600 4200 13000 4200
+Wire Wire Line
+	18700 3950 18700 5175
+Wire Wire Line
+	18700 5175 18775 5175
+Connection ~ 18700 3950
+Wire Wire Line
+	18650 4050 18650 5275
+Wire Wire Line
+	18650 5275 18775 5275
+Connection ~ 18650 4050
+Wire Wire Line
+	18600 4150 18600 5375
+Wire Wire Line
+	18600 5375 18775 5375
+Connection ~ 18600 4150
+Wire Wire Line
+	18550 4250 18550 5475
+Wire Wire Line
+	18550 5475 18775 5475
+Connection ~ 18550 4250
+Wire Wire Line
+	18500 4350 18500 5575
+Wire Wire Line
+	18500 5575 18775 5575
+Connection ~ 18500 4350
+Wire Wire Line
+	18450 4450 18450 5675
+Wire Wire Line
+	18450 5675 18775 5675
+Connection ~ 18450 4450
+Wire Wire Line
+	15100 5200 14950 5200
+Wire Wire Line
+	14950 5200 14950 2950
+Connection ~ 14950 2950
+Wire Wire Line
+	14950 2950 17325 2950
+Wire Wire Line
+	14900 3000 14900 5300
+Wire Wire Line
+	14900 5300 15100 5300
+Connection ~ 14900 3000
+Wire Wire Line
+	14900 3000 17375 3000
+Wire Wire Line
+	14850 3050 14850 5400
+Wire Wire Line
+	14850 5400 15100 5400
+Connection ~ 14850 3050
+Wire Wire Line
+	14850 3050 17425 3050
+Wire Wire Line
+	14800 3100 14800 3975
+Wire Wire Line
+	14800 3975 15075 3975
+Connection ~ 14800 3100
+Wire Wire Line
+	14800 3100 17475 3100
+Wire Wire Line
+	14750 3150 14750 4075
+Wire Wire Line
+	14750 4075 15075 4075
+Connection ~ 14750 3150
+Wire Wire Line
+	14750 3150 17525 3150
+Wire Wire Line
+	14700 3200 14700 4175
+Wire Wire Line
+	14700 4175 15075 4175
+Connection ~ 14700 3200
+Wire Wire Line
+	14700 3200 17575 3200
+Wire Wire Line
+	21025 3250 18400 3250
+Wire Wire Line
+	14650 3250 14650 4275
+Wire Wire Line
+	14650 4275 15075 4275
+Connection ~ 14650 3250
+Wire Wire Line
+	14650 3250 13350 3250
+Wire Wire Line
+	14600 3300 14600 4375
+Wire Wire Line
+	14600 4375 15075 4375
+Connection ~ 14600 3300
+Wire Wire Line
+	14600 3300 13400 3300
+Wire Wire Line
+	14550 3350 14550 4475
+Wire Wire Line
+	14550 4475 15075 4475
+Connection ~ 14550 3350
+Wire Wire Line
+	14550 3350 13450 3350
+Wire Wire Line
+	14500 3400 14500 4575
+Wire Wire Line
+	14500 4575 15075 4575
+Connection ~ 14500 3400
+Wire Wire Line
+	14500 3400 13500 3400
+Wire Wire Line
+	14450 3450 14450 4675
+Wire Wire Line
+	14450 4675 15075 4675
+Connection ~ 14450 3450
+Wire Wire Line
+	14450 3450 13550 3450
+Wire Wire Line
+	14500 4575 14500 5800
+Wire Wire Line
+	14500 5800 15100 5800
+Connection ~ 14500 4575
+Wire Wire Line
+	14450 4675 14450 5900
+Wire Wire Line
+	14450 5900 15100 5900
+Connection ~ 14450 4675
+Wire Wire Line
+	18400 3250 18400 5775
+Wire Wire Line
+	18400 5775 18775 5775
+Connection ~ 18400 3250
+Wire Wire Line
+	18400 3250 14650 3250
+Wire Wire Line
+	18350 3300 18350 5875
+Wire Wire Line
+	18350 5875 18775 5875
+Connection ~ 18350 3300
+Wire Wire Line
+	18350 3300 14600 3300
+Wire Wire Line
+	18300 3400 18300 4550
+Wire Wire Line
+	18300 4550 18750 4550
+Connection ~ 18300 3400
+Wire Wire Line
+	18300 3400 14500 3400
+Wire Wire Line
+	18250 3450 18250 4650
+Wire Wire Line
+	18250 4650 18750 4650
+Connection ~ 18250 3450
+Wire Wire Line
+	18250 3450 14450 3450
+Wire Wire Line
+	13000 5300 14400 5300
+Wire Wire Line
+	14400 5300 14400 6250
+Wire Wire Line
+	14400 6250 17375 6250
+Wire Wire Line
+	18700 6250 18700 7225
+Wire Wire Line
+	18700 7225 18775 7225
+Wire Wire Line
+	13000 5400 14350 5400
+Wire Wire Line
+	14350 5400 14350 6300
+Wire Wire Line
+	14350 6300 17425 6300
+Wire Wire Line
+	18650 6300 18650 7325
+Wire Wire Line
+	18650 7325 18775 7325
+Wire Wire Line
+	13000 5500 14300 5500
+Wire Wire Line
+	14300 5500 14300 6350
+Wire Wire Line
+	14300 6350 17475 6350
+Wire Wire Line
+	18600 6350 18600 7425
+Wire Wire Line
+	18600 7425 18775 7425
+Wire Wire Line
+	13000 5600 14250 5600
+Wire Wire Line
+	14250 5600 14250 6400
+Wire Wire Line
+	21050 6400 21050 7625
+Wire Wire Line
+	21050 7625 20975 7625
+Wire Wire Line
+	13000 5700 14200 5700
+Wire Wire Line
+	14200 5700 14200 6450
+Wire Wire Line
+	21100 6450 21100 7725
+Wire Wire Line
+	21100 7725 20975 7725
+Wire Wire Line
+	13000 5800 14150 5800
+Wire Wire Line
+	14150 5800 14150 6500
+Wire Wire Line
+	21150 6500 21150 7825
+Wire Wire Line
+	21150 7825 20975 7825
+Wire Wire Line
+	13000 5900 14100 5900
+Wire Wire Line
+	14100 5900 14100 6550
+Wire Wire Line
+	14100 6550 14875 6550
+Wire Wire Line
+	18550 6550 18550 7525
+Wire Wire Line
+	18550 7525 18775 7525
+Wire Wire Line
+	13000 6000 14050 6000
+Wire Wire Line
+	14050 6000 14050 6600
+Wire Wire Line
+	14050 6600 14825 6600
+Wire Wire Line
+	18500 6600 18500 7625
+Wire Wire Line
+	18500 7625 18775 7625
+Wire Wire Line
+	13000 6100 14000 6100
+Wire Wire Line
+	14000 6100 14000 6650
+Wire Wire Line
+	14000 6650 14775 6650
+Wire Wire Line
+	18450 6650 18450 7725
+Wire Wire Line
+	18450 7725 18775 7725
+Wire Wire Line
+	13000 6200 13950 6200
+Wire Wire Line
+	13950 6200 13950 6700
+Wire Wire Line
+	13950 6700 14725 6700
+Wire Wire Line
+	18400 6700 18400 7825
+Wire Wire Line
+	18400 7825 18775 7825
+Wire Wire Line
+	13000 6300 13900 6300
+Wire Wire Line
+	13900 6300 13900 6750
+Wire Wire Line
+	13900 6750 14675 6750
+Wire Wire Line
+	18350 6750 18350 7925
+Wire Wire Line
+	18350 7925 18775 7925
+Wire Wire Line
+	14150 6500 14925 6500
+Wire Wire Line
+	14200 6450 14975 6450
+Wire Wire Line
+	14250 6400 15025 6400
+Wire Wire Line
+	17300 7650 17375 7650
+Wire Wire Line
+	17375 7650 17375 6250
+Connection ~ 17375 6250
+Wire Wire Line
+	17375 6250 18700 6250
+Wire Wire Line
+	17300 7750 17425 7750
+Wire Wire Line
+	17425 7750 17425 6300
+Connection ~ 17425 6300
+Wire Wire Line
+	17425 6300 18650 6300
+Wire Wire Line
+	17300 7850 17475 7850
+Wire Wire Line
+	17475 7850 17475 6350
+Connection ~ 17475 6350
+Wire Wire Line
+	17475 6350 18600 6350
+Wire Wire Line
+	15100 7250 15025 7250
+Wire Wire Line
+	15025 7250 15025 6400
+Connection ~ 15025 6400
+Wire Wire Line
+	15025 6400 17525 6400
+Wire Wire Line
+	15100 7350 14975 7350
+Wire Wire Line
+	14975 7350 14975 6450
+Connection ~ 14975 6450
+Wire Wire Line
+	14975 6450 17575 6450
+Wire Wire Line
+	15100 7450 14925 7450
+Wire Wire Line
+	14925 7450 14925 6500
+Connection ~ 14925 6500
+Wire Wire Line
+	14925 6500 17625 6500
+Wire Wire Line
+	15100 7550 14875 7550
+Wire Wire Line
+	14875 7550 14875 6550
+Connection ~ 14875 6550
+Wire Wire Line
+	14875 6550 17675 6550
+Wire Wire Line
+	15100 7650 14825 7650
+Wire Wire Line
+	14825 7650 14825 6600
+Connection ~ 14825 6600
+Wire Wire Line
+	14825 6600 17725 6600
+Wire Wire Line
+	15100 7750 14775 7750
+Wire Wire Line
+	14775 7750 14775 6650
+Connection ~ 14775 6650
+Wire Wire Line
+	14775 6650 17775 6650
+Wire Wire Line
+	15100 7850 14725 7850
+Wire Wire Line
+	14725 7850 14725 6700
+Connection ~ 14725 6700
+Wire Wire Line
+	14725 6700 17825 6700
+Wire Wire Line
+	15100 7950 14675 7950
+Wire Wire Line
+	14675 7950 14675 6750
+Connection ~ 14675 6750
+Wire Wire Line
+	14675 6750 17875 6750
+Wire Wire Line
+	16900 11400 17150 11400
+Wire Wire Line
+	17150 11400 17150 10700
+Wire Wire Line
+	16900 10700 17150 10700
+Connection ~ 17150 10700
+Wire Wire Line
+	17150 10700 17150 10050
+Wire Wire Line
+	16900 10050 17150 10050
+Connection ~ 17150 10050
+Wire Wire Line
+	17150 10050 17150 9425
+Wire Wire Line
+	16900 11300 17100 11300
+Wire Wire Line
+	16900 10600 17050 10600
+Wire Wire Line
+	16900 9950 17000 9950
+Wire Wire Line
+	18700 12000 19000 12000
+Wire Wire Line
+	19000 12000 19000 11350
+Wire Wire Line
+	17150 9425 19000 9425
+Wire Wire Line
+	18700 11900 18950 11900
+Wire Wire Line
+	18700 11350 19000 11350
+Connection ~ 19000 11350
+Wire Wire Line
+	19000 11350 19000 10700
+Wire Wire Line
+	18700 10700 19000 10700
+Connection ~ 19000 10700
+Wire Wire Line
+	19000 10700 19000 10050
+Wire Wire Line
+	18700 10050 19000 10050
+Connection ~ 19000 10050
+Wire Wire Line
+	19000 10050 19000 9425
+Wire Wire Line
+	18700 11250 18900 11250
+Wire Wire Line
+	18700 10600 18850 10600
+Wire Wire Line
+	18700 9950 18800 9950
+Wire Wire Line
+	18800 9950 18800 9375
+Wire Wire Line
+	20550 9950 20650 9950
+Wire Wire Line
+	20550 10600 20700 10600
+Wire Wire Line
+	20550 11250 20750 11250
+Wire Wire Line
+	20550 11900 20800 11900
+Wire Wire Line
+	19000 9425 20850 9425
+Wire Wire Line
+	20850 9425 20850 10050
+Wire Wire Line
+	20850 12000 20550 12000
+Connection ~ 19000 9425
+Wire Wire Line
+	20550 11350 20850 11350
+Connection ~ 20850 11350
+Wire Wire Line
+	20850 11350 20850 12000
+Wire Wire Line
+	20525 10700 20550 10700
+Connection ~ 20850 10700
+Wire Wire Line
+	20850 10700 20850 11350
+Connection ~ 20550 10700
+Wire Wire Line
+	20550 10700 20850 10700
+Wire Wire Line
+	20550 10050 20850 10050
+Connection ~ 20850 10050
+Wire Wire Line
+	20850 10050 20850 10700
+Wire Wire Line
+	17475 7850 17475 9375
+Wire Wire Line
+	17475 9375 17100 9375
+Wire Wire Line
+	17100 9375 17100 11300
+Connection ~ 17475 7850
+Wire Wire Line
+	17425 7750 17425 9325
+Wire Wire Line
+	17425 9325 17050 9325
+Wire Wire Line
+	17050 9325 17050 10600
+Connection ~ 17425 7750
+Wire Wire Line
+	17375 7650 17375 9275
+Wire Wire Line
+	17375 9275 17000 9275
+Wire Wire Line
+	17000 9275 17000 9950
+Connection ~ 17375 7650
+Wire Wire Line
+	17525 6400 17525 9375
+Wire Wire Line
+	17525 9375 18800 9375
+Connection ~ 17525 6400
+Wire Wire Line
+	17525 6400 21050 6400
+Wire Wire Line
+	17575 6450 17575 9325
+Wire Wire Line
+	17575 9325 18850 9325
+Wire Wire Line
+	18850 9325 18850 10600
+Connection ~ 17575 6450
+Wire Wire Line
+	17575 6450 21100 6450
+Wire Wire Line
+	17625 6500 17625 9275
+Wire Wire Line
+	17625 9275 18900 9275
+Wire Wire Line
+	18900 9275 18900 11250
+Connection ~ 17625 6500
+Wire Wire Line
+	17625 6500 21150 6500
+Wire Wire Line
+	17675 6550 17675 9225
+Wire Wire Line
+	17675 9225 18950 9225
+Wire Wire Line
+	18950 9225 18950 11900
+Connection ~ 17675 6550
+Wire Wire Line
+	17675 6550 18550 6550
+Wire Wire Line
+	17725 6600 17725 9175
+Wire Wire Line
+	17725 9175 20650 9175
+Wire Wire Line
+	20650 9175 20650 9950
+Connection ~ 17725 6600
+Wire Wire Line
+	17725 6600 18500 6600
+Wire Wire Line
+	17775 6650 17775 9125
+Wire Wire Line
+	17775 9125 20700 9125
+Wire Wire Line
+	20700 9125 20700 10600
+Connection ~ 17775 6650
+Wire Wire Line
+	17775 6650 18450 6650
+Wire Wire Line
+	17825 6700 17825 9075
+Wire Wire Line
+	17825 9075 20750 9075
+Wire Wire Line
+	20750 9075 20750 11250
+Connection ~ 17825 6700
+Wire Wire Line
+	17825 6700 18400 6700
+Wire Wire Line
+	17875 6750 17875 9025
+Wire Wire Line
+	17875 9025 20800 9025
+Wire Wire Line
+	20800 9025 20800 11900
+Connection ~ 17875 6750
+Wire Wire Line
+	17875 6750 18350 6750
+Wire Wire Line
+	17150 9425 13850 9425
+Wire Wire Line
+	13850 9425 13850 6400
+Wire Wire Line
+	13850 6400 13000 6400
+Connection ~ 17150 9425
+$Comp
+L Connector_Generic:Conn_2Rows-21Pins J2
+U 1 1 660E41F3
+P 4375 7525
+F 0 "J2" H 4425 8150 50  0000 C CNN
+F 1 "Conn_2Rows-21Pins" H 4425 8151 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x11_P2.54mm_Vertical" H 4375 7525 50  0001 C CNN
+F 3 "~" H 4375 7525 50  0001 C CNN
+	1    4375 7525
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6375 6575 6625 6575
+Wire Wire Line
+	6625 6575 6625 7625
+Wire Wire Line
+	6625 7625 4675 7625
+Wire Wire Line
+	6375 6475 6675 6475
+Wire Wire Line
+	6675 6475 6675 7725
+Wire Wire Line
+	6675 7725 4675 7725
+Wire Wire Line
+	6375 6375 6725 6375
+Wire Wire Line
+	6725 6375 6725 7825
+Wire Wire Line
+	6725 7825 4675 7825
+Wire Wire Line
+	6375 6275 6775 6275
+Wire Wire Line
+	6775 6275 6775 7925
+Wire Wire Line
+	6775 7925 4675 7925
+Wire Wire Line
+	4675 7525 5125 7525
+Wire Wire Line
+	5125 7525 5125 6575
+Wire Wire Line
+	5125 6575 5175 6575
+Wire Wire Line
+	4675 7425 5075 7425
+Wire Wire Line
+	5075 7425 5075 6475
+Wire Wire Line
+	5075 6475 5175 6475
+Wire Wire Line
+	4675 7325 5025 7325
+Wire Wire Line
+	5025 7325 5025 6375
+Wire Wire Line
+	5025 6375 5175 6375
+Wire Wire Line
+	4675 7225 4975 7225
+Wire Wire Line
+	4975 7225 4975 6275
+Wire Wire Line
+	4975 6275 5175 6275
+Wire Wire Line
+	4675 7125 4925 7125
+Wire Wire Line
+	4925 7125 4925 6175
+Wire Wire Line
+	4925 6175 5175 6175
+Wire Wire Line
+	4675 7025 4875 7025
+Wire Wire Line
+	4875 7025 4875 6075
+Wire Wire Line
+	4875 6075 5175 6075
+Wire Wire Line
+	4175 7025 4125 7025
+Wire Wire Line
+	4125 7025 4125 5975
+Wire Wire Line
+	4125 5975 5175 5975
+Wire Wire Line
+	5175 5875 4075 5875
+Wire Wire Line
+	4075 5875 4075 7125
+Wire Wire Line
+	4075 7125 4175 7125
+Wire Wire Line
+	4025 5800 4025 7225
+Wire Wire Line
+	4025 7225 4175 7225
+Wire Wire Line
+	4175 7325 3975 7325
+Wire Wire Line
+	4175 7425 3925 7425
+Wire Wire Line
+	4175 7525 3875 7525
+Wire Wire Line
+	4175 7625 3825 7625
+Wire Wire Line
+	4175 7725 3775 7725
+Wire Wire Line
+	4175 7825 3725 7825
+Wire Wire Line
+	4175 7925 3675 7925
+$Comp
+L power:GND #PWR0115
+U 1 1 66A553E5
+P 3675 8250
+F 0 "#PWR0115" H 3675 8000 50  0001 C CNN
+F 1 "GND" H 3680 8077 50  0000 C CNN
+F 2 "" H 3675 8250 50  0001 C CNN
+F 3 "" H 3675 8250 50  0001 C CNN
+	1    3675 8250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3675 8250 3675 8025
+Wire Wire Line
+	3675 8025 4175 8025
+Wire Wire Line
+	4025 5800 5075 5800
+Wire Wire Line
+	5075 5800 5075 5675
+Wire Wire Line
+	5075 5675 5175 5675
+Wire Wire Line
+	3975 5750 5025 5750
+Wire Wire Line
+	5025 5750 5025 5575
+Wire Wire Line
+	5025 5575 5175 5575
+Wire Wire Line
+	3975 5750 3975 7325
+Wire Wire Line
+	3925 5700 4975 5700
+Wire Wire Line
+	4975 5700 4975 5475
+Wire Wire Line
+	4975 5475 5175 5475
+Wire Wire Line
+	3925 5700 3925 7425
+Wire Wire Line
+	3875 5650 4925 5650
+Wire Wire Line
+	4925 5650 4925 5375
+Wire Wire Line
+	4925 5375 5175 5375
+Wire Wire Line
+	3875 5650 3875 7525
+Wire Wire Line
+	3825 5600 4875 5600
+Wire Wire Line
+	4875 5600 4875 5275
+Wire Wire Line
+	4875 5275 5175 5275
+Wire Wire Line
+	3825 5600 3825 7625
+Wire Wire Line
+	3775 5550 4825 5550
+Wire Wire Line
+	4825 5550 4825 5175
+Wire Wire Line
+	4825 5175 5175 5175
+Wire Wire Line
+	3775 5550 3775 7725
+Wire Wire Line
+	3725 5500 4775 5500
+Wire Wire Line
+	4775 5500 4775 5075
+Wire Wire Line
+	4775 5075 5175 5075
+Wire Wire Line
+	3725 5500 3725 7825
+Wire Wire Line
+	3675 5450 4725 5450
+Wire Wire Line
+	4725 5450 4725 4975
+Wire Wire Line
+	4725 4975 5175 4975
+Wire Wire Line
+	3675 5450 3675 7925
+$Comp
+L power:VCC #PWR0102
+U 1 1 66F920A2
+P 11850 4300
+F 0 "#PWR0102" H 11850 4150 50  0001 C CNN
+F 1 "VCC" H 11865 4473 50  0000 C CNN
+F 2 "" H 11850 4300 50  0001 C CNN
+F 3 "" H 11850 4300 50  0001 C CNN
+	1    11850 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11750 6600 11750 6500
+$Comp
+L power:VCC #PWR0110
+U 1 1 66F943A1
+P 11750 6500
+F 0 "#PWR0110" H 11750 6350 50  0001 C CNN
+F 1 "VCC" H 11765 6673 50  0000 C CNN
+F 2 "" H 11750 6500 50  0001 C CNN
+F 3 "" H 11750 6500 50  0001 C CNN
+	1    11750 6500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6375 5675 11550 5675
+Wire Wire Line
+	11550 5675 11550 5600
+Connection ~ 11550 5600
+$Comp
+L Device:C C6
+U 1 1 670AF4B8
+P 3825 3300
+F 0 "C6" H 3940 3346 50  0000 L CNN
+F 1 "100nf" H 3940 3255 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3863 3150 50  0001 C CNN
+F 3 "~" H 3825 3300 50  0001 C CNN
+	1    3825 3300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3825 3625 4200 3625
+Wire Wire Line
+	3825 2950 4150 2950
+Wire Wire Line
+	5075 2950 5075 3175
+Wire Wire Line
+	5075 3175 5175 3175
+Wire Wire Line
+	3825 3150 3825 2950
+Wire Wire Line
+	3825 3450 3825 3625
+$Comp
+L Switch:SW_Push SW12
+U 1 1 67379726
+P 3350 3300
+F 0 "SW12" V 3396 3252 50  0000 R CNN
+F 1 "SW_Push" V 3305 3252 50  0000 R CNN
+F 2 "XKB5858-W-C:XKB5858WC" H 3350 3500 50  0001 C CNN
+F 3 "~" H 3350 3500 50  0001 C CNN
+	1    3350 3300
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3350 3500 3350 3625
+Wire Wire Line
+	3350 3625 3825 3625
+Connection ~ 3825 3625
+Wire Wire Line
+	3350 3100 3350 2950
+Wire Wire Line
+	3350 2950 3825 2950
+Connection ~ 3825 2950
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 6749D83E
+P 2550 3975
+F 0 "#FLG0101" H 2550 4050 50  0001 C CNN
+F 1 "PWR_FLAG" H 2550 4148 50  0000 C CNN
+F 2 "" H 2550 3975 50  0001 C CNN
+F 3 "~" H 2550 3975 50  0001 C CNN
+	1    2550 3975
+	1    0    0    -1  
+$EndComp
+Text Label 13150 2950 0    50   ~ 0
+CSA0
+Text Label 13200 3000 0    50   ~ 0
+CSA1
+Text Label 13250 3050 0    50   ~ 0
+CSA2
+Text Label 13300 3100 0    50   ~ 0
+CSA3
+Text Label 13350 3150 0    50   ~ 0
+CSA4
+Text Label 13400 3200 0    50   ~ 0
+CSA5
+Text Label 13450 3250 0    50   ~ 0
+CSA6
+Text Label 13500 3300 0    50   ~ 0
+CSA7
+Text Label 13550 3350 0    50   ~ 0
+CSA8
+Text Label 13600 3400 0    50   ~ 0
+CSA9
+Text Label 13650 3450 0    50   ~ 0
+CSA10
+Text Label 13700 3500 0    50   ~ 0
+CSA11
+Text Label 13100 5300 0    50   ~ 0
+CSB0
+Text Label 13100 5400 0    50   ~ 0
+CSB1
+Text Label 13100 5500 0    50   ~ 0
+CSB2
+Text Label 13100 5600 0    50   ~ 0
+CSB3
+Text Label 13100 5700 0    50   ~ 0
+CSB4
+Text Label 13100 5800 0    50   ~ 0
+CSB5
+Text Label 13100 5900 0    50   ~ 0
+CSB6
+Text Label 13100 6000 0    50   ~ 0
+CSB7
+Text Label 13100 6100 0    50   ~ 0
+CSB8
+Text Label 13100 6200 0    50   ~ 0
+CSB9
+Text Label 13100 6300 0    50   ~ 0
+CSB10
+Text Label 13100 6400 0    50   ~ 0
+CSB11
+Text Label 6475 3175 0    50   ~ 0
+PA0
+Text Label 6475 3275 0    50   ~ 0
+PA1
+Text Label 6475 3375 0    50   ~ 0
+PA2
+Text Label 6475 3475 0    50   ~ 0
+PA3
+Text Label 6475 3575 0    50   ~ 0
+PA4
+Text Label 6475 3675 0    50   ~ 0
+PA5
+Text Label 6475 3775 0    50   ~ 0
+PA6
+Text Label 6475 3875 0    50   ~ 0
+PA7
+Text Label 6475 4075 0    50   ~ 0
+PB0
+Text Label 6475 4175 0    50   ~ 0
+PB1
+Text Label 6475 4275 0    50   ~ 0
+PB2
+Text Label 6475 4375 0    50   ~ 0
+PB3
+Text Label 6475 4475 0    50   ~ 0
+PB4
+Text Label 6475 4575 0    50   ~ 0
+PB5
+Text Label 6475 4675 0    50   ~ 0
+PB6
+Text Label 6475 4775 0    50   ~ 0
+PB7
+Text Label 6475 4975 0    50   ~ 0
+PC0
+Text Label 6475 5075 0    50   ~ 0
+PC1
+Text Label 6475 5175 0    50   ~ 0
+PC2
+Text Label 6475 5275 0    50   ~ 0
+PC3
+Text Label 6475 5375 0    50   ~ 0
+PC4
+Text Label 6475 5475 0    50   ~ 0
+PC5
+Text Label 6475 5575 0    50   ~ 0
+PC6
+Text Label 6475 5675 0    50   ~ 0
+PC7
+Text Label 6475 6275 0    50   ~ 0
+PD4
+Text Label 6475 6375 0    50   ~ 0
+PD5
+Text Label 6475 6475 0    50   ~ 0
+PD6
+Text Label 6475 6575 0    50   ~ 0
+PD7
+Text Label 5075 5675 0    50   ~ 0
+PE7
+Text Label 5050 5575 0    50   ~ 0
+PE6
+Text Label 5000 5475 0    50   ~ 0
+PE5
+Text Label 5000 5375 0    50   ~ 0
+PE4
+Text Label 5000 5275 0    50   ~ 0
+PE3
+Text Label 5000 5175 0    50   ~ 0
+PE2
+Text Label 5000 5075 0    50   ~ 0
+PE1
+Text Label 5000 4975 0    50   ~ 0
+PE0
+Text Label 4625 5875 0    50   ~ 0
+PF0
+Text Label 4625 5975 0    50   ~ 0
+PF1
+Text Label 4700 7025 0    50   ~ 0
+PF2
+Text Label 4700 7125 0    50   ~ 0
+PF3
+Text Label 4700 7225 0    50   ~ 0
+PF4
+Text Label 4700 7325 0    50   ~ 0
+PF5
+Text Label 4700 7425 0    50   ~ 0
+PF6
+Text Label 4700 7525 0    50   ~ 0
+PF7
+Text Label 11850 5300 0    50   ~ 0
+SCL
+Text Label 11850 5400 0    50   ~ 0
+SDA
+Text Label 11825 5800 0    50   ~ 0
+IRQB
+Text Label 11775 3600 0    50   ~ 0
+IRQA
+Text Label 11775 3800 0    50   ~ 0
+SYNC
+Text Label 11775 3400 0    50   ~ 0
+RSTN
+Text Label 4925 3975 0    50   ~ 0
+VBUS
+Text Label 4925 4175 0    50   ~ 0
+D+
+Text Label 4925 4275 0    50   ~ 0
+D-
+Text Label 4925 4475 0    50   ~ 0
+UCAP
+Text Label 4825 3625 0    50   ~ 0
+XTAL-
+Text Label 4825 3325 0    50   ~ 0
+XTAL+
+Text Label 4825 2950 0    50   ~ 0
+RESET
+Text Label 1025 5175 0    50   ~ 0
+SHIELD
+Wire Wire Line
+	14550 4475 14550 5700
+Wire Wire Line
+	14550 5700 15100 5700
+Connection ~ 14550 4475
+Wire Wire Line
+	14600 4375 14600 5600
+Wire Wire Line
+	14600 5600 15100 5600
+Connection ~ 14600 4375
+Wire Wire Line
+	14650 4275 14650 5500
+Wire Wire Line
+	14650 5500 15100 5500
+Connection ~ 14650 4275
+Wire Wire Line
+	13000 6900 13100 6900
+Connection ~ 13100 6900
+Wire Wire Line
+	13100 6900 13100 7000
+Wire Wire Line
+	12000 7000 11750 7000
+Wire Wire Line
+	11750 7000 11750 6900
+Connection ~ 11750 6900
+Wire Wire Line
+	12000 4800 12000 4700
+Connection ~ 12000 4700
+Wire Wire Line
+	13000 4500 13100 4500
+Connection ~ 13100 4500
+Wire Wire Line
+	13100 4500 13100 4600
+$Comp
+L MCU_Microchip_AVR:AT90USB1286-AU U1
+U 1 1 623A230D
+P 5775 4875
+F 0 "U1" H 5775 2786 50  0000 C CNN
+F 1 "AT90USB1286-AU" H 5775 2695 50  0000 C CNN
+F 2 "Package_QFP:TQFP-64_14x14mm_P0.8mm" H 5775 4875 50  0001 C CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/doc7593.pdf" H 5775 4875 50  0001 C CNN
+F 4 "C1337544" H 5775 4875 50  0001 C CNN "LCSC"
+	1    5775 4875
+	1    0    0    -1  
+$EndComp
+$Comp
+L U-F-M5DW-Y-2:U-F-M5DW-Y-2 J1
+U 1 1 6246A14F
+P 1700 4375
+F 0 "J1" H 2150 3710 50  0000 C CNN
+F 1 "U-F-M5DW-Y-2" H 2150 3801 50  0000 C CNN
+F 2 "U-F-M5DW-Y-2:UFM5DWY2" H 2450 4475 50  0001 L CNN
+F 3 "https://datasheet.lcsc.com/szlcsc/1903211730_Korean-Hroparts-Elec-U-F-M5DW-Y-2_C105422.pdf" H 2450 4375 50  0001 L CNN
+F 4 "USB Connectors MicroUSBsocket RoHS" H 2450 4275 50  0001 L CNN "Description"
+F 5 "3.15" H 2450 4175 50  0001 L CNN "Height"
+F 6 "Korean Hroparts Elec" H 2450 4075 50  0001 L CNN "Manufacturer_Name"
+F 7 "U-F-M5DW-Y-2" H 2450 3975 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 2450 3875 50  0001 L CNN "Mouser Part Number"
+F 9 "" H 2450 3775 50  0001 L CNN "Mouser Price/Stock"
+F 10 "" H 2450 3675 50  0001 L CNN "Arrow Part Number"
+F 11 "" H 2450 3575 50  0001 L CNN "Arrow Price/Stock"
+F 12 "C105422" H 1700 4375 50  0001 C CNN "LCSC"
+	1    1700 4375
+	-1   0    0    1   
+$EndComp
+Text Label 2150 4175 0    50   ~ 0
+UD+
+Text Label 2150 4275 0    50   ~ 0
+UD-
+Wire Wire Line
+	2550 4375 2550 3975
+Wire Wire Line
+	2400 4700 2550 4700
+Wire Wire Line
+	2550 4700 2550 5175
+$Comp
+L Connector_Generic:Conn_02x03_Odd_Even J3
+U 1 1 60FC71E7
+P 4650 2000
+F 0 "J3" H 4700 2317 50  0000 C CNN
+F 1 "ISP" H 4700 2226 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" H 4650 2000 50  0001 C CNN
+F 3 "~" H 4650 2000 50  0001 C CNN
+	1    4650 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4950 1900 5375 1900
+Wire Wire Line
+	5375 1900 5375 2725
+Wire Wire Line
+	5375 2800 5675 2800
+Wire Wire Line
+	4450 2100 4150 2100
+Wire Wire Line
+	4150 2100 4150 2725
+Connection ~ 4150 2950
+Wire Wire Line
+	4150 2950 5075 2950
+Wire Wire Line
+	6850 4175 6850 2375
+Wire Wire Line
+	6850 2375 4200 2375
+Wire Wire Line
+	4200 2375 4200 2000
+Wire Wire Line
+	4200 2000 4450 2000
+Connection ~ 6850 4175
+Wire Wire Line
+	6850 4175 6375 4175
+Wire Wire Line
+	6900 4275 6900 2000
+Wire Wire Line
+	6900 2000 4950 2000
+Connection ~ 6900 4275
+Wire Wire Line
+	6900 4275 6375 4275
+Wire Wire Line
+	4450 1900 4250 1900
+Wire Wire Line
+	4250 1900 4250 2425
+Wire Wire Line
+	4250 2425 6950 2425
+Wire Wire Line
+	6950 2425 6950 4375
+Connection ~ 6950 4375
+Wire Wire Line
+	6950 4375 6375 4375
+Wire Wire Line
+	4950 2100 5050 2100
+$Comp
+L power:GND #PWR0116
+U 1 1 6137190A
+P 5050 2100
+F 0 "#PWR0116" H 5050 1850 50  0001 C CNN
+F 1 "GND" H 5055 1927 50  0000 C CNN
+F 2 "" H 5050 2100 50  0001 C CNN
+F 3 "" H 5050 2100 50  0001 C CNN
+	1    5050 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_US R5
+U 1 1 613725CA
+P 4775 2725
+F 0 "R5" V 4570 2725 50  0000 C CNN
+F 1 "10k" V 4661 2725 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4815 2715 50  0001 C CNN
+F 3 "~" H 4775 2725 50  0001 C CNN
+	1    4775 2725
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4925 2725 5375 2725
+Connection ~ 5375 2725
+Wire Wire Line
+	5375 2725 5375 2800
+Wire Wire Line
+	4625 2725 4150 2725
+Connection ~ 4150 2725
+Wire Wire Line
+	4150 2725 4150 2950
+Wire Wire Line
+	2550 4375 2775 4375
+Wire Wire Line
+	2775 4375 2775 4775
+Connection ~ 2775 4375
+Wire Wire Line
+	2775 4375 3400 4375
+Wire Wire Line
+	3225 4775 3700 4775
+$Comp
+L power:PWR_FLAG #FLG0102
+U 1 1 6161E760
+P 2550 4700
+F 0 "#FLG0102" H 2550 4775 50  0001 C CNN
+F 1 "PWR_FLAG" H 2550 4873 50  0000 C CNN
+F 2 "" H 2550 4700 50  0001 C CNN
+F 3 "~" H 2550 4700 50  0001 C CNN
+	1    2550 4700
+	1    0    0    -1  
+$EndComp
+Connection ~ 2550 4700
+Wire Wire Line
+	1775 4275 1700 4275
+Connection ~ 1775 4275
+Wire Wire Line
+	2400 3975 1700 3975
+Wire Wire Line
+	2400 3975 2400 4700
+Wire Wire Line
+	2550 4375 1700 4375
+Connection ~ 2550 4375
 $EndSCHEMATC
