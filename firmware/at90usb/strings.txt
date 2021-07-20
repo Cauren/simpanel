@@ -1,0 +1,55 @@
+mfg	The Coren
+product	SIMPANEL rev. C
+hid	SIMPANEL HID
+ctc	SIMPANEL Control Port
+g_ap	Autopilot panel
+ap_sw1	HDG hold
+ap_sw2	A/T
+ap_sw3	FLC
+ap_sw4	VNAV
+ap_sw5	LNAV
+ap_sw6	VS
+ap_sw7	ALT hold
+ap_sw8	NAV/FMS
+ap_sw9	FD
+ap_sw10	YD
+ap_sw11	A/P
+ap_sw12	FL select
+ap_sw13 Mach select
+dial1	HDG dial
+dial1b	HDG select
+dial2	SPD dial
+dial2b	SPD select
+dial3	VS dial
+dial3b	VS select
+dial4	ALT dial
+dial4b	ALT select
+dial1m	HDG-
+dial1p	HDG+
+dial2m	SPD-
+dial2p	SPD+
+dial3m	VS-
+dial3p	VS+
+dial4m	ALT-
+dial4p	ALT+
+g_sw	Switch panel
+s1	SW1
+s2	SW2
+s3	SW3
+s4	SW4
+s5	SW5
+s6	SW6
+s7	SW7
+s8u	SW8 up
+s8d	SW8 down
+s9u	SW9 up
+s9d	SW9 down
+s10u	SW10 up
+s10d	SW10 down
+s14	SW14
+s15	SW15
+s11u	SW11 up
+s11d	SW11 down
+s12	SW12
+s13u	SW13 up
+s13d	SW13 down
