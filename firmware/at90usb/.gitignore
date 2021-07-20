@@ -1,0 +1,12 @@
+obj
+strings.c
+*.eep
+*.hex
+*.elf
+*.lss
+*.map
+*.sym
+.cache
+*.o
+*.bin
+LUFA*
