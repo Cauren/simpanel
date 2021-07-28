@@ -1,0 +1,6 @@
+*.bak
+*.fpd
+*.dxf
+*.csv
+simpanel/
+casing/

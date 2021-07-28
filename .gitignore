@@ -12,3 +12,13 @@ msfs2020/SimpanelConnect/bin/
 msfs2020/SimpanelConnect/obj/
 
 .vs/
+
+msfs2020/SimpanelConnect/Simpanel.install/
+
+*.zip
+
+msfs2020/SimpanelConnect/SimConnect.dll
+
+*.dll
+
+msfs2020/SimpanelConnect/publish/

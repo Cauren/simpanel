@@ -18,11 +18,12 @@ public:
 	int				id;
 	double			value;
 	bool			synthetic;
+	char*			off;
 	char			key[32];
 	char			expr[128];
 
 public:
-	Expression(const char* k) : id(-1), value(0), synthetic(true) { strncpy(key, k, 31); key[31] = 0; expr[0] = 0; };
+	Expression(const char* k) : id(-1), value(0), synthetic(true), off(0) { strncpy(key, k, 31); key[31] = 0; expr[0] = 0; };
 
 	void fire(void);
 	operator int(void) { return int(value); };
@@ -60,10 +61,14 @@ enum Vid {
 	AP_Pitch,
 	AP_Altitude,
 	AP_Altitude_Show,
+	AP_Dial_Push_0,
+	AP_Dial_Push_3=AP_Dial_Push_0+3,
 	AP_Led_0,
 	AP_Led_10=AP_Led_0+10,
 	AP_Toggle_0,
 	AP_Toggle_10=AP_Toggle_0+10,
+	Switch_0,
+	Switch_21=Switch_0+21,
 };
 
 static Expression  V[] = {
@@ -84,8 +89,17 @@ static Expression  V[] = {
 	"AP_Pitch",
 	"AP_Altitude",
 	"AP_Altitude_Show",
+	"Dial0_push", "Dial1_push", "Dial2_push", "Dial3_push",
 	"led0", "led1", "led2", "led3", "led4", "led5", "led6", "led7", "led8", "led9", "led10",
 	"toggle0", "toggle1", "toggle2", "toggle3", "toggle4", "toggle5", "toggle6", "toggle7", "toggle8", "toggle9", "toggle10",
+	"switch0", "switch1", "switch2", "switch3", "switch4", "switch5", "switch6", "switch7",
+	"switch8up", "switch8down", "switch9up", "switch9down", "switch10up", "switch10down", "switch11up", "switch11down",
+	"switch12up", "switch12down", "switch13up", "switch13down",
+	"switch14", "switch15",
+};
+
+static int button_remap[24] = {
+	3, 4, 5, 2, 1, 14, 16, 15, 17, 12, 6, 9, 10, 11, 8, 7, 0, 20, 21, 18, 19, 13, 
 };
 
 static char airframe[5] = "----";
@@ -177,7 +191,6 @@ bool setup_expressions(const char* model)
 				i++;
 			if (i >= num) {
 				fprintf(stderr, "[SIMPANEL] unknown key %s in ini\n", s);
-				fprintf(stderr, "[SIMPANEL] 1 is %s\n", V[1].key);
 				fflush(stderr);
 				continue;
 			}
@@ -247,14 +260,14 @@ void Expression::fire(void)
 	int ival = -666;
 	char* sval = 0;
 
-	printf("[SIMPANEL] Firing %s: %s\n", key, expr);
+	// printf("[SIMPANEL] Firing %s: %s\n", key, expr);
 	if (id == -3)
 		if (!execute_calculator_code(expr, &nval, &ival, 0)) {
 			fprintf(stderr, "[SIMPANEL] Toggle code failed\n");
 			fflush(stderr);
 			id = -1;
 		}
-	printf("[SIMPANEL] results %g %d %p\n", nval, ival, sval);
+	// printf("[SIMPANEL] results %g %d %p\n", nval, ival, sval);
 	fflush(stdout);
 }
 
@@ -283,7 +296,7 @@ enum SCData : DWORD {
 };
 
 enum SCRequest : DWORD {
-	ATCInfoReq, SPDisplayReq, SPInputReq, SPInputCD,
+	ATCInfoReq, SPDisplayReq, SPDisplayCD, SPInputReq, SPInputCD,
 };
 
 enum SCGroup : DWORD {
@@ -311,15 +324,14 @@ template<typename T> void sim_recv(T* ev, DWORD data, void* ctx) {
 
 RECV_FUNC(EXCEPTION)
 {
-	fprintf(stderr, "[SIMPANEL] SimConnect exception %d\n", ev->dwException);
+	fprintf(stderr, "[SIMPANEL] SimConnect exception %ld\n", ev->dwException);
 	fflush(stderr);
 }
 
 RECV_FUNC(OPEN)
 {
 	printf("[SIMPANEL] Open (%s)\n", ev->szApplicationName);;
-	panel_state = PanelState::AskATC;
-	SimConnect_RequestDataOnSimObject(sim, ATCInfoReq, ATCInfoData, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_ONCE, SIMCONNECT_DATA_REQUEST_FLAG_DEFAULT);
+	panel_state = PanelState::SimStopped;
 	cur_in.apswitch = 0;
 	cur_in.dswitch = 0;
 	cur_in.toggles = 0;
@@ -342,11 +354,14 @@ RECV_FUNC(CLIENT_DATA)
 		std::strncpy(inp, (char*)(&ev->dwData), 31);
 		inp[31] = 0;
 
+		//printf("[SIMPANEL] <%s>\n", inp);
+
 		for (int i = 0; i < 4; i++)
 			in.dial[i] = unhex(inp + 2 * i);
 		in.apswitch = unhex(inp + 8) | int(unhex(inp + 10) << 8);
 		in.toggles = unhex(inp + 12) | int(unhex(inp + 14))<<8 | int(unhex(inp + 16)<<16);
 		in.dswitch = unhex(inp + 18);
+		//printf("[SIMPANEL] [%x]\n", in.toggles);
 
 		Expression& Heading = V[AP_Heading];
 		Expression& MachMode = V[AP_Mach_Mode];
@@ -358,8 +373,16 @@ RECV_FUNC(CLIENT_DATA)
 		Expression& Altitude = V[AP_Altitude];
 
 		int delta = in.dial[0];
-		if (delta && Heading) {
-			int nv = (int(Heading) + delta) % 360;
+		if (delta) {
+			if (in.dswitch & 1) {
+				delta = (delta * 10);
+				if (int(Heading) % 10) {
+					if (delta < 0)
+						delta += 10;
+					delta -= (int(Heading) % 10);
+				}
+			}
+			int nv = (int(Heading) + delta + 360) % 360;
 			send_key_event(KEY_HEADING_BUG_SET, nv);
 			Heading = nv;
 		}
@@ -394,13 +417,27 @@ RECV_FUNC(CLIENT_DATA)
 			Altitude = round;
 		}
 
+		for(int i=0; i<4; i++)
+			if ((in.dswitch & (1 << i)) && !(cur_in.dswitch & (1 << i))) {
+				if (V[AP_Dial_Push_0 + i].expr[0])
+					V[AP_Dial_Push_0 + i].fire();
+			}
+		cur_in.dswitch = in.dswitch;
+
 		for(int i=0; i<11; i++)
-			if (in.apswitch & (1 << i) && !(cur_in.apswitch & (1 << i))) {
+			if ((in.apswitch & (1 << i)) && !(cur_in.apswitch & (1 << i))) {
 				if (V[AP_Toggle_0+i].expr[0])
 					V[AP_Toggle_0 + i].fire();
 			}
 		cur_in.apswitch = in.apswitch;
 
+		for(int i=0; i<24; i++)
+			if ((in.toggles & (1 << i)) && !(cur_in.toggles & (1 << i))) {
+				int t = button_remap[i];
+				printf("[SIMPANEL] toggle %d\n", t);
+			}
+		cur_in.toggles = in.toggles;
+		fflush(stdout);
 		break;
 	}
 	}
@@ -424,8 +461,10 @@ RECV_FUNC(EVENT_FILENAME)
 		printf("[SIMPANEL] Aircraft loaded: %s\n", ev->szFileName);
 		fflush(stdout);
 		break;
+	case Event::SimpanelDisplay:
+		break;
 	default:
-		fprintf(stderr, "[SIMPANEL] unhandled event %d (filename)\n", ev->uEventID);
+		fprintf(stderr, "[SIMPANEL] unhandled event %ld (filename)\n", ev->uEventID);
 		fflush(stderr);
 		break;
 	}
@@ -450,7 +489,7 @@ RECV_FUNC(EVENT)
 		sim_paused = ev->dwData;
 		break;
 	default:
-		fprintf(stderr, "[SIMPANEL] unhandled event %d\n", ev->uEventID);
+		fprintf(stderr, "[SIMPANEL] unhandled event %ld\n", ev->uEventID);
 		fflush(stderr);
 		break;
 	}
@@ -500,7 +539,7 @@ void update_display(bool xmit)
 		dpy[3] = dpy[4] = dpy[5] = ' ';
 
 	if (V[AP_Pitch_Mode] && V[AP_Pitch_Show])
-		sprintf(dpy + 6, "%+5d", int(V[AP_VS].value));
+		sprintf(dpy + 6, "%+3do%d", int(V[AP_Pitch].value), int(10 * (double(V[AP_Pitch]) - int(V[AP_Pitch]))));
 	else if (V[AP_VS_Show] && !V[AP_Pitch_Mode])
 		sprintf(dpy + 6, "%+5d", int(V[AP_VS].value));
 	else
@@ -530,7 +569,7 @@ void update_display(bool xmit)
 
 	if (xmit) {
 		sprintf(sds.data, "%4s%16.16s%03x", airframe, simpanel_dpy, int(simpanel_leds));
-		SimConnect_SetClientData(sim, SPDisplayReq, SPDIsplayData, 0, 0, sizeof(SPDisplayStruct), &sds);
+		SimConnect_SetClientData(sim, SPDisplayCD, SPDIsplayData, 0, 0, sizeof(SPDisplayStruct), &sds);
 		SimConnect_TransmitClientEvent(sim, SIMCONNECT_OBJECT_ID_USER, SimpanelDisplay, 0, SimpanelGroup, 0);
 	}
 }
@@ -539,7 +578,7 @@ void display_now(const char* msg) {
 	SPDisplayStruct sds;
 
 	sprintf(sds.data, "%-20.20s000", msg);
-	SimConnect_SetClientData(sim, SPDisplayReq, SPDIsplayData, 0, 0, sizeof(SPDisplayStruct), &sds);
+	SimConnect_SetClientData(sim, SPDisplayCD, SPDIsplayData, 0, 0, sizeof(SPDisplayStruct), &sds);
 	SimConnect_TransmitClientEvent(sim, SIMCONNECT_OBJECT_ID_USER, SimpanelDisplay, 0, SimpanelGroup, 0);
 }
 
@@ -591,10 +630,7 @@ void CALLBACK sim_recv(SIMCONNECT_RECV* recv, DWORD data, void* ctx)
 }
 
 extern "C" MSFS_CALLBACK void module_init(void){
-//	FLOAT64 att_pitch = 0;
-//	FLOAT64 att_bank = 0;
-//	execute_calculator_code("(A:ATTITUDE INDICATOR PITCH DEGREES:2, degrees)", &att_pitch, 0, 0);
-//	execute_calculator_code("(A:ATTITUDE INDICATOR BANK DEGREES:2, degrees)", &att_bank,0, 0);
+
 	if (SimConnect_Open(&sim, "Simpanel Module", 0, 0, 0, 0) != S_OK) {
 		fprintf(stderr, "[SIMPANEL] Unable to open SimConnect.\n");
 		return;
@@ -604,16 +640,18 @@ extern "C" MSFS_CALLBACK void module_init(void){
 	SimConnect_AddToDataDefinition(sim, ATCInfoData, "ATC MODEL", 0, SIMCONNECT_DATATYPE_STRING64);
 	SimConnect_RequestDataOnSimObject(sim, ATCInfoReq, ATCInfoData, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
 
-	SimConnect_MapClientDataNameToID(sim, "simpanel.display", SPDisplayReq);
-	SimConnect_CreateClientData(sim, SPDisplayReq, sizeof(SPDisplayStruct), 0);
+	if (SimConnect_MapClientDataNameToID(sim, "simpanel.display", SPDisplayCD) != S_OK)
+		fprintf(stderr, "[SIMPANEL] MapClientDataNameToID(display) failed\n");
+	SimConnect_CreateClientData(sim, SPDisplayCD, sizeof(SPDisplayStruct), SIMCONNECT_CREATE_CLIENT_DATA_FLAG_READ_ONLY);
+	fprintf(stderr, "[SIMPANEL] CreateClientData(display) failed\n");
 	SimConnect_AddToClientDataDefinition(sim, SPDIsplayData, 0, 32);
 
 	SimConnect_MapClientDataNameToID(sim, "simpanel.input", SPInputCD);
-	SimConnect_CreateClientData(sim, SPInputCD, sizeof(SPDisplayStruct), 0);
+	fprintf(stderr, "[SIMPANEL] MapClientDataNameToID(input) failed\n");
 	SimConnect_AddToClientDataDefinition(sim, SPInputData, 0, 32);
 
 	SimConnect_MapClientEventToSimEvent(sim, SimpanelDisplay, "simpanel.display");
-	SimConnect_AddClientEventToNotificationGroup(sim, SimpanelGroup, SimpanelDisplay);
+//	SimConnect_AddClientEventToNotificationGroup(sim, SimpanelGroup, SimpanelDisplay);
 	SimConnect_MapClientEventToSimEvent(sim, SimpanelInput, "simpanel.input");
 	SimConnect_AddClientEventToNotificationGroup(sim, SimpanelGroup, SimpanelInput);
 	SimConnect_SetNotificationGroupPriority(sim, SimpanelGroup, SIMCONNECT_GROUP_PRIORITY_HIGHEST);
@@ -634,6 +672,7 @@ extern "C" MSFS_CALLBACK void module_init(void){
 	cur_in.dswitch = 0;
 	cur_in.toggles = 0;
 
+	fflush(stderr);
 	printf("[SIMPANEL] Simpanel Module started!\n");
 }
 
