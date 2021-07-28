@@ -56,14 +56,21 @@ typedef struct {
     uint8_t		switches[3];
 } Report;
 
+typedef struct {
+    uint8_t		digits[18];
+    uint16_t		leds;
+} LedReport;
+
 #define S(_sn_) _HID_RI_ENTRY(HID_RI_TYPE_LOCAL , 0x70, 8, SI_##_sn_)
 #define SMIN(_sn_) _HID_RI_ENTRY(HID_RI_TYPE_LOCAL , 0x80, 8, SI_##_sn_)
 #define SMAX(_sn_) _HID_RI_ENTRY(HID_RI_TYPE_LOCAL , 0x90, 8, SI_##_sn_)
 
 const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
-    HID_RI_USAGE_PAGE(8, 0x01), /* Generic Desktop */
-    HID_RI_USAGE(8, 0x05), /* Gamepad */
+    HID_RI_USAGE_PAGE(8, 0x02), /* Simulation controls */
+    HID_RI_USAGE(8, 0x01), /* Flight Simulation device */
     HID_RI_COLLECTION(8, 0x01), /* Application */
+
+        HID_RI_REPORT_ID(8, 1),
 
     	// Autopilot
         HID_RI_USAGE_PAGE(8, 0x02), /* Simulation controls */
@@ -83,7 +90,7 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 		HID_RI_REPORT_SIZE(8, 7),
 		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_WRAP | HID_IOF_RELATIVE | HID_IOF_VOLATILE),
 		HID_RI_USAGE_PAGE(8, 0x09), // button
-		HID_RI_USAGE(8, 9),
+		HID_RI_USAGE(8, 1),
 		HID_RI_LOGICAL_MINIMUM(8, 0),
 		HID_RI_LOGICAL_MAXIMUM(8, 1),
 		S(dial1b),
@@ -104,7 +111,7 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 		HID_RI_REPORT_SIZE(8, 7),
 		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_WRAP | HID_IOF_RELATIVE | HID_IOF_VOLATILE),
 		HID_RI_USAGE_PAGE(8, 0x09), // button
-		HID_RI_USAGE(8, 10),
+		HID_RI_USAGE(8, 1),
 		HID_RI_LOGICAL_MINIMUM(8, 0),
 		HID_RI_LOGICAL_MAXIMUM(8, 1),
 		S(dial2b),
@@ -125,7 +132,7 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 		HID_RI_REPORT_SIZE(8, 7),
 		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_WRAP | HID_IOF_RELATIVE | HID_IOF_VOLATILE),
 		HID_RI_USAGE_PAGE(8, 0x09), // button
-		HID_RI_USAGE(8, 11),
+		HID_RI_USAGE(8, 1),
 		HID_RI_LOGICAL_MINIMUM(8, 0),
 		HID_RI_LOGICAL_MAXIMUM(8, 1),
 		S(dial3b),
@@ -146,7 +153,7 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 		HID_RI_REPORT_SIZE(8, 7),
 		HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_WRAP | HID_IOF_RELATIVE | HID_IOF_VOLATILE),
 		HID_RI_USAGE_PAGE(8, 0x09), // button
-		HID_RI_USAGE(8, 12),
+		HID_RI_USAGE(8, 1),
 		HID_RI_LOGICAL_MINIMUM(8, 0),
 		HID_RI_LOGICAL_MAXIMUM(8, 1),
 		S(dial4b),
@@ -156,18 +163,18 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 	    HID_RI_END_COLLECTION(0),
 
 	    HID_RI_USAGE_PAGE(8, 0x09), /* Button */
-	    HID_RI_USAGE_MINIMUM(8, 13),
-	    HID_RI_USAGE_MAXIMUM(8, 24),
+	    HID_RI_USAGE_MINIMUM(8, 1),
+	    HID_RI_USAGE_MAXIMUM(8, 11),
 	    HID_RI_LOGICAL_MINIMUM(8, 0),
 	    HID_RI_LOGICAL_MAXIMUM(8, 1),
 	    SMIN(ap_sw1),
 	    SMAX(ap_sw12),
-	    HID_RI_REPORT_COUNT(8, 12),
+	    HID_RI_REPORT_COUNT(8, 11),
 	    HID_RI_REPORT_SIZE(8, 1),
 	    HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
 
 	    HID_RI_REPORT_COUNT(8, 1),
-	    HID_RI_REPORT_SIZE(8, 4),
+	    HID_RI_REPORT_SIZE(8, 5),
 	    HID_RI_INPUT(8, HID_IOF_CONSTANT),
 
 	HID_RI_END_COLLECTION(0),
@@ -178,8 +185,8 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 	HID_RI_COLLECTION(8, 0x02),
 
 	    HID_RI_USAGE_PAGE(8, 0x09), /* Button */
-	    HID_RI_USAGE_MINIMUM(8, 25),
-	    HID_RI_USAGE_MAXIMUM(8, 44),
+	    HID_RI_USAGE_MINIMUM(8, 1),
+	    HID_RI_USAGE_MAXIMUM(8, 20),
 	    SMIN(s1),
 	    SMAX(s13d),
 	    HID_RI_REPORT_COUNT(8, 20),
@@ -189,6 +196,33 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 	    HID_RI_REPORT_COUNT(8, 1),
 	    HID_RI_REPORT_SIZE(8, 4),
 	    HID_RI_INPUT(8, HID_IOF_CONSTANT),
+
+	HID_RI_END_COLLECTION(0),
+
+	HID_RI_REPORT_ID(8, 2),
+	HID_RI_USAGE_PAGE(8, 0x14),
+	HID_RI_USAGE(8, 0x01),
+	HID_RI_COLLECTION(8, 0x02),
+
+	    HID_RI_USAGE(8, 0x43),
+	    HID_RI_USAGE(8, 0x2C),
+	    HID_RI_REPORT_COUNT(8, 18),
+	    HID_RI_REPORT_SIZE(8, 8),
+	    S(digs),
+	    HID_RI_OUTPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE | HID_IOF_NON_VOLATILE),
+
+	    HID_RI_USAGE_PAGE(8, 0x08),
+	    HID_RI_USAGE_MINIMUM(8, 1),
+	    HID_RI_USAGE_MAXIMUM(8, 11),
+	    SMIN(ap_sw1),
+	    SMAX(ap_sw2),
+	    HID_RI_REPORT_COUNT(8, 11),
+	    HID_RI_REPORT_SIZE(8, 1),
+	    HID_RI_OUTPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE | HID_IOF_NON_VOLATILE),
+
+	    HID_RI_REPORT_COUNT(8, 1),
+	    HID_RI_REPORT_SIZE(8, 5),
+	    HID_RI_OUTPUT(8, HID_IOF_CONSTANT),
 
 	HID_RI_END_COLLECTION(0),
 
@@ -418,6 +452,7 @@ uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
 
 static volatile Report		report;
 static volatile Report		new_report;
+static volatile LedReport	led_report;
 static volatile bool		report_changed = true;
 static volatile bool		slow_report = false;
 static volatile bool		connected = false;
@@ -457,60 +492,6 @@ void EVENT_USB_Device_ConfigurationChanged(void)
 	if(ConfigSuccess) status++;
 }
 
-
-void EVENT_USB_Device_ControlRequest(void)
-{
-        /* Handle HID Class specific requests */
-        switch (USB_ControlRequest.bRequest) {
-	  case HID_REQ_GetReport:
-	    if (USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE))
-	      {
-		Endpoint_ClearSETUP();
-		Endpoint_Write_Control_Stream_LE((Report*)&report, sizeof(Report));
-		report_changed = false;
-		Endpoint_ClearOUT();
-	      }
-
-	    break;
-
-	  case CDC_REQ_GetLineEncoding:
-	    if (USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE))
-	      {
-		Endpoint_ClearSETUP();
-
-		/* Write the line coding data to the control endpoint */
-		Endpoint_Write_Control_Stream_LE(&linesetup, sizeof(CDC_LineEncoding_t));
-		Endpoint_ClearOUT();
-	      }
-
-	    break;
-	  case CDC_REQ_SetLineEncoding:
-	    if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
-	      {
-		Endpoint_ClearSETUP();
-
-		/* Read the line coding data in from the host into the global struct */
-		Endpoint_Read_Control_Stream_LE(&linesetup, sizeof(CDC_LineEncoding_t));
-		Endpoint_ClearIN();
-	      }
-
-	    break;
-	  case CDC_REQ_SetControlLineState:
-	    if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
-	      {
-		Endpoint_ClearSETUP();
-		Endpoint_ClearStatusStage();
-
-		/* NOTE: Here you can read in the line state mask from the host, to get the current state of the output handshake
-		   lines. The mask is read in from the wValue parameter in USB_ControlRequest, and can be masked against the
-		   CONTROL_LINE_OUT_* masks to determine the RTS and DTR line states using the following code:
-		 */
-	      }
-
-	    break;
-
-	}
-}
 
 #define BUFS 16
 #define BSIZE 44
@@ -973,6 +954,11 @@ bool dpy_set(void)
 	}
     }
 
+    if(dpybits[23] != leds) {
+	dpybits[23] = leds;
+	refresh = true;
+    }
+
     return refresh;
 }
 
@@ -1204,6 +1190,14 @@ void do_con_in(char* s, uint8_t len) {
 	}
 	return;
 
+      case 'l':
+	if(len==3) {
+	    leds = unhex(s+1);
+	    if(dpy_set())
+		dpy_step = 32;
+	}
+	return;
+
       case 'b':
 	if(len == 2 && s[1]=='P') {
 	    _delay_ms(1);
@@ -1230,8 +1224,83 @@ void do_con_in(char* s, uint8_t len) {
 
 }
 
+void EVENT_USB_Device_ControlRequest(void)
+{
+        /* Handle HID Class specific requests */
+        switch (USB_ControlRequest.bRequest) {
+	  case HID_REQ_GetReport:
+	    if (USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE))
+	      {
+		Endpoint_ClearSETUP();
+		Endpoint_Write_Control_Stream_LE((Report*)&report, sizeof(Report));
+		report_changed = false;
+		Endpoint_ClearOUT();
+	      }
+
+	    break;
+
+	  case HID_REQ_SetReport:
+	    if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
+	      {
+		Endpoint_ClearSETUP();
+
+		if(Endpoint_Read_Control_Stream_LE((uint8_t*)&led_report, sizeof(LedReport)) == ENDPOINT_RWSTREAM_NoError) {
+		    for(int i=0; i<18; i++)
+			display[i] = led_report.digits[i];
+		    leds = led_report.leds;
+		    if(dpy_set())
+			dpy_step = 32;
+		}
+
+		Endpoint_ClearIN();
+	      }
+
+	    break;
+
+	  case CDC_REQ_GetLineEncoding:
+	    if (USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE))
+	      {
+		Endpoint_ClearSETUP();
+
+		/* Write the line coding data to the control endpoint */
+		Endpoint_Write_Control_Stream_LE(&linesetup, sizeof(CDC_LineEncoding_t));
+		Endpoint_ClearOUT();
+	      }
+
+	    break;
+	  case CDC_REQ_SetLineEncoding:
+	    if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
+	      {
+		Endpoint_ClearSETUP();
+
+		/* Read the line coding data in from the host into the global struct */
+		Endpoint_Read_Control_Stream_LE(&linesetup, sizeof(CDC_LineEncoding_t));
+		Endpoint_ClearIN();
+	      }
+
+	    break;
+	  case CDC_REQ_SetControlLineState:
+	    if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
+	      {
+		Endpoint_ClearSETUP();
+		Endpoint_ClearStatusStage();
+
+		/* NOTE: Here you can read in the line state mask from the host, to get the current state of the output handshake
+		   lines. The mask is read in from the wValue parameter in USB_ControlRequest, and can be masked against the
+		   CONTROL_LINE_OUT_* masks to determine the RTS and DTR line states using the following code:
+		 */
+	      }
+
+	    break;
+
+	}
+}
+
 int main(void)
 {
+    int mcucr = MCUCR | 0x80;
+    MCUCR = mcucr;
+    MCUCR = mcucr;
     MCUSR &= ~(1 << WDRF);
     wdt_disable();
     clock_prescale_set(clock_div_1);
@@ -1291,7 +1360,6 @@ int main(void)
     USB_Init();
     GlobalInterruptEnable();
 
-    uint8_t send = 0;
     for(;;) {
 	wdt_reset();
 	// decode();
@@ -1304,21 +1372,22 @@ int main(void)
 	    milis = 0;
 	    ready = 1;
 
-	    update_report();
-	    if(report_changed) {
-		report_changed = false;
-		out('s');
-		for(int i=0; i<4; i++)
-		    hex(report.dswitch[i]);
-		out(' ');
-		hex(report.ap>>8);
-		hex(report.ap);
-		out(' ');
-		for(int i=0; i<3; i++)
-		    hex(report.switches[i]);
-		crlf();
-		write();
-	    }
+	    if(!report_changed)
+		update_report();
+//	    if(report_changed) {
+//		report_changed = false;
+//		out('s');
+//		for(int i=0; i<4; i++)
+//		    hex(report.dswitch[i]);
+//		out(' ');
+//		hex(report.ap>>8);
+//		hex(report.ap);
+//		out(' ');
+//		for(int i=0; i<3; i++)
+//		    hex(report.switches[i]);
+//		crlf();
+//		write();
+//	    }
 
 	    USB_USBTask();
 	    if (USB_DeviceState == DEVICE_STATE_Configured) {
