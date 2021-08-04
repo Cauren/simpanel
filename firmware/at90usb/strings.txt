@@ -53,3 +53,4 @@ s11d	SW11 down
 s12	SW12
 s13u	SW13 up
 s13d	SW13 down
+digs	Digital display
