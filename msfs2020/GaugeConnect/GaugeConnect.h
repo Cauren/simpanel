@@ -1,4 +1,4 @@
-﻿// SimpanelModule.h : Include file for standard system include files,
+﻿// GaugeConnect.h : Include file for standard system include files,
 // or project specific include files.
 
 #pragma once
@@ -12,4 +12,3 @@
 #	define __attribute__(x)
 #	define __restrict__
 #endif
-

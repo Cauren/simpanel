@@ -1,6 +1,0 @@
-<Project Version="2" Name="SimpanelModule" FolderName="Packages">
-	<OutputDirectory>.</OutputDirectory>
-	<TemporaryOutputDirectory>_PackageInt</TemporaryOutputDirectory>
-	<Packages/>
-</Project>
-

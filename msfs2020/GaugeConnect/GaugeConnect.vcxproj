@@ -85,7 +85,7 @@
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
       <NoEntryPoint>true</NoEntryPoint>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(Solutiondir)Output\$(TargetName)$(TargetExt)</OutputFile>
       <RandomizedBaseAddress>
       </RandomizedBaseAddress>
       <DataExecutionPrevention>
@@ -148,15 +148,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SimpanelModule.cpp" />
+    <ClCompile Include="GaugeConnect.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SimpanelModule.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="simpanel.ini">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
+    <ClInclude Include="GaugeConnect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
