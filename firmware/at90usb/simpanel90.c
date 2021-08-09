@@ -1,4 +1,5 @@
 
+#include <assert.h>
 
 #include <avr/io.h>
 #include <avr/wdt.h>
@@ -22,37 +23,18 @@ typedef struct
     USB_HID_Descriptor_HID_t			HID_JoystickHID;
     USB_Descriptor_Endpoint_t			HID_ReportINEndpoint;
 
-    USB_Descriptor_Interface_Association_t	CDC_IAD;
-    // CDC Control Interface
-    USB_Descriptor_Interface_t			CDC_CCI_Interface;
-    USB_CDC_Descriptor_FunctionalHeader_t	CDC_Functional_Header;
-    USB_CDC_Descriptor_FunctionalACM_t		CDC_Functional_ACM;
-    USB_CDC_Descriptor_FunctionalUnion_t	CDC_Functional_Union;
-    USB_Descriptor_Endpoint_t			CDC_ManagementEndpoint;
-    // CDC Data Interface
-    USB_Descriptor_Interface_t			CDC_DCI_Interface;
-    USB_Descriptor_Endpoint_t			CDC_DataOutEndpoint;
-    USB_Descriptor_Endpoint_t			CDC_DataInEndpoint;
-
 } USB_Descriptor_Configuration_t;
 
 #define SIMPANEL_IN_EPADDR	(ENDPOINT_DIR_IN | 1)
-#define CDC_NOTIFICATION_EPADDR (ENDPOINT_DIR_IN | 2)
-#define CDC_TX_EPADDR		(ENDPOINT_DIR_IN | 3)
-#define CDC_RX_EPADDR		(ENDPOINT_DIR_OUT | 4)
 
 #define DTYPE_HID                 0x21
 #define DTYPE_Report              0x22
 
-uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
-				    const uint16_t wIndex,
-				    const void** const DescriptorAddress)
-    ATTR_WARN_UNUSED_RESULT ATTR_NON_NULL_PTR_ARG(3);
-
-
 typedef struct {
+    uint8_t		id;
     uint8_t		dswitch[4];
-    uint16_t		ap;
+    uint8_t		aplo;
+    uint8_t		aphi;
     uint8_t		switches[3];
 } Report;
 
@@ -100,7 +82,7 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 	    HID_RI_END_COLLECTION(0),
 
 	    HID_RI_USAGE_PAGE(8, 0x0A),
-	    HID_RI_USAGE(8, 2), // ordinal 1
+	    HID_RI_USAGE(8, 2), // ordinal 2
 	    HID_RI_COLLECTION(8, 0x00),
 		HID_RI_USAGE_PAGE(8, 0x01),
 		HID_RI_USAGE(8, 0x37), // Dial
@@ -121,7 +103,7 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 	    HID_RI_END_COLLECTION(0),
 
 	    HID_RI_USAGE_PAGE(8, 0x0A),
-	    HID_RI_USAGE(8, 3), // ordinal 1
+	    HID_RI_USAGE(8, 3), // ordinal 3
 	    HID_RI_COLLECTION(8, 0x00),
 		HID_RI_USAGE_PAGE(8, 0x01),
 		HID_RI_USAGE(8, 0x37), // Dial
@@ -142,7 +124,7 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 	    HID_RI_END_COLLECTION(0),
 
 	    HID_RI_USAGE_PAGE(8, 0x0A),
-	    HID_RI_USAGE(8, 4), // ordinal 1
+	    HID_RI_USAGE(8, 4), // ordinal 4
 	    HID_RI_COLLECTION(8, 0x00),
 		HID_RI_USAGE_PAGE(8, 0x01),
 		HID_RI_USAGE(8, 0x37), // Dial
@@ -215,7 +197,7 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM ControlsReport[] = {
 	    HID_RI_USAGE_MINIMUM(8, 1),
 	    HID_RI_USAGE_MAXIMUM(8, 11),
 	    SMIN(ap_sw1),
-	    SMAX(ap_sw2),
+	    SMAX(ap_sw12),
 	    HID_RI_REPORT_COUNT(8, 11),
 	    HID_RI_REPORT_SIZE(8, 1),
 	    HID_RI_OUTPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE | HID_IOF_NON_VOLATILE),
@@ -242,11 +224,11 @@ const USB_Descriptor_Device_t PROGMEM DeviceDescriptor =
 
     .VendorID               = 0x1209,
     .ProductID              = 0xC00C,
-    .ReleaseNumber          = VERSION_BCD(0,9,0),
+    .ReleaseNumber          = VERSION_BCD(1,0,0),
 
     .ManufacturerStrIndex   = SI_mfg,
     .ProductStrIndex        = SI_product,
-    .SerialNumStrIndex      = USE_INTERNAL_SERIAL,
+    .SerialNumStrIndex      = SI_serial,
 
     .NumberOfConfigurations = 1,
 };
@@ -258,14 +240,14 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 	.Header                 = {.Size = sizeof(USB_Descriptor_Configuration_Header_t), .Type = DTYPE_Configuration},
 
 	.TotalConfigurationSize = sizeof(USB_Descriptor_Configuration_t),
-	.TotalInterfaces        = 3,
+	.TotalInterfaces        = 1,
 
 	.ConfigurationNumber    = 1,
 	.ConfigurationStrIndex  = NO_DESCRIPTOR,
 
 	.ConfigAttributes       = (USB_CONFIG_ATTR_RESERVED | USB_CONFIG_ATTR_SELFPOWERED),
 
-	.MaxPowerConsumption    = USB_CONFIG_POWER_MA(100)
+	.MaxPowerConsumption    = USB_CONFIG_POWER_MA(250)
       },
 
     .HID_Interface =
@@ -305,120 +287,29 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 	.PollingIntervalMS      = 0x0A
       },
 
-    .CDC_IAD =
-      {
-	.Header                 = {.Size = sizeof(USB_Descriptor_Interface_Association_t), .Type = DTYPE_InterfaceAssociation},
-
-	.FirstInterfaceIndex    = 1,
-	.TotalInterfaces        = 2,
-
-	.Class                  = CDC_CSCP_CDCClass,
-	.SubClass               = CDC_CSCP_ACMSubclass,
-	.Protocol               = CDC_CSCP_ATCommandProtocol,
-
-	.IADStrIndex            = SI_ctc,
-      },
-
-    .CDC_CCI_Interface =
-      {
-	.Header                 = {.Size = sizeof(USB_Descriptor_Interface_t), .Type = DTYPE_Interface},
-
-	.InterfaceNumber        = 1,
-	.AlternateSetting       = 0,
-
-	.TotalEndpoints         = 1,
-
-	.Class                  = CDC_CSCP_CDCClass,
-	.SubClass               = CDC_CSCP_ACMSubclass,
-	.Protocol               = CDC_CSCP_ATCommandProtocol,
-
-	.InterfaceStrIndex      = NO_DESCRIPTOR
-      },
-
-    .CDC_Functional_Header =
-      {
-	.Header                 = {.Size = sizeof(USB_CDC_Descriptor_FunctionalHeader_t), .Type = CDC_DTYPE_CSInterface},
-	.Subtype                = CDC_DSUBTYPE_CSInterface_Header,
-
-	.CDCSpecification       = VERSION_BCD(1,1,0),
-      },
-
-    .CDC_Functional_ACM =
-      {
-	.Header                 = {.Size = sizeof(USB_CDC_Descriptor_FunctionalACM_t), .Type = CDC_DTYPE_CSInterface},
-	.Subtype                = CDC_DSUBTYPE_CSInterface_ACM,
-
-	.Capabilities           = 0x06,
-      },
-
-    .CDC_Functional_Union =
-      {
-	.Header                 = {.Size = sizeof(USB_CDC_Descriptor_FunctionalUnion_t), .Type = CDC_DTYPE_CSInterface},
-	.Subtype                = CDC_DSUBTYPE_CSInterface_Union,
-
-	.MasterInterfaceNumber  = 1,
-	.SlaveInterfaceNumber   = 2,
-      },
-
-    .CDC_ManagementEndpoint =
-      {
-	.Header                 = {.Size = sizeof(USB_Descriptor_Endpoint_t), .Type = DTYPE_Endpoint},
-
-	.EndpointAddress        = CDC_NOTIFICATION_EPADDR,
-	.Attributes             = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
-	.EndpointSize           = 8,
-	.PollingIntervalMS      = 0xFF
-      },
-
-    .CDC_DCI_Interface =
-      {
-	.Header                 = {.Size = sizeof(USB_Descriptor_Interface_t), .Type = DTYPE_Interface},
-
-	.InterfaceNumber        = 2,
-	.AlternateSetting       = 0,
-
-	.TotalEndpoints         = 2,
-
-	.Class                  = CDC_CSCP_CDCDataClass,
-	.SubClass               = CDC_CSCP_NoDataSubclass,
-	.Protocol               = CDC_CSCP_NoDataProtocol,
-
-	.InterfaceStrIndex      = NO_DESCRIPTOR
-      },
-
-    .CDC_DataOutEndpoint =
-      {
-	.Header                 = {.Size = sizeof(USB_Descriptor_Endpoint_t), .Type = DTYPE_Endpoint},
-
-	.EndpointAddress        = CDC_RX_EPADDR,
-	.Attributes             = (EP_TYPE_BULK | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
-	.EndpointSize           = 16,
-	.PollingIntervalMS      = 0x05
-      },
-
-    .CDC_DataInEndpoint =
-      {
-	.Header                 = {.Size = sizeof(USB_Descriptor_Endpoint_t), .Type = DTYPE_Endpoint},
-
-	.EndpointAddress        = CDC_TX_EPADDR,
-	.Attributes             = (EP_TYPE_BULK | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
-	.EndpointSize           = 16,
-	.PollingIntervalMS      = 0x05
-      },
-
 };
 
 
+static const wchar_t EEMEM serial_number_number[] = L"2100-01";
 
 uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
                                     const uint16_t wIndex,
-                                    const void** const DescriptorAddress)
+                                    const void** const DescriptorAddress,
+				    uint8_t* const DescriptorMemorySpace)
 {
+    _Static_assert(sizeof(wchar_t)==sizeof(unsigned short), "wchar_t is not a short");
+
+    static struct {
+	USB_Descriptor_String_t d;
+	wchar_t			pad[16];
+    } serial_number;
     const uint8_t  DescriptorType   = (wValue >> 8);
     const uint8_t  DescriptorNumber = (wValue & 0xFF);
 
     const void* Address = NULL;
     uint16_t    Size    = NO_DESCRIPTOR;
+
+    *DescriptorMemorySpace = MEMSPACE_FLASH;
 
     switch (DescriptorType) {
       case DTYPE_Device:
@@ -430,11 +321,25 @@ uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
 	Size    = sizeof(USB_Descriptor_Configuration_t);
 	break;
       case DTYPE_String:
-	  {
-	    USB_Descriptor_String_t* a = (USB_Descriptor_String_t*)pgm_read_ptr(Strings+DescriptorNumber);
-	    Address = a;
-	    Size = pgm_read_byte(&(a->Header.Size));
+	switch(DescriptorNumber) {
+	  case SI_serial: {
+	      size_t len = 0;
+	      USB_Descriptor_String_t* a = &serial_number.d;
+	      Address = a;
+	      while((a->UnicodeString[len] = eeprom_read_word((const unsigned int*)serial_number_number+len)))
+		  len++;
+	      Size = a->Header.Size = sizeof(USB_Descriptor_Header_t) + len*sizeof(wchar_t);
+	      a->Header.Type = DTYPE_String;
+	      *DescriptorMemorySpace = MEMSPACE_RAM;
+	      break;
 	  }
+	  default: {
+	      USB_Descriptor_String_t* a = (USB_Descriptor_String_t*)pgm_read_ptr(Strings+DescriptorNumber);
+	      Address = a;
+	      Size = pgm_read_byte(&(a->Header.Size));
+	      break;
+	  }
+	}
 	break;
       case DTYPE_HID:
 	Address = &ConfigurationDescriptor.HID_JoystickHID;
@@ -454,21 +359,13 @@ static volatile Report		report;
 static volatile Report		new_report;
 static volatile LedReport	led_report;
 static volatile bool		report_changed = true;
-static volatile bool		slow_report = false;
 static volatile bool		connected = false;
-
-static CDC_LineEncoding_t linesetup = {	.BaudRateBPS = 115200,
-    					.CharFormat  = CDC_LINEENCODING_OneStopBit,
-					.ParityType  = CDC_PARITY_None,
-					.DataBits    = 8
-};
 
 volatile uint8_t status=0;
 
 void EVENT_USB_Device_Connect(void)
 {
     connected = true;
-    slow_report = false;
     report_changed = false;
 }
 
@@ -484,12 +381,6 @@ void EVENT_USB_Device_ConfigurationChanged(void)
         /* Setup HID Report Endpoint */
         ConfigSuccess &= Endpoint_ConfigureEndpoint(SIMPANEL_IN_EPADDR, EP_TYPE_INTERRUPT, sizeof(Report), 1);
 	if(ConfigSuccess) status++;
-        ConfigSuccess &= Endpoint_ConfigureEndpoint(CDC_NOTIFICATION_EPADDR, EP_TYPE_INTERRUPT, 8, 1);
-	if(ConfigSuccess) status++;
-        ConfigSuccess &= Endpoint_ConfigureEndpoint(CDC_TX_EPADDR, EP_TYPE_BULK, 16, 1);
-	if(ConfigSuccess) status++;
-        ConfigSuccess &= Endpoint_ConfigureEndpoint(CDC_RX_EPADDR, EP_TYPE_BULK, 16, 1);
-	if(ConfigSuccess) status++;
 }
 
 
@@ -504,10 +395,7 @@ typedef struct _iobuf {
 
 static IOBuf            iobuf[BUFS];
 
-static IOBuf* volatile  b_usbin = 0;
-static IOBuf* volatile  bl_usbin = 0;
 static IOBuf* volatile  b_usbout = 0;
-static IOBuf* volatile	b_out = 0;
 
 IOBuf* newbuf(uint8_t len)
 {   
@@ -562,134 +450,15 @@ void do_usb_io(void)
 
     Endpoint_SelectEndpoint(SIMPANEL_IN_EPADDR);
     if(report_changed && Endpoint_IsINReady()) {
+	report.id = 1;
 	Endpoint_Write_Stream_LE((Report*)&report, sizeof(Report), NULL);
 	Endpoint_ClearIN();
 	report_changed = false;
 	update_report();
     }
 
-    if(b_usbout) {
-
-	Endpoint_SelectEndpoint(CDC_TX_EPADDR);
-
-	uint16_t sent = b_usbout->len;
-
-	switch(Endpoint_Write_Stream_LE((uint8_t*)b_usbout->buf, b_usbout->end, &sent)) {
-	  case ENDPOINT_RWSTREAM_IncompleteTransfer:
-	    b_usbout->len = sent;
-	    break;
-
-	  default:
-	    Endpoint_ClearIN();
-	    cli();
-	    b_usbout->end = 0;
-	    b_usbout = b_usbout->next;
-	    sei();
-	    break;
-	}
-    }
-
-#if 0
-	uint8_t left = 16 - Endpoint_BytesInEndpoint();
-	uint8_t send = b_usbout->end - b_usbout->len;
-
-	if(send) {
-	    if(!left)
-		break;
-	    if(send > left)
-		send = left;
-	    if(send) {
-		Endpoint_Write_Stream_LE((uint8_t*)b_usbout->buf+b_usbout->len, send, NULL);
-		if(send < left) {
-		    cli();
-		    b_usbout->end = 0;
-		    b_usbout = b_usbout->next;
-		    sei();
-		} else
-		    b_usbout->len += send;
-	    }
-	    Endpoint_ClearIN();
-	} else if(b_usbout->len >= b_usbout->end) {
-	    cli();
-	    b_usbout->end = 0;
-	    b_usbout = b_usbout->next;
-	    sei();
-	    Endpoint_ClearIN();
-	}
-    }
-#endif
-
-    Endpoint_SelectEndpoint(CDC_RX_EPADDR);
-    if(Endpoint_IsOUTReceived()) {
-	while(Endpoint_BytesInEndpoint() > 0) {
-
-	    uint8_t rx = Endpoint_Read_8();
-
-	    if(rx < 32) {
-		if(bl_usbin) {
-		    cli();
-		    if(rx == 'X'-0x40) {
-			bl_usbin->end = 0;
-			bl_usbin = 0;
-			sei();
-			continue;
-		    }
-		    bl_usbin->len = bl_usbin->end;
-		    queuebuf(bl_usbin, &b_usbin);
-		    bl_usbin = 0;
-		    sei();
-		}
-		continue;
-	    }
-	    if(!bl_usbin) {
-		bl_usbin = newbuf(1);
-		bl_usbin->buf[0] = rx;
-		continue;
-	    }
-	    if(bl_usbin->end < BSIZE)
-		bl_usbin->buf[bl_usbin->end++] = rx;
-	}
-	Endpoint_ClearOUT();
-    }
-
 }
 
-void out(char c) {
-    if(!b_out) {
-	b_out = newbuf(1);
-	b_out->buf[0] = c;
-	return;
-    }
-    if(b_out->end < BSIZE)
-	b_out->buf[b_out->end++] = c;
-}
-
-void outs(const char* s, uint8_t len) {
-    while(len--)
-	out(pgm_read_byte(s++));
-}
-
-void hex(uint8_t n) {
-    out('0'+((n>>4)&0x0F)+((n>0x9F)? 7: 0));
-    out('0'+(n&0x0F)+(((n&0x0F)>9)? 7: 0));
-}
-
-void crlf(void) {
-    out('\r');
-    out('\n');
-}
-
-void write(void) {
-    if(b_out) {
-	crlf();
-	b_out->len = 0;
-	queuebuf(b_out, &b_usbout);
-	b_out = 0;
-    }
-}
-
-const char PROGMEM s_model[] = "SIMPANEL rev. C";
-const char PROGMEM s_version[] = "01.030";
 
 static uint8_t	inputs[38];
 static int16_t	encoders[4];
@@ -716,11 +485,13 @@ void update_report(void)
 	new_report.dswitch[e] = enc;
     }
 
-    new_report.ap = 0;
+    uint16_t ap = 0;
     for(int i=0; i<11; i++) {
 	if(inputs[4+i] & 0x10)
-	    new_report.ap |= 1<<i;
+	    ap |= 1<<i;
     }
+    new_report.aplo = ap;
+    new_report.aphi = ap>>8;
 
     new_report.switches[0] = 0;
     new_report.switches[1] = 0;
@@ -742,7 +513,8 @@ void update_report(void)
        || (new_report.dswitch[1] & 0x7F)
        || (new_report.dswitch[2] & 0x7F)
        || (new_report.dswitch[3] & 0x7F)
-       || report.ap != new_report.ap
+       || report.aplo != new_report.aplo
+       || report.aphi != new_report.aphi
        || report.switches[0] != new_report.switches[0]
        || report.switches[1] != new_report.switches[1]
        || report.switches[2] != new_report.switches[2] ) {
@@ -900,30 +672,6 @@ static const uint8_t pwm_bits[] PROGMEM = {
     0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
     0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF, 0xBF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-};
-
-static const uint8_t digit_seg[] PROGMEM = {
-    0x3F, // 0
-    0x06, // 1
-    0x03, // 2
-    0x4f, // 3
-    0x66, // 4
-    0x6d, // 5
-    0x7d, // 6
-    0x07, // 7
-    0x7f, // 8
-    0x6f, // 9
-    0x77, // A
-    0x7c, // B
-    0x39, // C
-    0x5e, // D
-    0x79, // E
-    0x71, // F
-    0x40, // G (-)
-    0x70, // H (1/2 +)
-    0x63, // I (degree)
-    0x00, // j (space)
-    0x08, // k (uline)
 };
 
 static const uint8_t digit_index[] PROGMEM = {
@@ -1160,83 +908,20 @@ ISR(TIMER1_COMPA_vect)
     milis++;
 }
 
-void do_con_in(char* s, uint8_t len) {
-    switch(*s) {
-      case 's':
-	out('S');
-	hex(status);
-	write();
-	return;
-
-      case 'r':
-	out('R');
-	for(uint8_t i=0; i<sizeof(report); i++)
-	    hex(((char*)&report)[i]);
-	out(' ');
-	hex(dpy_step);
-	hex(i2cs);
-	hex(i2ce);
-	hex(TWCR);
-	hex(TWSR);
-	write();
-	return;
-
-      case 'd':
-	if(len == 4) {
-	    if(s[1]>='a' && s[1]<'s')
-		display[s[1]-'a'] = unhex(s+2);
-	    if(dpy_set())
-		dpy_step = 32;
-	}
-	return;
-
-      case 'l':
-	if(len==3) {
-	    leds = unhex(s+1);
-	    if(dpy_set())
-		dpy_step = 32;
-	}
-	return;
-
-      case 'b':
-	if(len == 2 && s[1]=='P') {
-	    _delay_ms(1);
-	    USB_Detach();
-	    _delay_ms(2);
-	    cli();
-	    *(uint16_t*)(RAMEND-1) = 0x7777;
-	    wdt_enable(WDTO_120MS);
-	    for(;;)
-		;
-	}
-	break;
-
-      case 'v':
-	  out('M'); outs(s_model, 15); crlf();
-	  out('V'); outs(s_version, 5); write();
-	  return;
-    }
-
-    while(len--)
-	out(*s++);
-    out('?');
-    write();
-
-}
-
 void EVENT_USB_Device_ControlRequest(void)
 {
         /* Handle HID Class specific requests */
         switch (USB_ControlRequest.bRequest) {
+
 	  case HID_REQ_GetReport:
 	    if (USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE))
 	      {
 		Endpoint_ClearSETUP();
+		report.id = 1;
 		Endpoint_Write_Control_Stream_LE((Report*)&report, sizeof(Report));
 		report_changed = false;
 		Endpoint_ClearOUT();
 	      }
-
 	    break;
 
 	  case HID_REQ_SetReport:
@@ -1244,51 +929,19 @@ void EVENT_USB_Device_ControlRequest(void)
 	      {
 		Endpoint_ClearSETUP();
 
-		if(Endpoint_Read_Control_Stream_LE((uint8_t*)&led_report, sizeof(LedReport)) == ENDPOINT_RWSTREAM_NoError) {
-		    for(int i=0; i<18; i++)
-			display[i] = led_report.digits[i];
-		    leds = led_report.leds;
-		    if(dpy_set())
-			dpy_step = 32;
+		uint8_t report[sizeof(LedReport)+1];
+
+		if(Endpoint_Read_Control_Stream_LE(report, sizeof(LedReport)+1) == ENDPOINT_RWSTREAM_NoError) {
+		    if(report[0] == 2) {
+			for(int i=0; i<18; i++)
+			    display[i] = report[i+1];
+			leds = ((int)report[19])<<8 | report[20];
+			if(dpy_set())
+			    dpy_step = 32;
+		    }
 		}
 
 		Endpoint_ClearIN();
-	      }
-
-	    break;
-
-	  case CDC_REQ_GetLineEncoding:
-	    if (USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE))
-	      {
-		Endpoint_ClearSETUP();
-
-		/* Write the line coding data to the control endpoint */
-		Endpoint_Write_Control_Stream_LE(&linesetup, sizeof(CDC_LineEncoding_t));
-		Endpoint_ClearOUT();
-	      }
-
-	    break;
-	  case CDC_REQ_SetLineEncoding:
-	    if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
-	      {
-		Endpoint_ClearSETUP();
-
-		/* Read the line coding data in from the host into the global struct */
-		Endpoint_Read_Control_Stream_LE(&linesetup, sizeof(CDC_LineEncoding_t));
-		Endpoint_ClearIN();
-	      }
-
-	    break;
-	  case CDC_REQ_SetControlLineState:
-	    if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
-	      {
-		Endpoint_ClearSETUP();
-		Endpoint_ClearStatusStage();
-
-		/* NOTE: Here you can read in the line state mask from the host, to get the current state of the output handshake
-		   lines. The mask is read in from the wValue parameter in USB_ControlRequest, and can be masked against the
-		   CONTROL_LINE_OUT_* masks to determine the RTS and DTR line states using the following code:
-		 */
 	      }
 
 	    break;
@@ -1305,18 +958,9 @@ int main(void)
     wdt_disable();
     clock_prescale_set(clock_div_1);
 
-    linesetup.BaudRateBPS = 0;
-
     for(uint8_t i=0; i<8; i++)
 	iobuf[i].end = 0;
-//    xmit_buf = 0;
-//    recv_buf = 0;
-//    write_buf = 0;
-//    read_buf = 0;
-    b_usbin = 0;
-    bl_usbin = 0;
     b_usbout = 0;
-    b_out = 0;
     memset(inputs, 0, 38);
     memset(encoders, 0, 4);
     memset(encstate, 0, 4);
@@ -1374,37 +1018,12 @@ int main(void)
 
 	    if(!report_changed)
 		update_report();
-//	    if(report_changed) {
-//		report_changed = false;
-//		out('s');
-//		for(int i=0; i<4; i++)
-//		    hex(report.dswitch[i]);
-//		out(' ');
-//		hex(report.ap>>8);
-//		hex(report.ap);
-//		out(' ');
-//		for(int i=0; i<3; i++)
-//		    hex(report.switches[i]);
-//		crlf();
-//		write();
-//	    }
 
 	    USB_USBTask();
 	    if (USB_DeviceState == DEVICE_STATE_Configured) {
 
 		update_report();
 		do_usb_io();
-
-		cli();
-		IOBuf* b;
-		if((b = b_usbin)) {
-		    b_usbin = b_usbin->next;
-		    sei();
-		    do_con_in((char*)b->buf, b->end);
-		    cli();
-		    b->end = 0;
-		}
-		sei();
 	    }
 
 	}

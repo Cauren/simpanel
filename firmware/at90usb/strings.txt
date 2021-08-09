@@ -1,7 +1,6 @@
 mfg	The Coren
-product	SIMPANEL rev. C
+product	SIMPANEL rev. C2
 hid	SIMPANEL HID
-ctc	SIMPANEL Control Port
 g_ap	Autopilot panel
 ap_sw1	HDG hold
 ap_sw2	A/T
