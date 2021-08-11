@@ -290,7 +290,7 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 };
 
 
-static const wchar_t EEMEM serial_number_number[] = L"2100-01";
+static const wchar_t EEMEM serial_number_number[] = L"AP-2100-03";
 
 uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
                                     const uint16_t wIndex,
@@ -380,7 +380,6 @@ void EVENT_USB_Device_ConfigurationChanged(void)
 
         /* Setup HID Report Endpoint */
         ConfigSuccess &= Endpoint_ConfigureEndpoint(SIMPANEL_IN_EPADDR, EP_TYPE_INTERRUPT, sizeof(Report), 1);
-	if(ConfigSuccess) status++;
 }
 
 
@@ -459,6 +458,10 @@ void do_usb_io(void)
 
 }
 
+uint8_t		dpy_base = 0;
+uint8_t		dpy_step;
+uint16_t	dpybits[24];
+
 
 static uint8_t	inputs[38];
 static int16_t	encoders[4];
@@ -524,9 +527,6 @@ void update_report(void)
     sei();
 }
 
-uint8_t		dpy_step;
-uint16_t	dpybits[24];
-
 enum _i2c_state {
     I2CIdle, I2CStart, I2CAddr, I2CData, I2CStop,
     I2CRead,
@@ -547,6 +547,7 @@ ISR(TWI_vect)
 {
     switch(i2cs) {
 	case I2CStart:
+	  status |= 1;
 	  i2ce = 2;
 	  if((TWSR&0xF8) == 0x08) {
 	      i2cs = I2CAddr;
@@ -556,6 +557,7 @@ ISR(TWI_vect)
 	  }
 	  break;
 	case I2CAddr:
+	  status |= 2;
 	  i2ce = 3;
 	  switch(TWSR&0xF8) {
 	    case 0x38:
@@ -615,6 +617,7 @@ ISR(TWI_vect)
 	  }
 	  break;
 	case I2CStop:
+	  status |= 8;
 	  i2ce += 16;
 	  i2cs = I2CIdle;
 	  TWCR = 0x84;
@@ -685,8 +688,11 @@ static const uint8_t digit_mask[] PROGMEM = {
 static char	display[18];
 static uint16_t	leds;
 
+static bool attract_mode = true;
+
 bool dpy_set(void)
 {
+    status |= 4;
     bool refresh = false;
 
     for(int i=0; i<18; i++) {
@@ -710,6 +716,84 @@ bool dpy_set(void)
     return refresh;
 }
 
+static int attract_step = 0;
+
+void do_attract_mode(void)
+{
+
+    if(attract_step > 50)
+	display[17] = 1 << (attract_step % 6);
+
+    switch(attract_step) {
+      case 100:
+	attract_mode = false;
+	for(int i=0; i<17; i++)
+	    display[i] = 0x00;
+	display[17] = 0x80;
+	leds = 0;
+	break;
+
+      case 0:
+	for(int i=0; i<18; i++)
+	    display[i] = 0x40;
+	leds = 0;
+	break;
+
+      case 20:
+	display[0] = 0x77;
+	display[1] = 0x73;
+	display[2] = 0x00;
+	display[3] = 0x86;
+	display[4] = 0xBF;
+	display[5] = 0x3F;
+	for(int i=6; i<18; i++)
+	    display[i] = 0;
+	break;
+
+      case 30:
+	leds = 0x201;
+	break;
+      case 34:
+	leds = 0x20F;
+	break;
+      case 38:
+	leds = 0x21F;
+	break;
+      case 42:
+	leds = 0x23F;
+	break;
+      case 46:
+	leds = 0x27F;
+	break;
+      case 50:
+	leds = 0x7FF;
+	break;
+      case 54:
+	leds = 0x5FD;
+	break;
+      case 58:
+	leds = 0x5F0;
+	break;
+      case 62:
+	leds = 0x5E0;
+	break;
+      case 66:
+	leds = 0x5C0;
+	break;
+      case 70:
+	leds = 0x580;
+	break;
+      case 74:
+	leds = 0x000;
+	break;
+    }
+
+    if(dpy_set())
+	dpy_step = 32+dpy_base;
+
+    attract_step++;
+}
+
 void dpy_update(void)
 {
     cli();
@@ -720,43 +804,51 @@ void dpy_update(void)
     sei();
     switch(dpy_step) {
       case 0:
+      case 1:
 	i2clen = 3;
 	i2cbuf[1] = 0xFD;
 	i2cbuf[2] = 0xC0;
 	break;
 
       case 2:
+      case 3:
 	i2cbuf[1] = 0x06;
 	i2cbuf[2] = 0x11;
 	break;
 
       case 4:
+      case 5:
 	i2cbuf[1] = 0x04;
 	i2cbuf[2] = 0x2B;
 	break;
 
       case 6:
+      case 7:
 	i2cbuf[1] = 0x05;
 	i2cbuf[2] = 0xC0;
 	break;
 
       case 8:
+      case 9:
 	i2cbuf[1] = 0x00;
 	i2cbuf[2] = 0x40;
 	break;
 
       case 10:
+      case 11:
 	i2clen = 3;
 	i2cbuf[1] = 0x09;
 	i2cbuf[2] = 0x03;
 	break;
 
       case 12:
+      case 13:
 	i2cbuf[1] = 0xFD;
 	i2cbuf[2] = 0x40;
 	break;
 
       case 14:
+      case 15:
 	i2clen = 26;
 	i2cbuf[1] = 0x00;
 	for(uint8_t i=2; i<26; i++)
@@ -774,6 +866,7 @@ void dpy_update(void)
       case 24:
       case 25:
       case 26:
+      case 27:
 	i2clen = 24;
 	i2cbuf[1] = 0x18 + ((dpy_step-16)&~1)*11;
 	for(uint8_t i=2; i<24; i++)
@@ -784,6 +877,7 @@ void dpy_update(void)
 	break;
 
       case 28:
+      case 29:
 	i2clen = 3;
 	i2cbuf[1] = 0xFD;
 	i2cbuf[2] = 0x80;
@@ -802,6 +896,7 @@ void dpy_update(void)
 	break;
 
       case 32:
+      case 33:
 	i2clen = 3;
 	i2cbuf[1] = 0xFD;
 	i2cbuf[2] = 0x01;
@@ -828,7 +923,7 @@ void dpy_update(void)
     }
 
     i2cbuf[0] = (dpy_step&1)? 0x6E: 0x60;
-    dpy_step++;
+    dpy_step ++;
     i2cptr = 0;
     i2ce = 1;
     i2cs = I2CStart;
@@ -935,9 +1030,10 @@ void EVENT_USB_Device_ControlRequest(void)
 		    if(report[0] == 2) {
 			for(int i=0; i<18; i++)
 			    display[i] = report[i+1];
+			attract_mode = false;
 			leds = ((int)report[19])<<8 | report[20];
 			if(dpy_set())
-			    dpy_step = 32;
+			    dpy_step = 32+dpy_base;
 		    }
 		}
 
@@ -992,7 +1088,7 @@ int main(void)
     i2cs   = I2CIdle;
     i2ce   = 0;
 
-    dpy_step = 0;
+    dpy_step = dpy_base;
     for(uint8_t i=0; i<24; i++) {
 	dpybits[i] = 0x7FF;
     }
@@ -1006,7 +1102,6 @@ int main(void)
 
     for(;;) {
 	wdt_reset();
-	// decode();
 
 	if(ready)
 	    dpy_update();
@@ -1022,6 +1117,8 @@ int main(void)
 	    USB_USBTask();
 	    if (USB_DeviceState == DEVICE_STATE_Configured) {
 
+		if(attract_mode)
+		    do_attract_mode();
 		update_report();
 		do_usb_io();
 	    }
