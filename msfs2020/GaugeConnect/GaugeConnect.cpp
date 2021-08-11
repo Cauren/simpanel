@@ -19,7 +19,8 @@ struct Expression {
 	void remove(void) { if (valid && expression) delete[] expression; valid = false; expression = 0; };
 };
 
-Expression exprs[256];
+Expression* exprs = 0;
+size_t num_exprs = 0;
 
 enum GaugeInputCommands {
 	GISetExpr, GIEvaluate,
@@ -97,7 +98,20 @@ RECV_FUNC(CLIENT_DATA)
 		out.result = GIError;
 		switch (inp.command) {
 		case GISetExpr: {
-			if (inp.param < 256) {
+			if (inp.param >= num_exprs) {
+				size_t nn = (inp.params+256) & ~255;
+				Expression* ne = new Expression[nn];
+				if(ne) {
+					if (exprs) {
+						std::memcpy(ne, exprs, num_exprs*sizeof(Expression));
+						std::memset(exprs, 0, num_exprs*sizeof(Expression));
+						delete[] exprs;
+					}
+					exprs = ne;
+					num_exprs = nn;
+				}
+			}
+			if (exprs && inp.param < num_exprs) {
 				Expression& e = exprs[inp.param];
 				e.remove();
 				if ((e.expression = new char[strlen(inp.data)+1])) {
@@ -118,7 +132,7 @@ RECV_FUNC(CLIENT_DATA)
 			for (int i = 0; i < inp.param; i++) {
 				UINT16 index = reinterpret_cast<const UINT16*>(inp.data + inp.param * sizeof(FLOAT64))[i];
 				FLOAT64 value = reinterpret_cast<const FLOAT64*>(inp.data)[i];
-				if (index < 256 && exprs[index].valid) {
+				if (index < num_exprs && exprs[index].valid) {
 					auto& v = out.values[out.count++];
 					char* str = 0;
 					int vi;
