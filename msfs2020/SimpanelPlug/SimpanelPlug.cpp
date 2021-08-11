@@ -681,8 +681,8 @@ void SIMPANEL_AP_rev_C::load_plane(const char*)
     d[2].mode[0].press_action = false;
 
     // A/T
-    b[1].led_value = "(A:PITOT HEAT SWITCH:1, Bool)"; // "(A:AUTOPILOT THROTTLE ARM,bool)";
-    b[1].press_action = "(>B:DEICE_Pitot_1_Toggle)"; // "(>K:AUTO THROTTLE ARM)";
+    b[1].led_value = "(A:PITOT HEAT SWITCH:2, Bool)"; // "(A:AUTOPILOT THROTTLE ARM,bool)";
+    b[1].press_action = "123 'DEICE_Engine_1_Toggle' (>F:InputEvent)"; // "(>K:AUTO THROTTLE ARM)";
     // SPD but we use it for bank limit in the TBM
     b[10].led_value = "(A:AUTOPILOT MAX BANK,degrees) 30 <";
     b[10].press_action = "(A:AUTOPILOT MAX BANK, degrees) 30 < if{ (>K:AP_MAX_BANK_INC) } els{ (>K:AP_MAX_BANK_DEC) }";

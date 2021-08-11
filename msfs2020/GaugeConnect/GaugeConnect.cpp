@@ -69,7 +69,7 @@ HANDLE sim = 0;
 ID gvar;
 
 template<typename T> void sim_recv(T* ev, DWORD data, void* ctx) {
-	fprintf(stderr, "[GaugeConnect] unhandled RECV type %d\n", ev->dwID);
+	fprintf(stderr, "[GaugeConnect] unhandled RECV type %ld\n", ev->dwID);
 	fflush(stderr);
 }
 
@@ -100,7 +100,7 @@ RECV_FUNC(CLIENT_DATA)
 			if (inp.param < 256) {
 				Expression& e = exprs[inp.param];
 				e.remove();
-				if (e.expression = new char[strlen(inp.data)+1]) {
+				if ((e.expression = new char[strlen(inp.data)+1])) {
 					strcpy(e.expression, inp.data);
 					e.valid = true;
 					out.result = GIOk;
@@ -120,9 +120,13 @@ RECV_FUNC(CLIENT_DATA)
 				FLOAT64 value = reinterpret_cast<const FLOAT64*>(inp.data)[i];
 				if (index < 256 && exprs[index].valid) {
 					auto& v = out.values[out.count++];
+					char* str = 0;
+					int vi;
 					v.index = index;
 					set_named_variable_value(gvar, value);
-					v.valid = execute_calculator_code(exprs[index].expression, &v.value, 0, 0);
+					v.valid = execute_calculator_code(exprs[index].expression, &v.value, (SINT32*)0, (PCSTRINGZ * )0);
+//					printf("[GaugeConnect] eval '%s': returns %g ('%s')\n", exprs[index].expression, v.value, str ? str : "<no string>");
+//					fflush(stdout);
 				}
 				if (out.count == 20) {
 					SimConnect_SetClientData(sim, GaugeOutputCD, GaugeOutputData, 0, 0, sizeof(GaugeOutputStruct), &out);
