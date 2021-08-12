@@ -99,7 +99,7 @@ RECV_FUNC(CLIENT_DATA)
 		switch (inp.command) {
 		case GISetExpr: {
 			if (inp.param >= num_exprs) {
-				size_t nn = (inp.params+256) & ~255;
+				size_t nn = (inp.param+256) & ~255;
 				Expression* ne = new Expression[nn];
 				if(ne) {
 					if (exprs) {
@@ -118,8 +118,8 @@ RECV_FUNC(CLIENT_DATA)
 					strcpy(e.expression, inp.data);
 					e.valid = true;
 					out.result = GIOk;
-					printf("[GaugeConnect] expression %d registered (%s)\n", int(inp.param), inp.data);
-					fflush(stdout);
+					// printf("[GaugeConnect] expression %d registered (%s)\n", int(inp.param), inp.data);
+					// fflush(stdout);
 				}
 				else
 					e.valid = false;
