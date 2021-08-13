@@ -261,7 +261,7 @@ struct Device {
     };
 
     std::string name;
-    std::string physical;
+    std::basic_string<wchar_t> serial;
     Device* next;
     HANDLE hid;
     HANDLE whid;
@@ -821,11 +821,11 @@ void HID_find_panels(void)
             HANDLE whid = CreateFileA(didd.DevicePath, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
             Device* simpanel = 0;
             
-            char    phys[256];
-            if (HidD_GetSerialNumberString(hid, phys, 256)) {
+            wchar_t    phys[256];
+            if (HidD_GetSerialNumberString(hid, phys, 256*sizeof(wchar_t))) {
                 EnterCriticalSection(&cs_Devices);
                 for (Device* dev = panels; dev; dev = dev->next) {
-                    if (dev->physical == phys) {
+                    if (dev->serial == phys) {
                         simpanel = dev;
                         break;
                     }
@@ -834,17 +834,12 @@ void HID_find_panels(void)
             }
 
             if (!simpanel) {
-                switch (attr.VersionNumber) {
-                case 0x0090: // SIMPANEL A/P rev C prototype
-                case 0x0100: // SIMPANEL A/P rev C "production version"
+                if(!wcsncmp(phys, L"AP-2100-", 8))
                     simpanel = new SIMPANEL_AP_rev_C(hid, whid);
-                    break;
-                }
-                if (simpanel)
-                    simpanel->physical = phys;
             }
 
             if (simpanel) {
+                simpanel->serial = phys;
                 simpanel->active = true;
                 EnterCriticalSection(&cs_Devices);
                 simpanel->next = panels;
@@ -1034,16 +1029,20 @@ void CALLBACK simconnect_recv(SIMCONNECT_RECV* data, DWORD dlen, void*)
 }
 
 static const int WM_USER_SIMCONNECT = 0x0402;
+HANDLE simconnect_data_waiting;
 
-DWORD WINAPI simconnect_thread(void*)
+DWORD WINAPI simconnect_thread(void* vp)
 {
+    HWND win = reinterpret_cast<HWND>(vp);
+
     while (plug_status != Exiting) {
 
-        while(plug_status == Unconnected) {
-            Sleep(2000);
+        while (plug_status == Unconnected) {
 
-            if (SimConnect_Open(&sim, "Simpanel Plug", 0, 0, 0, 0) != S_OK)
+            if (SimConnect_Open(&sim, "Simpanel Plug", win, WM_USER_SIMCONNECT, 0, 0) != S_OK) {
+                Sleep(2000);
                 continue;
+            }
 
             if (
                 SimConnect_MapClientDataNameToID(sim, "org.uberbox.gauge.input", GaugeInputCD) == S_OK
@@ -1137,10 +1136,16 @@ DWORD WINAPI simconnect_thread(void*)
             LeaveCriticalSection(&cs_Devices);
 
         }
-        if (SimConnect_CallDispatch(sim, simconnect_recv, 0) != S_OK) {
-            plug_status = Unconnected;
-            SimConnect_Close(sim);
-            sim = 0;
+
+        switch (WaitForSingleObject(simconnect_data_waiting, INFINITE)) {
+        case WAIT_OBJECT_0:
+
+            if (SimConnect_CallDispatch(sim, simconnect_recv, 0) != S_OK) {
+                plug_status = Unconnected;
+                SimConnect_Close(sim);
+                sim = 0;
+            }
+
         }
 
     } // while !plug_shutdown
@@ -1156,8 +1161,12 @@ void startup(HWND win)
     gfree = 0;
     InitializeCriticalSectionAndSpinCount(&cs_Expressions, 256);
     InitializeCriticalSectionAndSpinCount(&cs_Devices, 256);
+
+    simconnect_data_waiting = CreateEventA(0, false, false, 0);
+
     HID_start_monitor(win);
-    CreateThread(0, 0, simconnect_thread, 0, 0, 0);
+
+    CreateThread(0, 0, simconnect_thread, reinterpret_cast<void*>(win), 0, 0);
 }
 
 
@@ -1290,6 +1299,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DEVICECHANGE:
         HID_find_panels();
         break;
+
+    case WM_USER_SIMCONNECT:
+        SetEvent(simconnect_data_waiting);
+        break;
+
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
