@@ -1,9 +1,12 @@
 // SimpanelPlug.cpp : Defines the entry point for the application.
 //
 
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 #pragma comment(lib, "hid.lib")
 #pragma comment(lib, "setupapi.lib")
 #pragma comment(lib, "simconnect.lib")
+#pragma comment(lib, "comctl32.lib")
 
 // I fucking *know* how to use str[n]cpy safely, Microsoft!
 #define _CRT_SECURE_NO_WARNINGS
@@ -16,6 +19,8 @@
 #include <stdio.h>
 #include <Dbt.h>
 #include <WinUser.h>
+#include <strsafe.h>
+#include <shellapi.h>
 
 #include "framework.h"
 #include "SimpanelPlug.h"
@@ -783,10 +788,16 @@ enum PanelStatus {
 };
 static PanelStatus panel_status = NoPanels;
 
+static const int WM_USER_SIMCONNECT = 0x0402;
+static const int WM_USER_PANEL_CHANGE = 0x0403;
+static const int WM_USER_PLANE_CHANGE = 0x0404;
+static const int WM_USER_SIM_CONNECTED = 0x0405;
+static const int WM_USER_SIM_DISCONNECTED = 0x0406;
+static const int WM_USER_NOTIFY = 0x0407;
 
 static Device* panels = 0;
 
-void HID_find_panels(void)
+void HID_find_panels(HWND win)
 {
     GUID hidgid;
     HidD_GetHidGuid(&hidgid);
@@ -845,6 +856,7 @@ void HID_find_panels(void)
                 simpanel->next = panels;
                 panels = simpanel;
                 LeaveCriticalSection(&cs_Devices);
+                PostMessage(win, WM_USER_PANEL_CHANGE, 0, 0);
             }
             else {
                 CloseHandle(whid);
@@ -883,7 +895,7 @@ bool HID_start_monitor(HWND window)
     HidD_GetHidGuid(&dbd.dbcc_classguid);
     HDEVNOTIFY res = RegisterDeviceNotificationA(window, &dbd, DEVICE_NOTIFY_WINDOW_HANDLE);
     if (res) {
-        HID_find_panels();
+        HID_find_panels(window);
         return true;
     }
     return false;
@@ -1028,7 +1040,6 @@ void CALLBACK simconnect_recv(SIMCONNECT_RECV* data, DWORD dlen, void*)
     }
 }
 
-static const int WM_USER_SIMCONNECT = 0x0402;
 HANDLE simconnect_data_waiting;
 
 DWORD WINAPI simconnect_thread(void* vp)
@@ -1072,6 +1083,8 @@ DWORD WINAPI simconnect_thread(void* vp)
                 for (int i = 0; i < 256; i++)
                     if (gexp[i].state != GaugeExpression::Free)
                         gexp[i].state = GaugeExpression::Updated;
+
+                PostMessage(win, WM_USER_SIM_CONNECTED, 0, 0);
             }
         }
 
@@ -1089,6 +1102,7 @@ DWORD WINAPI simconnect_thread(void* vp)
             if (panels && current_plane_changed) {
                 for(Device* panel=panels; panel; panel=panel->next)
                     panel->load_plane(current_plane);
+                PostMessage(win, WM_USER_PLANE_CHANGE, 0, 0);
                 current_plane_changed = false;
             }
             LeaveCriticalSection(&cs_Devices);
@@ -1144,6 +1158,7 @@ DWORD WINAPI simconnect_thread(void* vp)
                 plug_status = Unconnected;
                 SimConnect_Close(sim);
                 sim = 0;
+                PostMessage(win, WM_USER_SIM_DISCONNECTED, 0, 0);
             }
 
         }
@@ -1176,14 +1191,15 @@ void startup(HWND win)
 #define MAX_LOADSTRING 100
 
 // Global Variables:
-HINSTANCE hInst;                                // current instance
-WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
-WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+HINSTANCE instance;                            // current instance
+wchar_t main_title[MAX_LOADSTRING];            // The title bar text
+wchar_t main_class[MAX_LOADSTRING];            // the main window class name
 
 // Forward declarations of functions included in this code module:
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+ATOM                register_class(const wchar_t* name, WNDPROC);
+BOOL                init_instance(HINSTANCE, int);
+LRESULT CALLBACK    main_proc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK    status_proc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -1194,18 +1210,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+    instance = hInstance;
+
     // TODO: Place code here.
 
     // Initialize global strings
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_SIMPANELPLUG, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+    LoadStringW(hInstance, IDS_APP_TITLE, main_title, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_SIMPANELPLUG, main_class, MAX_LOADSTRING);
+    register_class(main_class, main_proc);
+    register_class(L"PlugStatus", status_proc);
 
-    // Perform application initialization:
-    if (!InitInstance(hInstance, nCmdShow))
+    HWND mainwin = CreateWindowW(main_class, main_title, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+            0, 0, 640, 480, nullptr, nullptr, hInstance, nullptr);
+
+    if (!mainwin)
     {
         return FALSE;
     }
+
+    startup(mainwin);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SIMPANELPLUG));
 
@@ -1221,88 +1244,199 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
+    plug_status = Exiting;
+
     return (int)msg.wParam;
 }
 
 
 
 //
-//  FUNCTION: MyRegisterClass()
+//  FUNCTION: RegisterClass()
 //
 //  PURPOSE: Registers the window class.
 //
-ATOM MyRegisterClass(HINSTANCE hInstance)
+ATOM register_class(const wchar_t* name, WNDPROC proc)
 {
     WNDCLASSEXW wcex;
 
     wcex.cbSize = sizeof(WNDCLASSEX);
 
     wcex.style = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc = WndProc;
+    wcex.lpfnWndProc = proc;
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
-    wcex.hInstance = hInstance;
-    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SIMPANELPLUG));
+    wcex.hInstance = instance;
+    wcex.hIcon = LoadIcon(instance, MAKEINTRESOURCE(IDI_SIMPANELPLUG));
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SIMPANELPLUG);
-    wcex.lpszClassName = szWindowClass;
+    wcex.hbrBackground = GetSysColorBrush(COLOR_WINDOW);
+    wcex.lpszClassName = name;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
 }
 
-//
-//   FUNCTION: InitInstance(HINSTANCE, int)
-//
-//   PURPOSE: Saves instance handle and creates main window
-//
-//   COMMENTS:
-//
-//        In this function, we save the instance handle in a global variable and
-//        create and display the main program window.
-//
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-    hInst = hInstance; // Store instance handle in our global variable
+struct Noticon : public NOTIFYICONDATA {
+    static constexpr GUID noticon_guid = { 0x2a36d23e, 0x5795, 0x472b, { 0x8f, 0xcd, 0x98, 0xa3, 0xa8, 0x28, 0x79, 0x5c } };
 
-    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
-    if (!hWnd)
-    {
-        return FALSE;
+    Noticon(HWND win) {
+        cbSize = sizeof(NOTIFYICONDATA);
+        hWnd = win;
+        uFlags = NIF_GUID;
+        guidItem = noticon_guid;
     }
 
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
+    operator NOTIFYICONDATA* (void) { return this; };
+    operator const NOTIFYICONDATA* (void) const { return this; };
 
-    startup(hWnd);
+};
 
-    return TRUE;
+HWND popup;
+
+void show_status(HWND main) {
+
+    RECT winpos = {};
+
+    winpos.right = 240;
+    winpos.bottom = 180;
+    AdjustWindowRectEx(&winpos, WS_POPUP | WS_BORDER, false, WS_EX_TOOLWINDOW);
+    popup = CreateWindowEx(WS_EX_TOOLWINDOW, L"PlugStatus", 0, WS_POPUP | WS_BORDER, 0, 0, winpos.right - winpos.left, winpos.bottom - winpos.top, main, 0, instance, 0);
+    if (!popup)
+        return;
+
+    NOTIFYICONIDENTIFIER ii = { sizeof(ii) };
+    ii.guidItem = Noticon::noticon_guid;
+    RECT ipos;
+    if (SUCCEEDED(Shell_NotifyIconGetRect(&ii, &ipos))) {
+        const POINT anchor = { (ipos.left + ipos.right) / 2, (ipos.top + ipos.bottom) / 2 };
+        SIZE winsize = { winpos.right - winpos.left, winpos.bottom - winpos.top };
+        CalculatePopupWindowPosition(&anchor, &winsize, TPM_VERTICAL | TPM_VCENTERALIGN | TPM_CENTERALIGN | TPM_WORKAREA, &ipos, &winpos);
+    }
+ 
+    SetWindowPos(popup, HWND_TOPMOST, winpos.left, winpos.top, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW);
+    SetForegroundWindow(popup);
 }
 
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE: Processes messages for the main window.
-//
-//  WM_COMMAND  - process the application menu
-//  WM_PAINT    - Paint the main window
-//  WM_DESTROY  - post a quit message and return
-//
-//
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void hide_status(void)
+{
+    if (!popup)
+        return;
+
+    DestroyWindow(popup);
+    popup = 0;
+}
+
+LRESULT CALLBACK status_proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_CREATE:
+        break;
+
+    case WM_PAINT:
+        break;
+
+    case WM_DESTROY:
+        break;
+
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+
+    return 0;
+}
+
+LRESULT CALLBACK main_proc(HWND win, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
     case WM_DEVICECHANGE:
-        HID_find_panels();
+        HID_find_panels(win);
         break;
 
     case WM_USER_SIMCONNECT:
         SetEvent(simconnect_data_waiting);
         break;
+
+    case WM_USER_PANEL_CHANGE:
+    {
+        Noticon ni(win);
+
+        ni.uFlags |= NIF_INFO;
+        StringCchCopyW(ni.szInfo, ARRAYSIZE(ni.szTip), L"Yeay!");
+        StringCchCopyW(ni.szInfoTitle, ARRAYSIZE(ni.szInfoTitle), L"SimPanel connected");
+        ni.dwInfoFlags = NIIF_INFO;
+        Shell_NotifyIcon(NIM_MODIFY, ni);
+
+        if (popup)
+            PostMessage(popup, WM_USER_PANEL_CHANGE, 0, 0);
+
+        break;
+    }
+
+    case WM_USER_PLANE_CHANGE:
+        if (popup)
+            PostMessage(popup, WM_USER_PLANE_CHANGE, 0, 0);
+        break;
+
+    case WM_USER_SIM_CONNECTED:
+        if (popup)
+            PostMessage(popup, WM_USER_SIM_CONNECTED, 0, 0);
+        break;
+
+    case WM_USER_SIM_DISCONNECTED:
+        if (popup)
+            PostMessage(popup, WM_USER_SIM_DISCONNECTED, 0, 0);
+        break;
+
+    case WM_USER_NOTIFY:
+        switch (LOWORD(lParam)) {
+        
+        case NIN_SELECT:
+        case NIN_KEYSELECT:
+        {
+            DestroyWindow(win);
+            break;
+        }
+
+        case NIN_POPUPOPEN:
+            show_status(win);
+            break;
+
+        case NIN_POPUPCLOSE:
+            hide_status();
+            break;
+
+        case WM_CONTEXTMENU:
+        {
+            break;
+        }
+
+        default:
+            Sleep(20);
+            break;
+
+        }
+        break;
+
+    case WM_CREATE:
+    {
+        Noticon ni(win);
+
+        ni.uFlags |= NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_INFO;
+        ni.uCallbackMessage = WM_USER_NOTIFY;
+        LoadIconMetric(instance, MAKEINTRESOURCE(IDI_SMALL), LIM_SMALL, &ni.hIcon);
+        LoadString(instance, IDS_APP_TITLE, ni.szTip, ARRAYSIZE(ni.szTip));
+        ni.szInfo[0] = 0;
+        ni.szInfoTitle[0] = 0;
+        ni.dwInfoFlags = NIIF_INFO;
+        Shell_NotifyIcon(NIM_ADD, ni);
+
+        ni.uVersion = NOTIFYICON_VERSION_4;
+        Shell_NotifyIconW(NIM_SETVERSION, ni);
+
+        break;
+    }
 
     case WM_COMMAND:
     {
@@ -1311,29 +1445,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (wmId)
         {
         case IDM_ABOUT:
-            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+            DialogBox(instance, MAKEINTRESOURCE(IDD_ABOUTBOX), win, About);
             break;
         case IDM_EXIT:
-            DestroyWindow(hWnd);
+            DestroyWindow(win);
             break;
         default:
-            return DefWindowProc(hWnd, message, wParam, lParam);
+            return DefWindowProc(win, message, wParam, lParam);
         }
     }
     break;
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hWnd, &ps);
+        HDC hdc = BeginPaint(win, &ps);
         // TODO: Add any drawing code that uses hdc here...
-        EndPaint(hWnd, &ps);
+        EndPaint(win, &ps);
     }
     break;
     case WM_DESTROY:
+    {
+        Noticon nid(win);
+        Shell_NotifyIcon(NIM_DELETE, &nid);
         PostQuitMessage(0);
         break;
+    }
     default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return DefWindowProc(win, message, wParam, lParam);
     }
     return 0;
 }
