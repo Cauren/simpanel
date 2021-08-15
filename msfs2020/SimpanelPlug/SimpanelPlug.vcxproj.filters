@@ -46,4 +46,11 @@
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="main.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\..\..\..\..\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" />
+  </ItemGroup>
 </Project>

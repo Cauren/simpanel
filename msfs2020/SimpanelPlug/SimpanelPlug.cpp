@@ -22,8 +22,14 @@
 #include <strsafe.h>
 #include <shellapi.h>
 
+#include <assert.h>
+#include <wrl.h>
+#include <WebView2.h>
+using Microsoft::WRL::Callback;
+
 #include "framework.h"
 #include "SimpanelPlug.h"
+#include "Resource.h"
 
 #include <SimConnect.h>
 #include <cstring>
@@ -1184,6 +1190,71 @@ void startup(HWND win)
     CreateThread(0, 0, simconnect_thread, reinterpret_cast<void*>(win), 0, 0);
 }
 
+ICoreWebView2Controller* webviewController = nullptr;
+ICoreWebView2* webview = nullptr;
+
+void init_gui(HWND win)
+{
+    // Set up the web view environment for the settings window
+    HRESULT result = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+    assert(result == S_OK);
+
+    CreateCoreWebView2Environment(
+        Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
+            [win](HRESULT result, ICoreWebView2Environment* env) -> HRESULT {
+                assert(result == S_OK);
+
+                // Get a controller for the view and add it to our main window
+                env->CreateCoreWebView2Controller(win,
+                    Callback<ICoreWebView2CreateCoreWebView2ControllerCompletedHandler>(
+                        [win](HRESULT result, ICoreWebView2Controller* controller) -> HRESULT {
+                            assert(result == S_OK);
+
+                            webviewController = controller;
+                            result = controller->get_CoreWebView2(&webview);
+                            assert(result == S_OK);
+
+                            // todo: customize settings to disable web-style context menus etc
+                            ICoreWebView2Settings* Settings;
+                            webview->get_Settings(&Settings);
+
+                            RECT bounds;
+                            GetClientRect(win, &bounds);
+                            result = controller->put_Bounds(bounds);
+                            assert(result == S_OK);
+
+                            // Load the HTML GUI from a resource, as we can't navigate
+                            // directly to the filesystem for security!
+                            HMODULE hmod = GetModuleHandle(nullptr);
+                            assert(hmod != nullptr);
+
+                            HRSRC resource = FindResource(hmod, MAKEINTRESOURCE(IDR_HTML_GUI), RT_HTML);
+                            assert(resource != nullptr);
+
+                            HGLOBAL data = LoadResource(hmod, resource);
+                            assert(data != nullptr);
+
+                            // Note there's no need to unlock the resource later; it's read
+                            // directly from the executable's read-only data sections and is
+                            // safely unloaded from memory and reloaded by the kernel as needed.
+                            void* locked = LockResource(data);
+                            assert(data != nullptr);
+                            const wchar_t* html = static_cast<const wchar_t*>(locked);
+
+                            result = webview->NavigateToString(html);
+                            //result = webview->NavigateToString(L"<h1>hello world</h1>");
+                            //result = webview->Navigate(L"https://www.bing.com/");
+                            assert(result == S_OK);
+
+                            return S_OK;
+                        }
+                    ).Get()
+                );
+                return S_OK;
+            }
+        ).Get()
+    );
+}
 
 /// WINDOWS DEFAULT STUFF BELOW
 
@@ -1220,7 +1291,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     register_class(main_class, main_proc);
     register_class(L"PlugStatus", status_proc);
 
-    HWND mainwin = CreateWindowW(main_class, main_title, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+    HWND mainwin = CreateWindowW(main_class, main_title, WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME | WS_SYSMENU,
             0, 0, 640, 480, nullptr, nullptr, hInstance, nullptr);
 
     if (!mainwin)
@@ -1229,6 +1300,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     startup(mainwin);
+    init_gui(mainwin);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SIMPANELPLUG));
 
@@ -1271,6 +1343,7 @@ ATOM register_class(const wchar_t* name, WNDPROC proc)
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = GetSysColorBrush(COLOR_WINDOW);
     wcex.lpszClassName = name;
+    wcex.lpszMenuName = nullptr;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
@@ -1395,7 +1468,10 @@ LRESULT CALLBACK main_proc(HWND win, UINT message, WPARAM wParam, LPARAM lParam)
         case NIN_SELECT:
         case NIN_KEYSELECT:
         {
-            DestroyWindow(win);
+            if (IsWindowVisible(win))
+                ShowWindow(win, SW_HIDE);
+            else
+                ShowWindow(win, SW_SHOW);
             break;
         }
 
@@ -1438,6 +1514,16 @@ LRESULT CALLBACK main_proc(HWND win, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
 
+    case WM_SIZE:
+    {
+        if (webviewController) {
+            RECT bounds;
+            GetClientRect(win, &bounds);
+            webviewController->put_Bounds(bounds);
+        }
+        break;
+    }
+
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
@@ -1455,6 +1541,8 @@ LRESULT CALLBACK main_proc(HWND win, UINT message, WPARAM wParam, LPARAM lParam)
         }
     }
     break;
+    /*
+    // This should be unnecessary
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
@@ -1463,6 +1551,7 @@ LRESULT CALLBACK main_proc(HWND win, UINT message, WPARAM wParam, LPARAM lParam)
         EndPaint(win, &ps);
     }
     break;
+    */
     case WM_DESTROY:
     {
         Noticon nid(win);
