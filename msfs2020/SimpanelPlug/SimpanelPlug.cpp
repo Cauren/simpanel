@@ -1193,7 +1193,7 @@ void startup(HWND win)
 ICoreWebView2Controller* webviewController = nullptr;
 ICoreWebView2* webview = nullptr;
 
-void init_gui(HWND win)
+void init_gui(HWND win, HINSTANCE hInstance)
 {
     // Set up the web view environment for the settings window
     HRESULT result = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
@@ -1211,8 +1211,10 @@ void init_gui(HWND win)
                             assert(result == S_OK);
 
                             webviewController = controller;
+                            webviewController->AddRef(); // is this necessary?
                             result = controller->get_CoreWebView2(&webview);
                             assert(result == S_OK);
+                            webview->AddRef(); // is this necessary?
 
                             // todo: customize settings to disable web-style context menus etc
                             ICoreWebView2Settings* Settings;
@@ -1241,9 +1243,9 @@ void init_gui(HWND win)
                             assert(data != nullptr);
                             const wchar_t* html = static_cast<const wchar_t*>(locked);
 
-                            result = webview->NavigateToString(html);
+                            //result = webview->NavigateToString(html);
                             //result = webview->NavigateToString(L"<h1>hello world</h1>");
-                            //result = webview->Navigate(L"https://www.bing.com/");
+                            result = webview->Navigate(L"https://www.bing.com/");
                             assert(result == S_OK);
 
                             return S_OK;
@@ -1300,7 +1302,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     startup(mainwin);
-    init_gui(mainwin);
+    init_gui(mainwin, hInstance);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SIMPANELPLUG));
 
@@ -1309,11 +1311,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        if (IsChild(mainwin, msg.hwnd))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+            if (TranslateAccelerator(mainwin, hAccelTable, &msg))
+                continue;
         }
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
 
     plug_status = Exiting;
@@ -1404,10 +1408,18 @@ LRESULT CALLBACK status_proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
     switch (message)
     {
     case WM_CREATE:
-        break;
-
-    case WM_PAINT:
-        break;
+        {
+            RECT bounds;
+            GetClientRect(hWnd, &bounds);
+            HINSTANCE hInstance = reinterpret_cast<HINSTANCE>(GetWindowLongPtr(hWnd, GWLP_HINSTANCE));
+            HWND childLabel = CreateWindowW(L"static", SS_LEFT,
+                WS_CHILD | WS_VISIBLE,
+                bounds.left, bounds.top, bounds.right - bounds.left, bounds.bottom - bounds.top,
+                hWnd, nullptr,
+                hInstance, nullptr);
+            SetWindowTextW(childLabel, L"TODO: place status info here");
+            break;
+        }
 
     case WM_DESTROY:
         break;
@@ -1539,19 +1551,9 @@ LRESULT CALLBACK main_proc(HWND win, UINT message, WPARAM wParam, LPARAM lParam)
         default:
             return DefWindowProc(win, message, wParam, lParam);
         }
+        break;
     }
-    break;
-    /*
-    // This should be unnecessary
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(win, &ps);
-        // TODO: Add any drawing code that uses hdc here...
-        EndPaint(win, &ps);
-    }
-    break;
-    */
+
     case WM_DESTROY:
     {
         Noticon nid(win);
