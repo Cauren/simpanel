@@ -1203,6 +1203,7 @@ void init_gui(HWND win, HINSTANCE hInstance)
         Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
             [win](HRESULT result, ICoreWebView2Environment* env) -> HRESULT {
                 assert(result == S_OK);
+                env->AddRef();
 
                 // Get a controller for the view and add it to our main window
                 env->CreateCoreWebView2Controller(win,
@@ -1243,11 +1244,11 @@ void init_gui(HWND win, HINSTANCE hInstance)
                             assert(data != nullptr);
                             const wchar_t* html = static_cast<const wchar_t*>(locked);
 
-                            //result = webview->NavigateToString(html);
-                            //result = webview->NavigateToString(L"<h1>hello world</h1>");
-                            result = webview->Navigate(L"https://www.bing.com/");
+                            result = webview->NavigateToString(html);
                             assert(result == S_OK);
 
+                            webviewController->put_IsVisible(TRUE);
+                            
                             return S_OK;
                         }
                     ).Get()
