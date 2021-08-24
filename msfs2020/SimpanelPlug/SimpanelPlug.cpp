@@ -1234,6 +1234,9 @@ void init_gui(HWND win, HINSTANCE hInstance)
                             HRSRC resource = FindResource(hmod, MAKEINTRESOURCE(IDR_HTML_GUI), RT_HTML);
                             assert(resource != nullptr);
 
+                            size_t bytes_utf8 = SizeofResource(hmod, resource);
+                            assert(bytes_utf8 > 0);
+
                             HGLOBAL data = LoadResource(hmod, resource);
                             assert(data != nullptr);
 
@@ -1242,9 +1245,27 @@ void init_gui(HWND win, HINSTANCE hInstance)
                             // safely unloaded from memory and reloaded by the kernel as needed.
                             void* locked = LockResource(data);
                             assert(data != nullptr);
-                            const wchar_t* html = static_cast<const wchar_t*>(locked);
+                            const char* html_utf8 = static_cast<const char*>(locked);
 
-                            result = webview->NavigateToString(html);
+                            int chars_utf16 = MultiByteToWideChar(
+                                CP_UTF8,
+                                MB_ERR_INVALID_CHARS,
+                                html_utf8,
+                                bytes_utf8,
+                                nullptr,
+                                0);
+                            assert(chars_utf16 > 0);
+                            std::wstring html_utf16(chars_utf16, 0);
+                            int converted = MultiByteToWideChar(
+                                CP_UTF8,
+                                MB_ERR_INVALID_CHARS,
+                                html_utf8,
+                                bytes_utf8,
+                                &html_utf16[0],
+                                chars_utf16);
+                            assert(converted == chars_utf16);
+
+                            result = webview->NavigateToString(html_utf16.c_str());
                             assert(result == S_OK);
 
                             webviewController->put_IsVisible(TRUE);
