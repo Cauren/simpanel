@@ -22,3 +22,5 @@ msfs2020/SimpanelConnect/SimConnect.dll
 *.dll
 
 msfs2020/SimpanelConnect/publish/
+
+*.aps
