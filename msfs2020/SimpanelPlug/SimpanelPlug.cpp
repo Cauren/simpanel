@@ -586,6 +586,11 @@ void SIMPANEL_AP_rev_C::update(void)
             sprintf(pad, "%+4.2go", val);
             break;
         case SPDial::IAS:
+            if (long(val) == 0) {
+                pad[0] = 0;
+                break;
+            }
+            // Fallthrough
         case SPDial::Altitude:
             sprintf(pad, "%6ld", long(val));
             break;
