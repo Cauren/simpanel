@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="main.html" />
+    <None Include="gui.htm" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\..\..\..\..\..\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" />

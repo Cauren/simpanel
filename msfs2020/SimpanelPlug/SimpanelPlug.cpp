@@ -7,9 +7,13 @@
 #pragma comment(lib, "setupapi.lib")
 #pragma comment(lib, "simconnect.lib")
 #pragma comment(lib, "comctl32.lib")
+#pragma comment(lib, "windowsapp")
+#pragma comment(lib, "ole32")
 
 // I fucking *know* how to use str[n]cpy safely, Microsoft!
 #define _CRT_SECURE_NO_WARNINGS
+
+#include <winrt/base.h>
 
 #include <Windows.h>
 #include <cfgmgr32.h>
@@ -23,9 +27,19 @@
 #include <shellapi.h>
 
 #include <assert.h>
+#include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.Foundation.Collections.h>
+#include <winrt/Windows.Data.Json.h>
+#include <wrl\wrappers\corewrappers.h>
+#include <wrl\client.h>
 #include <wrl.h>
 #include <WebView2.h>
-using Microsoft::WRL::Callback;
+using namespace winrt;
+using namespace winrt::Windows::Foundation;
+using namespace winrt::Windows::Data::Json;
+using namespace Microsoft::WRL;
+using namespace Microsoft::WRL::Wrappers;
+
 
 #include "framework.h"
 #include "SimpanelPlug.h"
@@ -1190,86 +1204,198 @@ void startup(HWND win)
     CreateThread(0, 0, simconnect_thread, reinterpret_cast<void*>(win), 0, 0);
 }
 
-ICoreWebView2Controller* webviewController = nullptr;
-ICoreWebView2* webview = nullptr;
+// for some reason it tries to release and dies after free if i use com_ptr
+ICoreWebView2Environment* webviewEnv = nullptr;
+com_ptr<ICoreWebView2Controller> webviewController(nullptr);
+com_ptr<ICoreWebView2> webview(nullptr);
+
+std::wstring utf8_to_wstring(const char* data_utf8, size_t bytes_utf8) {
+    int chars_utf16 = MultiByteToWideChar(
+        CP_UTF8,
+        MB_ERR_INVALID_CHARS,
+        data_utf8,
+        bytes_utf8,
+        nullptr,
+        0);
+    assert(chars_utf16 > 0);
+
+    std::wstring wstr_utf16(chars_utf16, 0);
+
+    int converted = MultiByteToWideChar(
+        CP_UTF8,
+        MB_ERR_INVALID_CHARS,
+        data_utf8,
+        bytes_utf8,
+        &wstr_utf16[0],
+        chars_utf16);
+    assert(converted == chars_utf16);
+
+    return wstr_utf16;
+}
+
+JsonValue string_to_json(std::string& str_utf8) {
+    auto str_utf16 = utf8_to_wstring(str_utf8.data(), str_utf8.length());
+    return JsonValue::CreateStringValue(str_utf16);
+}
+
+std::wstring load_html_resource(int resource_id) {
+
+    // Load the HTML GUI from a resource, as we can't navigate
+    // directly to the filesystem for security!
+    HMODULE hmod = GetModuleHandle(nullptr);
+    assert(hmod != nullptr);
+
+    HRSRC resource = FindResource(hmod, MAKEINTRESOURCE(resource_id), RT_HTML);
+    assert(resource != nullptr);
+
+    size_t bytes_utf8 = SizeofResource(hmod, resource);
+    assert(bytes_utf8 > 0);
+
+    HGLOBAL data = LoadResource(hmod, resource);
+    assert(data != nullptr);
+
+    // Note there's no need to unlock the resource later; it's read
+    // directly from the executable's read-only data sections and is
+    // safely unloaded from memory and reloaded by the kernel as needed.
+    void* locked = LockResource(data);
+    assert(data != nullptr);
+    const char* html_utf8 = static_cast<const char*>(locked);
+
+    return utf8_to_wstring(html_utf8, bytes_utf8);
+}
 
 void init_gui(HWND win, HINSTANCE hInstance)
 {
     // Set up the web view environment for the settings window
-    HRESULT result = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-    assert(result == S_OK);
-
     CreateCoreWebView2Environment(
         Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
             [win](HRESULT result, ICoreWebView2Environment* env) -> HRESULT {
-                assert(result == S_OK);
-                env->AddRef();
+                check_hresult(result);
+                webviewEnv = env;
+                webviewEnv->AddRef();
 
                 // Get a controller for the view and add it to our main window
                 env->CreateCoreWebView2Controller(win,
                     Callback<ICoreWebView2CreateCoreWebView2ControllerCompletedHandler>(
                         [win](HRESULT result, ICoreWebView2Controller* controller) -> HRESULT {
-                            assert(result == S_OK);
+                            check_hresult(result);
+                            webviewController.attach(controller);
+                            webviewController->AddRef();
 
-                            webviewController = controller;
-                            webviewController->AddRef(); // is this necessary?
-                            result = controller->get_CoreWebView2(&webview);
-                            assert(result == S_OK);
-                            webview->AddRef(); // is this necessary?
+                            check_hresult(webviewController->get_CoreWebView2(webview.put()));
+                            webview->AddRef();
 
                             // todo: customize settings to disable web-style context menus etc
-                            ICoreWebView2Settings* Settings;
-                            webview->get_Settings(&Settings);
+                            com_ptr<ICoreWebView2Settings> settings(nullptr);
+                            webview->get_Settings(settings.put());
+                            // ... settings->...
 
                             RECT bounds;
                             GetClientRect(win, &bounds);
-                            result = controller->put_Bounds(bounds);
+                            check_hresult(webviewController->put_Bounds(bounds));
+
+                            std::wstring html = load_html_resource(IDR_HTML_GUI);
+                            check_hresult(webview->NavigateToString(html.c_str()));
+
+                            result = webview->add_WebMessageReceived(
+                                Callback<ICoreWebView2WebMessageReceivedEventHandler>(
+                                    [](ICoreWebView2* sender, ICoreWebView2WebMessageReceivedEventArgs* args) -> HRESULT {
+                                        wchar_t* json_str = nullptr;
+                                        check_hresult(args->get_WebMessageAsJson(&json_str));
+
+                                        hstring json_hstr(json_str);
+                                        JsonObject data = JsonObject::Parse(json_hstr);
+
+                                        hstring action = data.GetNamedString(L"action");
+                                        if (action == L"init") {
+                                            // JS is ready; send it the set of control data
+                                            {
+                                                auto action = JsonValue::CreateStringValue(L"setPlane");
+                                                auto payload = JsonValue::CreateStringValue(L"<plane name>");
+
+                                                JsonObject msg;
+                                                msg.SetNamedValue(L"action", action);
+                                                msg.SetNamedValue(L"payload", payload);
+
+                                                hstring json = msg.ToString();
+                                                check_hresult(webview->PostWebMessageAsJson(json.c_str()));
+                                            }
+                                            {
+                                                JsonArray payload;
+                                                //assert(panels);
+                                                if (!panels) {
+                                                    // currently this is null
+                                                    return S_OK;
+                                                }
+
+                                                auto panel = &panels[0]; // @todo select the right one based on plane
+                                                for (int i = 0; i < panel->num_settings; i++) {
+                                                    JsonObject item;
+                                                    auto setting = &panel->settings[i];
+                                                    item.SetNamedValue(L"control", string_to_json(setting->control));
+                                                    item.SetNamedValue(L"label", string_to_json(setting->label));
+                                                    switch (setting->type) {
+                                                    case Device::Setting::SettingType::Action:
+                                                        item.SetNamedValue(L"type", JsonValue::CreateStringValue(L"action"));
+                                                        //item.SetNamedValue(L"value", JsonValue)
+                                                        // expression
+                                                        break;
+                                                    case Device::Setting::SettingType::GetExpression:
+                                                        item.SetNamedValue(L"type", JsonValue::CreateStringValue(L"get expression"));
+                                                        //item.SetNamedValue(L"value", JsonValue)
+                                                        // expression
+                                                        break;
+                                                    case Device::Setting::SettingType::SetExpression:
+                                                        item.SetNamedValue(L"type", JsonValue::CreateStringValue(L"set expression"));
+                                                        //item.SetNamedValue(L"value", JsonValue)
+                                                        // expression
+                                                        break;
+                                                    case Device::Setting::SettingType::Value:
+                                                        item.SetNamedValue(L"type", JsonValue::CreateStringValue(L"value"));
+                                                        //item.SetNamedValue(L"value", JsonValue)
+                                                        // value -> double
+                                                        break;
+                                                    case Device::Setting::SettingType::Enumerator:
+                                                        item.SetNamedValue(L"type", JsonValue::CreateStringValue(L"enumerator"));
+                                                        //item.SetNamedValue(L"value", JsonValue)
+                                                        // enumer -> what is it? pointer??
+                                                        break;
+                                                    default:
+                                                        assert(0);
+                                                    }
+                                                    payload.Append(item);
+                                                }
+
+                                                JsonObject msg;
+                                                msg.SetNamedValue(L"action", JsonValue::CreateStringValue(L"initControls"));
+                                                msg.SetNamedValue(L"payload", payload);
+
+                                                hstring json = msg.ToString();
+                                                check_hresult(webview->PostWebMessageAsJson(json.c_str()));
+
+                                            }
+                                        }
+                                        else if (action == L"update") {
+                                            JsonObject payload = data.GetNamedObject(L"payload");
+                                            hstring control = payload.GetNamedString(L"control");
+                                            hstring label = payload.GetNamedString(L"label");
+                                            hstring value = payload.GetNamedString(L"value");
+                                            // todo: update state
+                                        }
+                                        else {
+                                            assert(0);
+                                        }
+
+                                        return S_OK;
+                                    }
+                                ).Get(),
+                                nullptr
+                            );
                             assert(result == S_OK);
 
-                            // Load the HTML GUI from a resource, as we can't navigate
-                            // directly to the filesystem for security!
-                            HMODULE hmod = GetModuleHandle(nullptr);
-                            assert(hmod != nullptr);
-
-                            HRSRC resource = FindResource(hmod, MAKEINTRESOURCE(IDR_HTML_GUI), RT_HTML);
-                            assert(resource != nullptr);
-
-                            size_t bytes_utf8 = SizeofResource(hmod, resource);
-                            assert(bytes_utf8 > 0);
-
-                            HGLOBAL data = LoadResource(hmod, resource);
-                            assert(data != nullptr);
-
-                            // Note there's no need to unlock the resource later; it's read
-                            // directly from the executable's read-only data sections and is
-                            // safely unloaded from memory and reloaded by the kernel as needed.
-                            void* locked = LockResource(data);
-                            assert(data != nullptr);
-                            const char* html_utf8 = static_cast<const char*>(locked);
-
-                            int chars_utf16 = MultiByteToWideChar(
-                                CP_UTF8,
-                                MB_ERR_INVALID_CHARS,
-                                html_utf8,
-                                bytes_utf8,
-                                nullptr,
-                                0);
-                            assert(chars_utf16 > 0);
-                            std::wstring html_utf16(chars_utf16, 0);
-                            int converted = MultiByteToWideChar(
-                                CP_UTF8,
-                                MB_ERR_INVALID_CHARS,
-                                html_utf8,
-                                bytes_utf8,
-                                &html_utf16[0],
-                                chars_utf16);
-                            assert(converted == chars_utf16);
-
-                            result = webview->NavigateToString(html_utf16.c_str());
-                            assert(result == S_OK);
-
+                            // todo: hide it again when minimized to optimize performance
                             webviewController->put_IsVisible(TRUE);
-                            
+
                             return S_OK;
                         }
                     ).Get()
@@ -1307,7 +1433,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     instance = hInstance;
 
-    // TODO: Place code here.
+    // Initialize COM and the Windows Runtime.
+    // Must use apartment threading for COM for WebView2?
+    HRESULT result = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+    assert(result == S_OK);
+
+    RoInitializeWrapper initialize(RO_INIT_SINGLETHREADED);
+    assert(!FAILED(initialize));
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, main_title, MAX_LOADSTRING);
