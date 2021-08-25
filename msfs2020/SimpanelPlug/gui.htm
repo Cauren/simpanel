@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8>
+        <title>SimpanelPlug</title>
+        <style type=text/css>
+            :root {
+                /* todo: use system colors instead */
+                background-color: white;
+                color: black;
+                font-family: "Segoe UI", sans-serif;
+            }
+            table {
+                border: solid 1px gray;
+            }
+        </style>
+        <script type=text/javascript async>
+            document.addEventListener('DOMContentLoaded', () => {
+                function byid(id) {
+                    return document.getElementById(id);
+                }
+
+                const planeName = byid('plane-name');
+                const controls = byid('controls');
+                const webview = window.chrome.webview;
+
+                function post(action, payload) {
+                    webview.postMessage({
+                        action,
+                        payload
+                    });
+                }
+
+                class Send {
+                    static init() {
+                        // Let the Win32 side know we're ready
+                        post('init');
+                    }
+
+                    static updateControl(control, label, value) {
+                        post('updateControl', {
+                            control,
+                            label,
+                            value
+                        });
+                    }
+                }
+
+                function el(name) {
+                    return document.createElement(name);
+                }
+
+                function td(content) {
+                    let col = el('td');
+                    if (typeof content === 'object') {
+                        col.appendChild(content);
+                    } else {
+                        col.textContent = text;
+                    }
+                    return col;
+                }
+
+                function tr(className, cols) {
+                    let row = el('tr');
+                    row.classList.add(className);
+                    for (let col of cols) {
+                        row.appendChild(col);
+                    }
+                    return row;
+                }
+
+                function input(text) {
+                    let field = el('input');
+                    field.type = 'text';
+                    field.value = text;
+                    return field;
+                }
+
+                function addControl(control, label, type, value) {
+                    let controlCol = td(control);
+                    let labelCol = td(label);
+                    let typeCol = td(type);
+                    let valueIn = input(value);
+                    valueIn.addEventListener('change', () => {
+                        // Send the updated value back to Win32
+                        Send.updateControl(control, label, valueIn.value);
+                    });
+                    let valueCol = td(valueIn);
+                    let row = tr('control', [controlCol, labelCol, typeCol, valueCol]);
+                    controls.appendChild(row);
+                }
+
+                function clearControls() {
+                    let rows = controls.querySelectorAll('tr.control');
+                    for (let row of rows) {
+                        row.parent.removeChild(row);
+                    }
+                }
+
+                class Receive {
+                    static setPlane(plane) {
+                        planeName.textContent = plane;
+                    }
+
+                    static initControls(defs) {
+                        clearControls();
+                    }
+                }
+
+                webview.addEventListener('message', (event) => {
+                    const {action, payload} = event.data;
+                    Receive[action](payload);
+                });
+
+                Send.init();
+            });
+        </script>
+    </head>
+    <body>
+        <h1 id=plane-name>Loading...</h1>
+        <table id=controls>
+            <tr class=header>
+                <th>Control</th>
+                <th>Label</th>
+                <th>Type</th>
+                <th>Value/Expression</th>
+            </tr>
+        </table>
+    </body>
+</html>
