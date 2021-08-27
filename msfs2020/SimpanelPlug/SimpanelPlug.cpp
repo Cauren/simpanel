@@ -304,11 +304,13 @@ struct Device {
     ~Device() {
         end_reader = true;
         WaitForSingleObject(reader_thread, INFINITE);
+        for (int i = 0; i < num_settings; i++)
+            settings[i].~Setting();
         delete[] settings;
     };
 
-    Setting& add(const std::string& c, const std::string& l, Setting::SettingType t) {
-        Setting& s = settings[num_settings++];
+    Setting& add(const std::string c, const std::string l, Setting::SettingType t) {
+        Setting& s = *new(settings+(num_settings++)) Setting;
         s.control = c;
         s.label = l;
         s.type = t;
@@ -394,6 +396,14 @@ struct SPDial {
     };
 };
 
+struct SPIndicator {
+    Expression value;
+
+    void add_settings(Device* dev, const std::string& label) {
+        dev->add(label, "value", &value, Device::Setting::GetExpression);
+    }
+};
+
 struct SPButton {
     Expression led_value;
     Expression press_action;
@@ -426,6 +436,7 @@ struct SIMPANEL_AP_rev_C: public Device {
     bool            switch_closed[20];
     bool            switch_on[20];
 
+    SPIndicator power;
     SPDial d[4];
     SPButton b[11];
     SPSwitch sw[20];
@@ -440,6 +451,7 @@ struct SIMPANEL_AP_rev_C: public Device {
         for (int i = 0; i < 20; i++)
             switch_closed[i] = switch_on[i] = false;
 
+        power.add_settings(this, "Avionics Power");
         d[0].add_settings(this, "Speed");
         d[1].add_settings(this, "Heading");
         d[2].add_settings(this, "VS");
@@ -502,8 +514,19 @@ void SIMPANEL_AP_rev_C::recv_hid_report(void* buf, size_t len)
         }
     }
 
+    // bits map to switches in a set but arbitrary order
+    constexpr static int sw_remap[] = {
+        13, 12, 10, 11, 9, 8, 6,
+        5, 4,
+        15, 16, 17, 18,
+        19, 3, 2,
+        0, 1,
+        7, 14,
+    };
+
     for (int s = 0; s < 20; s++) {
-        switch_closed[s] = report->switches[s >> 3] & (1 << (s & 7));
+        int n = sw_remap[s];
+        switch_closed[s] = report->switches[n>> 3] & (1 << (n & 7));
     }
 }
 
@@ -514,6 +537,17 @@ void SIMPANEL_AP_rev_C::update(void)
         unsigned char digits[18];
         unsigned char leds[2];
     } out_report;
+
+    out_report.id = 2;
+    if (!power.value) {
+        for (int i = 0; i < 17; i++)
+            out_report.digits[i] = 0;
+        out_report.digits[17] = 0x80;
+        out_report.leds[0] = 0;
+        out_report.leds[1] = 0;
+        WriteFile(whid, &out_report, 21, 0, 0);
+        return;
+    }
 
     EvaluateRequest ev;
 
@@ -665,6 +699,8 @@ void SIMPANEL_AP_rev_C::load_plane(const char*)
 {
     // Right now, we hardcode "TBM 930 Asobo"
 
+    power.value = "(A:CIRCUIT AVIONICS ON,Bool)";
+
     // Dial 0 is configured with sane defaults, but not active
     // because we don't have a 940.  :-)
     d[0].mode_select = "(L:XMLVAR_AirSpeedIsInMach,Bool)";
@@ -711,8 +747,8 @@ void SIMPANEL_AP_rev_C::load_plane(const char*)
     d[2].mode[0].press_action = false;
 
     // A/T
-    b[1].led_value = "(A:PITOT HEAT SWITCH:2, Bool)"; // "(A:AUTOPILOT THROTTLE ARM,bool)";
-    b[1].press_action = "123 'DEICE_Engine_1_Toggle' (>F:InputEvent)"; // "(>K:AUTO THROTTLE ARM)";
+    b[1].led_value = "(A:AUTOPILOT THROTTLE ARM,bool)";
+    b[1].press_action = "(>K:AUTO THROTTLE ARM)";
     // SPD but we use it for bank limit in the TBM
     b[10].led_value = "(A:AUTOPILOT MAX BANK,degrees) 30 <";
     b[10].press_action = "(A:AUTOPILOT MAX BANK, degrees) 30 < if{ (>K:AP_MAX_BANK_INC) } els{ (>K:AP_MAX_BANK_DEC) }";
@@ -798,10 +834,10 @@ void SIMPANEL_AP_rev_C::load_plane(const char*)
     // AP/TRIM OFF
     sw[17].set_action = false;
     sw[17].reset_action = false;
-    //
+    // spare 1
     sw[18].set_action = false;
     sw[18].reset_action = false;
-    //
+    // spare 2
     sw[19].set_action = false;
     sw[19].reset_action = false;
 
