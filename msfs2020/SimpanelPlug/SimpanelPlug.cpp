@@ -304,13 +304,11 @@ struct Device {
     ~Device() {
         end_reader = true;
         WaitForSingleObject(reader_thread, INFINITE);
-        for (int i = 0; i < num_settings; i++)
-            settings[i].~Setting();
         delete[] settings;
     };
 
     Setting& add(const std::string c, const std::string l, Setting::SettingType t) {
-        Setting& s = *new(settings+(num_settings++)) Setting;
+        Setting& s = settings[num_settings++];
         s.control = c;
         s.label = l;
         s.type = t;
@@ -441,7 +439,7 @@ struct SIMPANEL_AP_rev_C: public Device {
     SPButton b[11];
     SPSwitch sw[20];
 
-    SIMPANEL_AP_rev_C(HANDLE hid, HANDLE whid): Device("SimPanel A/P rev. C", hid, whid, 122) {
+    SIMPANEL_AP_rev_C(HANDLE hid, HANDLE whid): Device("SimPanel A/P rev. C", hid, whid, 123) {
         for (int i = 0; i < 4; i++) {
             dial_delta[i] = 0;
             dial_closed[i] = dial_pushed[i] = false;
