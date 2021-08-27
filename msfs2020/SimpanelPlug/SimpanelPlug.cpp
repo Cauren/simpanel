@@ -425,6 +425,17 @@ struct SPSwitch {
 
 struct SIMPANEL_AP_rev_C: public Device {
 
+    struct OutputReport {
+        unsigned char id;
+        unsigned char digits[18];
+        unsigned char leds[2];
+    };
+    struct InputReport {
+        unsigned char dials[4];
+        unsigned char buttons[2];
+        unsigned char switches[3];
+    };
+
     signed short    dial_delta[4];
     bool            dial_closed[4];
     bool            dial_pushed[4];
@@ -469,6 +480,12 @@ struct SIMPANEL_AP_rev_C: public Device {
             sw[i].add_settings(this, "Switch " + std::to_string(i));
         if (current_plane)
             load_plane(current_plane);
+        else
+            blank();
+    }
+
+    ~SIMPANEL_AP_rev_C() {
+        blank();
     }
 
     virtual unsigned char in_report_id(void) { return 1; };
@@ -476,18 +493,14 @@ struct SIMPANEL_AP_rev_C: public Device {
     virtual void recv_hid_report(void* buf, size_t len);
     virtual void update(void);
     virtual void load_plane(const char*);
+
+    void blank(void);
 };
 
 void SIMPANEL_AP_rev_C::recv_hid_report(void* buf, size_t len)
 {
-    struct in_report {
-        unsigned char dials[4];
-        unsigned char buttons[2];
-        unsigned char switches[3];
-    };
-
-    in_report* report = reinterpret_cast<in_report*>(buf);
-    if (len != sizeof(in_report))
+    InputReport* report = reinterpret_cast<InputReport*>(buf);
+    if (len != sizeof(InputReport))
         return;
     for (int d = 0; d < 4; d++) {
         if (report->dials[d] & 0x80) {
@@ -528,25 +541,27 @@ void SIMPANEL_AP_rev_C::recv_hid_report(void* buf, size_t len)
     }
 }
 
-void SIMPANEL_AP_rev_C::update(void)
+void SIMPANEL_AP_rev_C::blank(void)
 {
-    struct {
-        unsigned char id;
-        unsigned char digits[18];
-        unsigned char leds[2];
-    } out_report;
+    OutputReport out_report;
 
     out_report.id = 2;
+    for (int i = 0; i < 17; i++)
+        out_report.digits[i] = 0;
+    out_report.digits[17] = 0x80;
+    out_report.leds[0] = 0;
+    out_report.leds[1] = 0;
+    WriteFile(whid, &out_report, 21, 0, 0);
+}
+void SIMPANEL_AP_rev_C::update(void)
+{
     if (!power.value) {
-        for (int i = 0; i < 17; i++)
-            out_report.digits[i] = 0;
-        out_report.digits[17] = 0x80;
-        out_report.leds[0] = 0;
-        out_report.leds[1] = 0;
-        WriteFile(whid, &out_report, 21, 0, 0);
+        blank();
         return;
     }
 
+    OutputReport out_report;
+    out_report.id = 2;
     EvaluateRequest ev;
 
     for (int i = 0; i < 11; i++) {
