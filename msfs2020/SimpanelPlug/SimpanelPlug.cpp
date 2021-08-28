@@ -714,17 +714,16 @@ void SIMPANEL_AP_rev_C::load_plane(const char*)
 
     power.value = "(A:CIRCUIT AVIONICS ON,Bool)";
 
-    // Dial 0 is configured with sane defaults, but not active
-    // because we don't have a 940.  :-)
+    // Dial 0 is configured with sane defaults for GA planes with no A/T
     d[0].mode_select = "(L:XMLVAR_AirSpeedIsInMach,Bool)";
     d[0].mode[0].active = true;
     d[0].mode[0].pressed_scale = 1.0;
     d[0].mode[0].unpressed_scale = 1.0;
     d[0].mode[0].value_type = SPDial::IAS;
     d[0].mode[0].value = "(A:AUTOPILOT AIRSPEED HOLD VAR, knots)";
-    d[0].mode[0].set_value = "(L:GCVAL) (>K:AP_SPD_VAR_SET)";
-    d[0].mode[0].press_action = "1 (>L:XMLVAR_AirSpeedIsInMach)";
-    d[0].mode[1].active = true;
+    d[0].mode[0].set_value = false;
+    d[0].mode[0].press_action = "(>K:BAROMETRIC)";
+    d[0].mode[1].active = false;
     d[0].mode[1].pressed_scale = 0.01;
     d[0].mode[1].unpressed_scale = 0.01;
     d[0].mode[1].value_type = SPDial::Mach;
@@ -759,9 +758,9 @@ void SIMPANEL_AP_rev_C::load_plane(const char*)
     d[3].mode[0].set_value = "(L:GCVAL) (>K:AP_ALT_VAR_SET_ENGLISH)";
     d[2].mode[0].press_action = false;
 
-    // A/T
-    b[1].led_value = "(A:AUTOPILOT THROTTLE ARM,bool)";
-    b[1].press_action = "(>K:AUTO THROTTLE ARM)";
+    // A/T but TBM doesn't have one.  We cheat hear for convenience: nav source button!
+    b[1].led_value = false;
+    b[1].press_action = "1 (>H:AS3000_PFD_1_SOFTKEYS_7)";
     // SPD but we use it for bank limit in the TBM
     b[10].led_value = "(A:AUTOPILOT MAX BANK,degrees) 30 <";
     b[10].press_action = "(A:AUTOPILOT MAX BANK, degrees) 30 < if{ (>K:AP_MAX_BANK_INC) } els{ (>K:AP_MAX_BANK_DEC) }";
@@ -797,8 +796,8 @@ void SIMPANEL_AP_rev_C::load_plane(const char*)
     sw[0].set_action = "(A:STRUCTURAL DEICE SWITCH, Bool) ! if{ (>K:TOGGLE_STRUCTURAL_DEICE) }";
     sw[0].reset_action = "(A:STRUCTURAL DEICE SWITCH, Bool) if{ (>K:TOGGLE_STRUCTURAL_DEICE) }";
     // DE-ICE ice light
-    sw[1].set_action = false;
-    sw[1].reset_action = false;
+    sw[1].set_action = "(>K:TBM930_ICE_LIGHT_ON)";
+    sw[1].reset_action = "(>K:TBM930_ICE_LIGHT_OFF)";
     // DE-ICE prop
     sw[2].set_action = "(A:PROP DEICE SWITCH:1, Bool) ! if{ 1 (>K:1:TOGGLE_PROPELLER_DEICE) }";
     sw[2].reset_action = "(A:PROP DEICE SWITCH:1, Bool) if{ 1 (>K:1:TOGGLE_PROPELLER_DEICE) }";
@@ -806,47 +805,47 @@ void SIMPANEL_AP_rev_C::load_plane(const char*)
     sw[3].set_action = "(A:WINDSHIELD DEICE SWITCH, Bool) ! if{ (>K:WINDSHIELD_DEICE_TOGGLE) }";
     sw[3].reset_action = "(A:WINDSHIELD DEICE SWITCH, Bool) if{ (>K:WINDSHIELD_DEICE_TOGGLE) }";
     // DE-ICE pitot L
-    sw[4].set_action = "1 (>K:0:PITOT_HEAT_SET)";
-    sw[4].reset_action = "0 (>K:0:PITOT_HEAT_SET)";
+    sw[4].set_action = "1 (>L:XMLVAR_Pitot_1) (A:PITOT HEAT, bool) ! if{ (>K:PITOT_HEAT_TOGGLE) }";
+    sw[4].reset_action = "0 (>L:XMLVAR_Pitot_1) (L:XMLVAR_Pitot_1) ! (L:XMLVAR_Pitot_2) ! and (A:PITOT HEAT, bool) == if{ (>K:PITOT_HEAT_TOGGLE) }";
     // DE-ICE pitot R
-    sw[5].set_action = false;
-    sw[5].reset_action = false;
+    sw[5].set_action = "1 (>L:XMLVAR_Pitot_2) (A:PITOT HEAT, bool) ! if{ (>K:PITOT_HEAT_TOGGLE) }";
+    sw[5].reset_action = "0 (>L:XMLVAR_Pitot_2) (L:XMLVAR_Pitot_1) ! (L:XMLVAR_Pitot_2) ! and (A:PITOT HEAT, bool) == if{ (>K:PITOT_HEAT_TOGGLE) }";
     // DE-ICE inert sep
-    sw[6].set_action = false;
-    sw[6].reset_action = false;
+    sw[6].set_action = "(A:ENG_ANTI_ICE:1,Bool) ! if{ (>K:ANTI_ICE_TOGGLE_ENG1) }";
+    sw[6].reset_action = "(A:ENG_ANTI_ICE:1,Bool) if{ (>K:ANTI_ICE_TOGGLE_ENG1) }";
     // BLEED AUTO
-    sw[7].set_action = false;
-    sw[7].reset_action = false;
+    sw[7].set_action = "0 (>K:BLEED_AIR_SOURCE_CONTROL_SET)";
+    sw[7].reset_action = "3 (>K:BLEED_AIR_SOURCE_CONTROL_SET)";
     // BLEED OFF
-    sw[8].set_action = false;
-    sw[8].reset_action = false;
+    sw[8].set_action = "1 (>K:BLEED_AIR_SOURCE_CONTROL_SET)";
+    sw[8].reset_action = "3 (>K:BLEED_AIR_SOURCE_CONTROL_SET)";
     // ENGINE starter ON
-    sw[9].set_action = false;
+    sw[9].set_action = "0 (>L:XMLVAR_Starter, Number) (A:GENERAL ENG STARTER:1, Bool) ! if{ (>K:TOGGLE_STARTER1) }";
     sw[9].reset_action = false;
     // ENGINE starter ABORT
-    sw[10].set_action = false;
+    sw[10].set_action = "2 (>L:XMLVAR_Starter, Number) (A:GENERAL ENG STARTER:1, Bool) if{ (>K:TOGGLE_STARTER1) }";
     sw[10].reset_action = false;
     // ENGINE ignition AUTO
-    sw[11].set_action = false;
-    sw[11].reset_action = false;
+    sw[11].set_action = "1 (>A:TURB ENG IGNITION SWITCH EX1:1, Enum) 1 (>L:XMLVAR_Ignition)";
+    sw[11].reset_action = "2 (>A:TURB ENG IGNITION SWITCH EX1:1, Enum) 0 (>L:XMLVAR_Ignition)";
     // ENGINE ignition OFF
-    sw[12].set_action = false;
-    sw[12].reset_action = false;
+    sw[12].set_action = "0 (>A:TURB ENG IGNITION SWITCH EX1:1, Enum) 0 (>L:XMLVAR_Ignition)";
+    sw[12].reset_action = "2 (>A:TURB ENG IGNITION SWITCH EX1:1, Enum) 0 (>L:XMLVAR_Ignition)";
     // FUEL aux BP AUTO
-    sw[13].set_action = false;
-    sw[13].reset_action = false;
+    sw[13].set_action = "2 (>L:XMLVAR_BoostFuelPump, Number) (A:GENERAL ENG FUEL PUMP SWITCH EX1:1, Enum) 2 != if{ 2 (>K:ELECT_FUEL_PUMP1_SET) }";
+    sw[13].reset_action = "1 (>L:XMLVAR_BoostFuelPump, Number) (A:GENERAL ENG FUEL PUMP SWITCH EX1:1, Enum) 1 != if{ 1 (>K:ELECT_FUEL_PUMP1_SET) }";
     // FUEL aux BP OFF
-    sw[14].set_action = false;
-    sw[14].reset_action = false;
+    sw[14].set_action = "0 (>L:XMLVAR_BoostFuelPump, Number) (A:GENERAL ENG FUEL PUMP SWITCH EX1:1, Enum) 0 != if{ 0 (>K:ELECT_FUEL_PUMP1_SET) }";
+    sw[14].reset_action = "1 (>L:XMLVAR_BoostFuelPump, Number) (A:GENERAL ENG FUEL PUMP SWITCH EX1:1, Enum) 1 != if{ 1 (>K:ELECT_FUEL_PUMP1_SET) }";
     // FUEL fuel sel AUTO
-    sw[15].set_action = false;
-    sw[15].reset_action = false;
+    sw[15].set_action = false; // broken in SU5
+    sw[15].reset_action = false; // broken in SU5
     // AP/TRIM ON
-    sw[16].set_action = false;
-    sw[16].reset_action = false;
+    sw[16].set_action = "0 (>L:XMLVAR_APTrim) (A:AUTOPILOT DISENGAGED, Bool) if{ (>K:AUTOPILOT_DISENGAGE_TOGGLE) }";
+    sw[16].reset_action = "1 (>L:XMLVAR_APTrim) (A:AUTOPILOT DISENGAGED, Bool) ! if{ (>K:AUTOPILOT_DISENGAGE_TOGGLE) } (A:RUDDER TRIM DISABLED, Bool) if{ 0 (>K:RUDDER_TRIM_DISABLED_SET) } (A:AILERON TRIM DISABLED, Bool) if{ 0 (>K:AILERON_TRIM_DISABLED_SET) }";
     // AP/TRIM OFF
-    sw[17].set_action = false;
-    sw[17].reset_action = false;
+    sw[17].set_action = "2 (>L:XMLVAR_APTrim) (A:AUTOPILOT DISENGAGED, Bool) ! if{ (>K:AUTOPILOT_DISENGAGE_TOGGLE) } (A:RUDDER TRIM DISABLED, Bool) ! if{ 1 (>K:RUDDER_TRIM_DISABLED_SET) } (A:AILERON TRIM DISABLED, Bool) ! if{ 1 (>K:AILERON_TRIM_DISABLED_SET) }";
+    sw[17].reset_action = "1 (>L:XMLVAR_APTrim) (A:AUTOPILOT DISENGAGED, Bool) ! if{ (>K:AUTOPILOT_DISENGAGE_TOGGLE) } (A:RUDDER TRIM DISABLED, Bool) if{ 0 (>K:RUDDER_TRIM_DISABLED_SET) } (A:AILERON TRIM DISABLED, Bool) if{ 0 (>K:AILERON_TRIM_DISABLED_SET) }";
     // spare 1
     sw[18].set_action = false;
     sw[18].reset_action = false;
