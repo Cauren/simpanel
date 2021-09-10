@@ -1,0 +1,33 @@
+#! /bin/bash
+
+convert-im6 -crop 97x87+7+8 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_1_unpressed
+convert-im6 -crop 97x87+111+8 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_2_unpressed
+convert-im6 -crop 97x87+215+8 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_3_unpressed
+convert-im6 -crop 97x87+7+102 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_4_unpressed
+convert-im6 -crop 97x87+111+102 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_5_unpressed
+convert-im6 -crop 97x87+215+102 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_6_unpressed
+convert-im6 -crop 97x87+7+196 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_7_unpressed
+convert-im6 -crop 97x87+111+196 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_8_unpressed
+convert-im6 -crop 97x87+215+196 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_9_unpressed
+convert-im6 -crop 97x87+7+290 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl decimal_unpressed
+convert-im6 -crop 97x87+111+290 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_0_unpressed
+convert-im6 -crop 97x87+215+290 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl backspace_unpressed
+convert-im6 -crop 97x87+7+384 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl cancel_unpressed
+convert-im6 -crop 97x87+111+384 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl xfer_unpressed
+convert-im6 -crop 97x87+215+384 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl enter_unpressed
+
+convert-im6 -crop 97x87+7+8 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_1_pressed
+convert-im6 -crop 97x87+111+8 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_2_pressed
+convert-im6 -crop 97x87+215+8 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_3_pressed
+convert-im6 -crop 97x87+7+102 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_4_pressed
+convert-im6 -crop 97x87+111+102 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_5_pressed
+convert-im6 -crop 97x87+215+102 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_6_pressed
+convert-im6 -crop 97x87+7+196 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_7_pressed
+convert-im6 -crop 97x87+111+196 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_8_pressed
+convert-im6 -crop 97x87+215+196 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_9_pressed
+convert-im6 -crop 97x87+7+290 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl decimal_pressed
+convert-im6 -crop 97x87+111+290 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_0_pressed
+convert-im6 -crop 97x87+215+290 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl backspace_pressed
+convert-im6 -crop 97x87+7+384 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl cancel_pressed
+convert-im6 -crop 97x87+111+384 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl xfer_pressed
+convert-im6 -crop 97x87+215+384 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl enter_pressed
