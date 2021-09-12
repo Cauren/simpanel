@@ -1,33 +1,182 @@
 #! /bin/bash
 
-convert-im6 -crop 97x87+7+8 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_1_unpressed
-convert-im6 -crop 97x87+111+8 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_2_unpressed
-convert-im6 -crop 97x87+215+8 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_3_unpressed
-convert-im6 -crop 97x87+7+102 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_4_unpressed
-convert-im6 -crop 97x87+111+102 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_5_unpressed
-convert-im6 -crop 97x87+215+102 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_6_unpressed
-convert-im6 -crop 97x87+7+196 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_7_unpressed
-convert-im6 -crop 97x87+111+196 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_8_unpressed
-convert-im6 -crop 97x87+215+196 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_9_unpressed
-convert-im6 -crop 97x87+7+290 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl decimal_unpressed
-convert-im6 -crop 97x87+111+290 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl digit_0_unpressed
-convert-im6 -crop 97x87+215+290 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl backspace_unpressed
-convert-im6 -crop 97x87+7+384 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl cancel_unpressed
-convert-im6 -crop 97x87+111+384 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl xfer_unpressed
-convert-im6 -crop 97x87+215+384 images/keypad_09_unpressed.png -type palette XPM:- | ./crunch.pl enter_unpressed
+chop() {
+# src w h x y
+    convert-im6 -crop $2x$3+$4+$5 images/$1.png -type palette XPM:- | ./crunch.pl $6
+    index=$[$index+1]
+}
 
-convert-im6 -crop 97x87+7+8 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_1_pressed
-convert-im6 -crop 97x87+111+8 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_2_pressed
-convert-im6 -crop 97x87+215+8 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_3_pressed
-convert-im6 -crop 97x87+7+102 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_4_pressed
-convert-im6 -crop 97x87+111+102 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_5_pressed
-convert-im6 -crop 97x87+215+102 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_6_pressed
-convert-im6 -crop 97x87+7+196 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_7_pressed
-convert-im6 -crop 97x87+111+196 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_8_pressed
-convert-im6 -crop 97x87+215+196 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_9_pressed
-convert-im6 -crop 97x87+7+290 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl decimal_pressed
-convert-im6 -crop 97x87+111+290 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl digit_0_pressed
-convert-im6 -crop 97x87+215+290 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl backspace_pressed
-convert-im6 -crop 97x87+7+384 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl cancel_pressed
-convert-im6 -crop 97x87+111+384 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl xfer_pressed
-convert-im6 -crop 97x87+215+384 images/keypad_09_pressed.png -type palette XPM:- | ./crunch.pl enter_pressed
+index=0
+
+echo '#include "images.h"'
+echo
+
+chop keypad_09_unpressed  97  87   7   8 keypad_1_unpressed
+chop keypad_09_unpressed  97  87 111   8 keypad_2_unpressed
+chop keypad_09_unpressed  97  87 215   8 keypad_3_unpressed
+chop keypad_09_unpressed  97  87   7 102 keypad_4_unpressed
+chop keypad_09_unpressed  97  87 111 102 keypad_5_unpressed
+chop keypad_09_unpressed  97  87 215 102 keypad_6_unpressed
+chop keypad_09_unpressed  97  87   7 196 keypad_7_unpressed
+chop keypad_09_unpressed  97  87 111 196 keypad_8_unpressed
+chop keypad_09_unpressed  97  87 215 196 keypad_9_unpressed
+chop keypad_09_unpressed  97  87   7 290 keypad_decimal_unpressed
+chop keypad_09_unpressed  97  87 111 290 keypad_0_unpressed
+chop keypad_09_unpressed  97  87 215 290 keypad_backspace_unpressed
+chop keypad_09_unpressed  97  87   7 384 keypad_cancel_unpressed
+chop keypad_09_unpressed  97  87 111 384 keypad_xfer_unpressed
+chop keypad_09_unpressed  97  87 215 384 keypad_enter_unpressed
+
+chop keypad_09_pressed	  97  87   7   8 keypad_1_pressed
+chop keypad_09_pressed	  97  87 111   8 keypad_2_pressed
+chop keypad_09_pressed	  97  87 215   8 keypad_3_pressed
+chop keypad_09_pressed	  97  87   7 102 keypad_4_pressed
+chop keypad_09_pressed	  97  87 111 102 keypad_5_pressed
+chop keypad_09_pressed	  97  87 215 102 keypad_6_pressed
+chop keypad_09_pressed	  97  87   7 196 keypad_7_pressed
+chop keypad_09_pressed	  97  87 111 196 keypad_8_pressed
+chop keypad_09_pressed	  97  87 215 196 keypad_9_pressed
+chop keypad_09_pressed	  97  87   7 290 keypad_decimal_pressed
+chop keypad_09_pressed	  97  87 111 290 keypad_0_pressed
+chop keypad_09_pressed	  97  87 215 290 keypad_backspace_pressed
+chop keypad_09_pressed	  97  87   7 384 keypad_cancel_pressed
+chop keypad_09_pressed	  97  87 111 384 keypad_xfer_pressed
+chop keypad_09_pressed	  97  87 215 384 keypad_enter_pressed
+
+chop display_com	  26  34 172 119 digit_0
+chop display_com	  26  34  27  46 digit_1
+chop display_com	  26  34  56  46 digit_2
+chop display_com	  26  34 143 307 digit_3
+chop display_com	  26  34  85  46 digit_4
+chop display_com	  26  34 201  46 digit_5
+chop display_com	  26  34 201 307 digit_6
+chop display_com	  26  34 201 234 digit_7
+chop display_com	  26  34 143  46 digit_8
+chop display_com	  26  34 143 119 digit_9
+chop display_com	  26  34 114  46 digit_decimal
+chop display_com	  34  12 191  82 unit_mhz
+chop display_com	  34  12 191 270 unit_khz
+chop display_com	  72  21   7  11 bra_com1
+chop display_com	  72  21   7 199 bra_com2
+chop display_com	 112  21  79  11 bra_mid
+chop display_com	 120  21 191  11 bra_end
+chop display_com	  64  11   7 177 ket_start
+chop display_com	 120  11  71 177 ket_mid
+chop display_com	 120  11 191 177 ket_end
+chop display_com	  69  87 242  61 xfer_unpressed
+chop display_com	  69  87 242 249 xfer_pressed
+chop display_com	  97  57   7 384 com1_unpressed
+chop display_com	  97  57 111 384 mic_unpressed
+chop display_com	  97  57 215 384 com2_unpressed
+chop display_com	  97  30   7 441 led_single_unpressed
+chop display_com	  97  30 111 441 led_double_unpressed
+
+chop display_nav	  72  21   7  11 bra_nav1
+chop display_nav	  72  21   7  35 bra_nav2
+chop display_nav	  72  21   7  59 bra_adf
+chop display_nav	  72  21   7  83 bra_xpndr
+chop display_nav	  72  21   7 107 bra_tacan
+chop display_nav	  97  57   7 196 nav1_pressed
+chop display_nav	  97  57 111 196 nav2_pressed
+chop display_nav	  97  57 215 196 adf_pressed
+chop display_nav	  97  57   7 290 nav1_unpressed
+chop display_nav	  97  57 111 290 nav2_unpressed
+chop display_nav	  97  57 215 290 adf_unpressed
+chop display_nav	  97  57   7 384 com1_pressed
+chop display_nav	  97  57 111 384 mic_pressed
+chop display_nav	  97  57 215 384 com2_pressed
+chop display_nav	  97  30   7 441 led_single_pressed
+chop display_nav	  97  30 111 441 led_double_pressed
+
+chop keypad_menu	  97  87   7   8 menu_com_unpressed
+chop keypad_menu	  97  87 111   8 menu_com_pressed
+chop keypad_menu	  97  87 215   8 keypad_x_unpressed
+chop keypad_menu	  97  87   7 102 menu_xpndr_unpressed
+chop keypad_menu	  97  87 111 102 menu_xpndr_pressed
+chop keypad_menu	  97  87 215 102 keypad_x_pressed
+chop keypad_menu	  97  87   7 196 menu_nav_unpressed
+chop keypad_menu	  97  87 111 196 menu_nav_pressed
+chop keypad_menu	  97  87 215 196 keypad_y_unpressed
+chop keypad_menu	  97  87   7 290 menu_adf_unpressed
+chop keypad_menu	  97  87 111 290 menu_adf_pressed
+chop keypad_menu	  97  87 215 290 keypad_y_pressed
+chop keypad_menu	  97  87   7 384 menu_tacan_unpressed
+chop keypad_menu	  97  87 111 384 menu_tacan
+chop keypad_menu	  97  87 215 384 empty
+
+chop display_buttons	  97  57   7   8 on_unpressed
+chop display_buttons	  97  57 111   8 alt_unpressed
+chop display_buttons	  97  57 215   8 ident_unpressed
+chop display_buttons	  97  57   7 102 on_pressed
+chop display_buttons	  97  57 111 102 alt_pressed
+chop display_buttons	  97  57 215 102 ident_pressed
+
+cat <<EOF
+
+
+const unsigned char* images_buttons[][2] PROGMEM = {
+      { _image_keypad_1_unpressed, _image_keypad_1_pressed },
+      { _image_keypad_2_unpressed, _image_keypad_2_pressed },
+      { _image_keypad_3_unpressed, _image_keypad_3_pressed },
+      { _image_keypad_4_unpressed, _image_keypad_4_pressed },
+      { _image_keypad_5_unpressed, _image_keypad_5_pressed },
+      { _image_keypad_6_unpressed, _image_keypad_6_pressed },
+      { _image_keypad_7_unpressed, _image_keypad_7_pressed },
+      { _image_keypad_8_unpressed, _image_keypad_8_pressed },
+      { _image_keypad_9_unpressed, _image_keypad_9_pressed },
+      { _image_keypad_decimal_unpressed, _image_keypad_decimal_pressed },
+      { _image_keypad_0_unpressed, _image_keypad_0_pressed },
+      { _image_keypad_backspace_unpressed, _image_keypad_backspace_pressed },
+      { _image_keypad_cancel_unpressed, _image_keypad_cancel_pressed },
+      { _image_keypad_xfer_unpressed, _image_keypad_xfer_pressed },
+      { _image_keypad_enter_unpressed, _image_keypad_enter_pressed },
+      { _image_keypad_x_unpressed, _image_keypad_x_pressed },
+      { _image_keypad_y_unpressed, _image_keypad_y_pressed },
+      { _image_menu_com_unpressed, _image_menu_com_pressed },
+      { _image_menu_xpndr_unpressed, _image_menu_xpndr_pressed },
+      { _image_menu_nav_unpressed, _image_menu_nav_pressed },
+      { _image_menu_adf_unpressed, _image_menu_adf_pressed },
+      { _image_menu_tacan_unpressed, _image_menu_tacan },
+      { _image_xfer_unpressed, _image_xfer_pressed },
+      { _image_com1_unpressed, _image_com1_pressed },
+      { _image_mic_unpressed, _image_mic_pressed },
+      { _image_com2_unpressed, _image_com2_pressed },
+      { _image_nav1_unpressed, _image_nav1_pressed },
+      { _image_nav2_unpressed, _image_nav2_pressed },
+      { _image_adf_unpressed, _image_adf_pressed },
+      { _image_on_unpressed, _image_on_pressed },
+      { _image_alt_unpressed, _image_alt_pressed },
+      { _image_ident_unpressed, _image_ident_pressed },
+      { _image_led_single_unpressed, _image_led_single_pressed },
+      { _image_led_double_unpressed, _image_led_double_pressed },
+};
+
+const unsigned char* images_bits[] PROGMEM = {
+    _image_digit_0,
+    _image_digit_1,
+    _image_digit_2,
+    _image_digit_3,
+    _image_digit_4,
+    _image_digit_5,
+    _image_digit_6,
+    _image_digit_7,
+    _image_digit_8,
+    _image_digit_9,
+    _image_digit_decimal,
+    _image_unit_mhz,
+    _image_unit_khz,
+    _image_bra_com1,
+    _image_bra_com2,
+    _image_bra_nav1,
+    _image_bra_nav2,
+    _image_bra_adf,
+    _image_bra_xpndr,
+    _image_bra_tacan,
+    _image_bra_mid,
+    _image_bra_end,
+    _image_ket_start,
+    _image_ket_mid,
+    _image_ket_end,
+};
+
+EOF

@@ -7,7 +7,7 @@ my $w;
 my $h;
 my $nc;
 my $ch;
-my $name = shift;
+my $index = shift;
 
 while(<>) {
     chomp;
@@ -25,7 +25,7 @@ while(<>) {
     }
     next unless m/^"(.*)"(:?,|};|)$/;
     s//\1/;
-    push @data, map { index $palette, $_ } split(//);
+    push @data, map { my $i = index $palette, $_; ($i>7)? 7: $i; } split(//);
 }
 
 my @col = 0 x $w;
@@ -72,7 +72,7 @@ while($#data >= 0) {
     $x %= $w;
 }
 
-print "static const unsigned char img_${name}[] PROGMEM = { $w, $h,\n\t";
+print "static const unsigned char _image_${index}[] PROGMEM = { $w, $h,\n\t";
 $x = -1;
 foreach my $o (@out) {
     if($x++ > 15) {
