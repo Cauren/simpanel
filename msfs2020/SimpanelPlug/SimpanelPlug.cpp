@@ -48,6 +48,13 @@ using namespace Microsoft::WRL::Wrappers;
 #include <SimConnect.h>
 #include <cstring>
 #include <string>
+#include <initializer_list>
+#include <array>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
 
 CRITICAL_SECTION cs_Expressions;
 CRITICAL_SECTION cs_Devices;
@@ -55,63 +62,112 @@ CRITICAL_SECTION cs_Devices;
 
 struct GaugeExpression {
     enum State {
-        Free, Updated, Sent, Invalid, Valid, Set, Get, Stale,
+        Free, Updated, Sent, Invalid, Valid, Stale,
     };
+
+    static GaugeExpression gexp[256];
 
     State   state;
+    bool readable;
+    unsigned short refs;
     const char* expression;
-    union {
-        double  value;
-        int     next;
+    double  value;
+
+    GaugeExpression(State s = Free) : state(s), readable(false), refs(0), expression(0), value(0.0) { };
+    ~GaugeExpression() { delete[] expression; };
+
+    void free(void) {
+        if (--refs)
+            return;
+        delete[] expression;
+        expression = 0;
+        state = Free;
+    }
+
+    struct Ref {
+        short i;
+
+        bool valid(void) const { return i >= 0 && gexp[i].state == Valid; };
+        double value(void) const { return valid() ? gexp[i].value : 0.0; };
+
+        Ref(void) : i(-1) { };
+        Ref(const Ref& r) : i(r.i) { if (i >= 0) gexp[i].refs++; };
+        Ref(Ref&& r) : i(r.i) { r.i = -1; };
+        ~Ref() { free(); };
+
+        void free(void) {
+            if (i >= 0) {
+                gexp[i].free();
+                i = -1;
+            }
+        }
+        void set(const char* exp, bool readable) {
+            if (i >= 0) {
+                if (gexp[i].expression && !strcmp(exp, gexp[i].expression)) {
+                    if (readable)
+                        gexp[i].readable = true;
+                    return;
+                }
+                gexp[i].free();
+            }
+            short free = -1;
+            for (short e = 0; e < 256; e++) {
+                if (gexp[e].state == Free) {
+                    if (free < 0)
+                        free = e;
+                }
+                else {
+                    if (gexp[e].expression && !strcmp(exp, gexp[e].expression)) {
+                        i = e;
+                        gexp[e].refs++;
+                        if (readable)
+                            gexp[e].readable = true;
+                        return;
+                    }
+                }
+            }
+            if (free < 0) {
+                i = -1;
+                return;
+            }
+
+            char* nexp = new char[strlen(exp) + 1];
+            strcpy(nexp, exp);
+
+            i = free;
+            gexp[i].state = Updated;
+            gexp[i].readable = readable;
+            gexp[i].refs = 1;
+            gexp[i].expression = nexp;
+            gexp[i].value = 0.0;
+        }
+
+        bool update(double v) {
+            if (i < 0)
+                return false;
+            switch (gexp[i].state) {
+            case Stale:
+                gexp[i].state = Valid;
+                [[fallthrough]];
+            case Valid:
+                gexp[i].value = v;
+                return true;
+            default:
+                return false;
+            }
+        }
+
+        std::string expr(void) { return (i<0)? "": gexp[i].expression; }
+
     };
 
-    GaugeExpression(void) : state(Free), expression(0), next(-1) { };
-    ~GaugeExpression() { empty(); };
-
-    GaugeExpression& operator = (const char* exp) {
-        empty();
-        state = Updated;
-        char* x = new char[strlen(exp) + 1];
-        strcpy(x, exp);
-        expression = x;
-        return *this;
-    }
-
-    void empty(void) {
-        state = Free;
-        if (expression)
-            delete[] expression;
-        expression = 0;
-    }
-
-    void setup(void);
-    void fire(double parm = 0.0);
 };
 
-static GaugeExpression gexp[256];
-static int gfree = -1;
+GaugeExpression GaugeExpression::gexp[256];
+
 static const char* current_plane = 0;
 static bool current_plane_changed = false;
-
-int ge_alloc()
-{
-    int e = gfree;
-    if (e >= 0) {
-        gfree = gexp[e].next;
-        gexp[e].state = GaugeExpression::Updated;
-        return e;
-    }
-    return e;
-}
-
-void ge_free(int e)
-{
-    if (e < 0)
-        return;
-    gexp[e].empty();
-    gexp[e].next = gfree;
-    gfree = e;
-}
+static size_t current_model_loaded = 0;
 
 enum GaugeInputCommands {
     GISetExpr, GIEvaluate,
@@ -191,7 +247,15 @@ struct EvaluateRequest {
 
     EvaluateRequest(void) : numx(0) { };
 
-    void add(UINT16 i, double v = 0.0) { xnum[numx] = i; xval[numx++] = v; }
+    void update(const GaugeExpression::Ref& ge, double v = 0.0) {
+        if (ge.i >= 0) {
+            xnum[numx] = ge.i; xval[numx++] = v;
+        }
+    }
+    void fetch(UINT16 i) {
+        xnum[numx] = i; xval[numx++] = 0.0;
+    }
+
     void request(void) {
         if (numx == 0)
             return;
@@ -214,89 +278,256 @@ struct EvaluateRequest {
 };
 
 
+struct Value {
 
+    enum Kind {
+        Boolean, Natural, Floating, Gauge,
+    };
+    Kind kind;
+    GaugeExpression::Ref ge;
+    union {
+        double val;
+        int nat;
+    };
 
-struct Expression {
-    std::string expression;
-    bool fixed;
-    bool val;
-    UINT16 index;
+    Value(void) : kind(Boolean), nat(0) { };
+    ~Value() { blank(); };
 
-    Expression(void) : fixed(true), val(false) { };
-    ~Expression() { blank(); };
+    void blank(void) {
+        if (kind == Gauge)
+            ge.free();
+        kind = Boolean;
+        nat = 0;
+    }
 
-    void blank(void);
-    Expression& operator = (const char*);
-    Expression& operator = (bool f) { blank(); val = f; expression.clear(); return *this; }
+    bool set(const char* exp, size_t count, const char* const* enums) {
+        if (exp && exp[0])
+            for (int e = 0; e < count; e++)
+                if (!_stricmp(exp, enums[e])) {
+                    blank();
+                    kind = Natural;
+                    nat = e;
+                    return true;
+                }
+        return false;
+    }
 
-    operator bool(void) { return fixed ? val : ((gexp[index].state == GaugeExpression::Valid) ? gexp[index].value: false); };
-    double value(void) { return fixed ? val : ((gexp[index].state == GaugeExpression::Valid) ? gexp[index].value : 0.0); };
-
-    void add(EvaluateRequest& ev, double val = 0.0) {
-        if (fixed)
+    void set(const char* exp, bool readable) {
+        if (!exp || !exp[0]) {
+            blank();
             return;
-        if (gexp[index].state != GaugeExpression::Updated)
-            ev.add(index, val);
-        gexp[index].value = val;
+        }
+
+        static constexpr const char* bool_true[] = { "True", "On", "Yes" };
+        static constexpr const char* bool_false[] = { "False", "Off", "No" };
+
+        if (set(exp, 3, bool_true)) {
+            nat = 1;
+            kind = Boolean;
+            return;
+        }
+        if (set(exp, 3, bool_false)) {
+            nat = 0;
+            kind = Boolean;
+            return;
+        }
+
+        std::from_chars_result fcr;
+        const char* end = exp + strlen(exp);
+
+        fcr = std::from_chars(exp, end, nat);
+        if (fcr.ptr == end) {
+            blank();
+            kind = Natural;
+            return;
+        }
+        fcr = std::from_chars(exp, end, val);
+        if (fcr.ptr == end) {
+            blank();
+            kind = Floating;
+            return;
+        }
+        kind = Gauge;
+        ge.set(exp, readable);
+    }
+
+    operator bool(void) { return natural(); };
+    operator UINT32(void) { return natural(); };
+    operator int(void) { return natural(); };
+    operator double(void) { return value(); };
+    UINT32 natural(void) { return (kind == Natural || kind==Boolean) ? nat : value(); };
+    double value(void) { return (kind == Natural || kind == Boolean) ? nat : ((kind == Floating) ? val : ge.value()); };
+
+    void update(EvaluateRequest& ev, double val = 0.0) {
+        if (kind != Gauge)
+            return;
+        if(ge.update(val))
+            ev.update(ge, val);
     }
 
 };
 
-void Expression::blank(void)
-{
-    if (!fixed)
-        ge_free(index);
-    fixed = true;
-    val = false;
-}
+struct Control {
+    static Control prototype_;
 
-Expression& Expression::operator=(const char* exp)
-{
-    if (exp && exp[0]) {
-        if (!fixed && expression == exp)
-            return *this;
-        if (fixed) {
-            fixed = false;
-            index = ge_alloc();
-        }
-        expression = exp;
-        gexp[index] = expression.c_str();
-    }
-    else
-        blank();
-    
-    return *this;
-}
+    template<typename T, typename C> static constexpr size_t offset(C T::* PM) { return static_cast<char*>((void*)&(prototype_.*static_cast<C Control::*>(PM))) - static_cast<char*>((void*)&prototype_); }
+    Value* o_value(size_t o) { return static_cast<Value*>((void*)(static_cast<char*>((void*)this) + o)); };
+};
+Control Control::prototype_;
 
-DWORD WINAPI device_thread_reader(void*);
-
-struct Device {
-    struct Setting {
-        enum SettingType {
-            Action, GetExpression, SetExpression, Value, Enumerator,
-        };
-        std::string control;
-        std::string label;
-        union {
-            Expression* expression;
-            double* value;
-            UINT32* enumer;
-        };
-        SettingType type;
+struct Setting {
+    enum Type {
+        Subcontrol, Readable, Writable, Action, Enumerated,
+    };
+    Type type;
+    const char* label;
+    size_t offset;
+    size_t count;
+    union {
+        const Setting* settings;
+        const char* const* enums;
     };
 
+    template<typename C, typename T> constexpr Setting(const char* l, C T::* sc) : type(Subcontrol), label(l), offset(Control::offset(sc)), count(sizeof(C::settings) / sizeof(Setting)), settings(C::settings) { }
+    template<typename C, typename T, size_t N> constexpr Setting(const char* l, C (T::* sc)[N], int i) : type(Subcontrol), label(l), offset(Control::offset(sc)+i*sizeof(C)), count(sizeof(C::settings)/sizeof(Setting)), settings(C::settings) { }
+    template<typename T> constexpr Setting(const char* l, Value T::* sv, Type t = Readable) : type(t), label(l), offset(Control::offset(sv)), count(0), settings(0) { };
+    template<typename T> constexpr Setting(const char* l, Value T::* sv, int i, Type t = Readable) : type(t), label(l), offset(Control::offset(sv)+i*sizeof(Value)), count(0), settings(0) { };
+    template<typename T, size_t N> constexpr Setting(const char* l, Value T::* sv, const char* const (&e)[N]) : type(Enumerated), label(l), offset(Control::offset(sv)), count(N), enums(e) { };
+};
+
+struct Config {
+    Setting::Type type;
+    const char* label;
+    union {
+        Value* value;
+        Config* config;
+    };
+    size_t count_enums;
+    const char* const* enums;
+    Config* next;
+
+    struct KVPair {
+        std::vector<std::string> keys;
+        std::string value;
+
+        KVPair(const char* line) {
+            if (!line)
+                return;
+            const char* end;
+            while (*line && *line!='=') {
+                while (*line == '.')
+                    *line++;
+                while (isspace(*line))
+                    line++;
+                end = line + 1;
+                while (*end && *end != '=' && *end != '.')
+                    end++;
+                const char* next = end;
+                while (isspace(end[-1]))
+                    --end;
+                if(end > line)
+                    keys.push_back(std::basic_string(line, end - line));
+                line = next;
+            }
+            if (*line != '=')
+                return;
+            line++;
+            while (isspace(*line))
+                line++;
+            if (!*line)
+                return;
+            end = line + strlen(line);
+            while (isspace(end[-1]))
+                --end;
+            value = std::basic_string(line, end - line);
+        }
+    };
+
+    template<typename C> Config(C* base) : Config(C::settings, sizeof(C::settings) / sizeof(Setting), base, 0) { };
+    Config(const Setting* s, size_t count, Control* base, size_t offset) : type(s->type), label(s->label), count_enums(0), enums(0), next(0) {
+        switch (type) {
+        case Setting::Subcontrol:
+            config = new Config(s->settings, s->count, base, offset + s->offset);
+            break;
+        case Setting::Enumerated:
+            count_enums = s->count;
+            enums = s->enums;
+            [[fallthrough]];
+        default:
+            value = base->o_value(offset + s->offset);
+            break;
+        }
+        if(count > 1)
+            next = new Config(s+1, count - 1, base, offset);
+    }
+    bool load(const KVPair& kv, int key) {
+        if (kv.keys[key] == label) {
+            if (kv.keys.size() == key + 1 && type != Setting::Subcontrol && value) {
+                if (type == Setting::Enumerated)
+                    value->set(kv.value.c_str(), count_enums, enums);
+                else
+                    value->set(kv.value.c_str(), type==Setting::Readable);
+                return true;
+            }
+            if(kv.keys.size() > key+1 && type == Setting::Subcontrol && config)
+                return config->load(kv, key + 1);
+            return false;
+        }
+        if (!next)
+            return false;
+        return next->load(kv, key);
+    }
+    void save(std::ostream& out, std::string prefix) {
+        using namespace std::literals;
+        if (type == Setting::Subcontrol && config)
+            config->save(out, prefix + label + "."s);
+        else if(value) {
+            out << prefix << std::string(label) << " = "s;
+            if (type == Setting::Enumerated) {
+                int v = value->natural();
+                out << std::string(enums[(v<0 || v>=count_enums)? 0: v]) << std::endl;
+            }
+            else switch (value->kind) {
+            case Value::Boolean:
+                out << (value->natural() ? "True"s : "False"s) << std::endl;
+                break;
+            case Value::Natural:
+                out << value->natural() << std::endl;
+                break;
+            case Value::Floating:
+                out << value->value() << std::endl;
+                break;
+            case Value::Gauge:
+                out << value->ge.expr() << std::endl;
+                break;
+            default:
+                out << "0" << std::endl;
+                break;
+            }
+        }
+        if (next)
+            next->save(out, prefix);
+    }
+};
+
+DWORD WINAPI device_thread_reader(void*);
+struct Device;
+static Device* panels = 0;
+
+struct Device {
+
     std::string name;
+    std::string label;
     std::basic_string<wchar_t> serial;
+    Config* config;
     Device* next;
     HANDLE hid;
     HANDLE whid;
     HANDLE reader_thread;
     bool end_reader;
-    Setting* settings;
-    size_t num_settings;
     bool active;
 
-    Device(const char* n, HANDLE h, HANDLE wh, size_t ns) : name(n), next(0), hid(h), whid(wh), settings(new Setting[ns]), num_settings(0), active(true)
+    Device(const char* n, const char* l, HANDLE h, HANDLE wh) : name(n), label(l), config(0), next(0), hid(h), whid(wh), active(true)
     {
         end_reader = false;
         reader_thread = CreateThread(0, 0, device_thread_reader, this, 0, 0);
@@ -304,31 +535,13 @@ struct Device {
     ~Device() {
         end_reader = true;
         WaitForSingleObject(reader_thread, INFINITE);
-        delete[] settings;
-    };
-
-    Setting& add(const std::string c, const std::string l, Setting::SettingType t) {
-        Setting& s = settings[num_settings++];
-        s.control = c;
-        s.label = l;
-        s.type = t;
-        return s;
-    };
-    void add(const std::string& c, const std::string& l, Expression* exp, Setting::SettingType st = Setting::Action) {
-        add(c, l, st).expression = exp;
-    };
-    void add(const std::string& c, const std::string& l, double* val) {
-        add(c, l, Setting::Value).value = val;
-    };
-    void add(const std::string& c, const std::string& l, UINT32* val) {
-        add(c, l, Setting::Enumerator).enumer = val;
+        delete config;
     };
 
     virtual unsigned char in_report_id(void) { return 0; };
     virtual size_t in_report_len(void) { return 0; };
     virtual void recv_hid_report(void* buf, size_t len) = 0;
     virtual void update(void) = 0;
-    virtual void load_plane(const char*) = 0;
 };
 
 DWORD WINAPI device_thread_reader(void* dp)
@@ -353,77 +566,250 @@ DWORD WINAPI device_thread_reader(void* dp)
     return 0;
 }
 
-// workflow: on 6Hz:
-//   (a) if plane changed, load settings
-//   (b) update all new expressions
-//   (c) make a list of expression to evaluate and send it
-//   -- after all expressions evaluated --
-//   (d) panel->update()
+struct SPIndicator : public Control
+{
+    Value   value;
 
-struct SPDial {
+    static const Setting settings[];
+};
+
+const Setting SPIndicator::settings[]{
+    Setting("value", &SPIndicator::value),
+};
+
+struct SPButton : public Control
+{
+    Value   led;
+    Value   push;
+
+    static const Setting settings[];
+};
+
+const Setting SPButton::settings[]{
+    Setting("led", &SPButton::led),
+    Setting("push action", &SPButton::push, Setting::Action),
+};
+
+struct SPToggle : public Control
+{
+    Value on;
+    Value off;
+
+    static const Setting settings[];
+};
+
+const Setting SPToggle::settings[]{
+    Setting("on action", &SPToggle::on, Setting::Action),
+    Setting("off action", &SPToggle::off, Setting::Action),
+};
+
+struct SP3Way : public Control
+{
+    Value top;
+    Value middle;
+    Value bottom;
+
+    static const Setting settings[];
+};
+
+const Setting SP3Way::settings[]{
+    Setting("top action", &SP3Way::top, Setting::Action),
+    Setting("middle action", &SP3Way::middle, Setting::Action),
+    Setting("bottom action", &SP3Way::bottom, Setting::Action),
+};
+
+struct SPDial : public Control
+{
     enum ValueType {
         Blank, Error, Track, IAS, Mach, VS, Angle, Altitude,
     };
-    Expression mode_select;
-    struct Set {
-        Expression active;
-        Expression value;
-        UINT32 value_type;
-        Expression set_value;
-        double unpressed_scale;
-        double pressed_scale;
-        Expression press_action;
-    } mode[2];
+    static constexpr const char* vt_names[] = { "Blank", "Error", "Track", "IAS", "Mach", "VS", "Angle", "Altitude", };
 
-    void add_settings(Device* dev, const std::string& label) {
-        dev->add(label, "mode select", &mode_select, Device::Setting::GetExpression);
-        dev->add(label, "mode 1 active", &mode[0].active, Device::Setting::GetExpression);
-        dev->add(label, "mode 1 value", &mode[0].value, Device::Setting::GetExpression);
-        dev->add(label, "mode 1 value type", &mode[0].value_type);
-        dev->add(label, "mode 1 unpressed scale", &mode[0].unpressed_scale);
-        dev->add(label, "mode 1 pressed scale", &mode[0].pressed_scale);
-        dev->add(label, "mode 1 set value", &mode[0].set_value, Device::Setting::SetExpression);
-        dev->add(label, "mode 1 press action", &mode[0].press_action);
-        dev->add(label, "mode 2 active", &mode[1].active, Device::Setting::GetExpression);
-        dev->add(label, "mode 2 value", &mode[1].value, Device::Setting::GetExpression);
-        dev->add(label, "mode 2 value type", &mode[1].value_type);
-        dev->add(label, "mode 2 unpressed scale", &mode[1].unpressed_scale);
-        dev->add(label, "mode 2 pressed scale", &mode[1].pressed_scale);
-        dev->add(label, "mode 2 set value", &mode[1].set_value, Device::Setting::SetExpression);
-        dev->add(label, "mode 2 press action", &mode[1].press_action);
-    };
+    Value active;
+    Value value;
+    Value value_type;
+    Value set_value;
+    Value unpressed_scale;
+    Value pressed_scale;
+    Value push;
+
+    static const Setting settings[];
 };
 
-struct SPIndicator {
-    Expression value;
+const Setting SPDial::settings[]{
+    Setting("active", &SPDial::active),
+    Setting("value", &SPDial::value),
+    Setting("type", &SPDial::value_type, SPDial::vt_names),
+    Setting("set value", &SPDial::set_value, Setting::Writable),
+    Setting("unpressed scale", &SPDial::unpressed_scale),
+    Setting("pressed scale", &SPDial::pressed_scale),
+    Setting("push action", &SPDial::push, Setting::Action),
+};
 
-    void add_settings(Device* dev, const std::string& label) {
-        dev->add(label, "value", &value, Device::Setting::GetExpression);
+struct SPModeDial : public Control
+{
+    Value mode_select;
+    SPDial dial[2];
+
+    static const Setting settings[];
+};
+
+const Setting SPModeDial::settings[]{
+    Setting("mode select", &SPModeDial::mode_select),
+    Setting("primary", &SPModeDial::dial, 0),
+    Setting("alternate", &SPModeDial::dial, 1),
+};
+
+struct SP_AP_C : public Control {
+    SPIndicator power;
+    SPModeDial d[4];
+    SPButton b[11];
+    SPToggle t[10];
+    SP3Way tw[5];
+
+    static const Setting settings[];
+};
+
+const Setting SP_AP_C::settings[]{
+    Setting("avionics power", &SP_AP_C::power),
+
+    Setting("speed", &SP_AP_C::d, 0),
+    Setting("heading", &SP_AP_C::d, 1),
+    Setting("vs", &SP_AP_C::d, 2),
+    Setting("altitude", &SP_AP_C::d, 3),
+
+    Setting("autothrottle", &SP_AP_C::b, 1),
+    Setting("speed hold", &SP_AP_C::b, 10),
+    Setting("lnav", &SP_AP_C::b, 7),
+    Setting("vnav", &SP_AP_C::b, 8),
+    Setting("flch", &SP_AP_C::b, 9),
+    Setting("heading hold", &SP_AP_C::b, 6),
+    Setting("vs hold", &SP_AP_C::b, 5),
+    Setting("alt hold", &SP_AP_C::b, 4),
+    Setting("autopilot", &SP_AP_C::b, 0),
+    Setting("yd", &SP_AP_C::b, 2),
+    Setting("approach", &SP_AP_C::b, 3),
+
+    Setting("deice airframe", &SP_AP_C::t, 0),
+    Setting("ice light", &SP_AP_C::t, 1),
+    Setting("deice prop", &SP_AP_C::t, 2),
+    Setting("deice windshield", &SP_AP_C::t, 3),
+    Setting("pitot left", &SP_AP_C::t, 4),
+    Setting("pitot right", &SP_AP_C::t, 5),
+    Setting("inertial separator", &SP_AP_C::t, 6),
+    Setting("fuel select", &SP_AP_C::t, 7),
+    Setting("spare 1", &SP_AP_C::t, 8),
+    Setting("spare 2", &SP_AP_C::t, 9),
+
+    Setting("bleed", &SP_AP_C::tw, 0),
+    Setting("starter", &SP_AP_C::tw, 1),
+    Setting("ignition", &SP_AP_C::tw, 2),
+    Setting("fuel pump", &SP_AP_C::tw, 3),
+    Setting("autopilot master", &SP_AP_C::tw, 4),
+};
+
+using namespace std::string_literals;
+
+namespace Configuration {
+
+    static std::vector<std::string> models;
+    static std::map<std::string, size_t> map;
+
+    static std::vector<std::string> loaded_config;
+    static size_t current_model;
+
+    static std::string name(size_t i) { return models[(i < models.size()) ? i : 0]; }
+    static size_t model(const char* title) {
+        auto found = map.find(std::string(title));
+        if (found != map.end())
+            return found->second;
+        return 0;
+    }
+
+    static void switch_to_model(size_t mdl) {
+        loaded_config.clear();
+        current_model = mdl;
+        std::ifstream cfile;
+        cfile.open(models[mdl] + ".spconf");
+        for (std::string line; std::getline(cfile, line); )
+            loaded_config.push_back(line);
+        cfile.close();
+    }
+
+    static void create_new_model(std::string name)
+    {
+        size_t mdl = models.size();
+        models.push_back(name);
+        current_model = mdl;
+        map[name] = mdl;
+        save_map();
+        save();
+    }
+
+    static void load(const char* title) {
+        size_t mdl = model(title);
+        if (loaded_config.size() > 0 && current_model == mdl)
+            return;
+        switch_to_model(mdl);
+    }
+
+    static void configure(Device* dev) {
+        for (auto line : loaded_config) {
+            Config::KVPair kv(line.c_str());
+            if (kv.keys[0] == dev->label)
+                dev->config->load(kv, 1);
+        }
+    }
+
+    static void save(void) {
+        std::ofstream cfile(models[current_model] + ".spconf");
+        for (Device* dev = panels; dev; dev = dev->next)
+            dev->config->save(cfile, dev->label + "."s);
+        cfile.close();
+        // force reload of current config so that the in-memory save is synced
+        switch_to_model(current_model);
+    }
+
+    static void load_map(void) {
+        models.clear();
+        models.push_back("generic"s);
+        map.clear();
+        std::ifstream mmfile("modelmap.ini");
+        size_t model = 0;
+        for (std::string line; std::getline(mmfile, line); ) {
+            if (line.empty())
+                continue;
+            if (line.front() == '[' && line.back() == ']') {
+                models.push_back(line.substr(1, line.size()-2));
+                model++;
+                continue;
+            }
+            if (!model)
+                continue;
+            map[line] = model;
+        }
+        mmfile.close();
+    }
+
+    static void save_map(void) {
+        std::ofstream mmfile("modelmap.ini");
+        for (size_t m = 1; m < models.size(); m++) {
+            bool any = false;
+            for(auto title: map)
+                if (title.second == m) {
+                    if (!any) {
+                        any = true;
+                        mmfile << "["s << models[m] << "]"s << std::endl;
+                    }
+                    mmfile << title.first << std::endl;
+                }
+        }
+        mmfile.close();
     }
 };
 
-struct SPButton {
-    Expression led_value;
-    Expression press_action;
 
-    void add_settings(Device* dev, const std::string& label) {
-        dev->add(label, "led value", &led_value, Device::Setting::GetExpression);
-        dev->add(label, "press action", &press_action);
-    };
-};
-
-struct SPSwitch {
-    Expression set_action;
-    Expression reset_action;
-
-    void add_settings(Device* dev, const std::string& label) {
-        dev->add(label, "on action", &set_action);
-        dev->add(label, "off action", &reset_action);
-    };
-};
-
-
-struct SIMPANEL_AP_rev_C: public Device {
+struct SIMPANEL_AP_rev_C : public Device, public SP_AP_C {
 
     struct OutputReport {
         unsigned char id;
@@ -443,14 +829,11 @@ struct SIMPANEL_AP_rev_C: public Device {
     bool            button_closed[11];
     bool            button_pushed[11];
     bool            switch_closed[20];
-    bool            switch_on[20];
+    bool            toggle_on[11];
+    unsigned char   threeway_state[5];
 
-    SPIndicator power;
-    SPDial d[4];
-    SPButton b[11];
-    SPSwitch sw[20];
 
-    SIMPANEL_AP_rev_C(HANDLE hid, HANDLE whid): Device("SimPanel A/P rev. C", hid, whid, 123) {
+    SIMPANEL_AP_rev_C(HANDLE hid, HANDLE whid) : Device("SimPanel A/P rev. C", "ap", hid, whid) {
         for (int i = 0; i < 4; i++) {
             dial_delta[i] = 0;
             dial_closed[i] = dial_pushed[i] = false;
@@ -458,29 +841,18 @@ struct SIMPANEL_AP_rev_C: public Device {
         for (int i = 0; i < 11; i++)
             button_closed[i] = button_pushed[i] = leds[i] = false;
         for (int i = 0; i < 20; i++)
-            switch_closed[i] = switch_on[i] = false;
+            switch_closed[i] = false;
+        for (int i = 0; i < 10; i++)
+            toggle_on[i] = false;
+        for (int i = 0; i < 5; i++)
+            threeway_state[i] = 1;
 
-        power.add_settings(this, "Avionics Power");
-        d[0].add_settings(this, "Speed");
-        d[1].add_settings(this, "Heading");
-        d[2].add_settings(this, "VS");
-        d[3].add_settings(this, "Altitude");
-        b[1].add_settings(this, "Button 1");
-        b[10].add_settings(this, "Button 2");
-        b[7].add_settings(this, "Button 3");
-        b[8].add_settings(this, "Button 4");
-        b[9].add_settings(this, "Button 5");
-        b[6].add_settings(this, "Button 6");
-        b[5].add_settings(this, "Button 7");
-        b[4].add_settings(this, "Button 8");
-        b[0].add_settings(this, "Button 9");
-        b[2].add_settings(this, "Button 10");
-        b[3].add_settings(this, "Button 11");
-        for (int i = 0; i < 20; i++)
-            sw[i].add_settings(this, "Switch " + std::to_string(i));
-        if (current_plane)
-            load_plane(current_plane);
-        else
+        config = new Config((SP_AP_C*)this);
+
+        if (current_plane) {
+            Configuration::load(current_plane);
+            Configuration::configure(this);
+        } else
             blank();
     }
 
@@ -492,7 +864,6 @@ struct SIMPANEL_AP_rev_C: public Device {
     virtual size_t in_report_len(void) { return 10; };
     virtual void recv_hid_report(void* buf, size_t len);
     virtual void update(void);
-    virtual void load_plane(const char*);
 
     void blank(void);
 };
@@ -553,6 +924,14 @@ void SIMPANEL_AP_rev_C::blank(void)
     out_report.leds[1] = 0;
     WriteFile(whid, &out_report, 21, 0, 0);
 }
+
+// workflow: on 6Hz:
+//   (a) if plane changed, load settings
+//   (b) update all new expressions
+//   (c) make a list of expression to evaluate and send it
+//   -- after all expressions evaluated --
+//   (d) panel->update()
+
 void SIMPANEL_AP_rev_C::update(void)
 {
     if (!power.value) {
@@ -565,295 +944,157 @@ void SIMPANEL_AP_rev_C::update(void)
     EvaluateRequest ev;
 
     for (int i = 0; i < 11; i++) {
-        leds[i] = b[i].led_value;
+        leds[i] = b[i].led;
         if (button_pushed[i]) {
-            b[i].press_action.add(ev);
+            b[i].push.update(ev);
             button_pushed[i] = false;
         }
     }
 
-    for (int i = 0; i < 20; i++) {
-        if (switch_on[i] && !switch_closed[i]) {
-            switch_on[i] = false;
-            sw[i].reset_action.add(ev);
-        }
-    }
-    for (int i = 0; i < 20; i++) {
-        if (switch_closed[i] && !switch_on[i]) {
-            switch_on[i] = true;
-            sw[i].set_action.add(ev);
+    for (int i = 0; i < 10; i++) {
+        if (toggle_on[i] != switch_closed[i < 9 ? i : 15]) {
+            toggle_on[i] = switch_closed[i < 9 ? i : 15];
+            (toggle_on[i] ? t[i].on : t[i].off).update(ev);
         }
     }
 
-    static const int disp_offset[4] = { 0, 3, 6, 12 };
-    static const int disp_width[4] = { 3, 3, 6, 6 };
-    static const unsigned char sevenseg[] = {
-        0x3F, 0x06, 0x5B, 0x4F, 0x66,
-        0x6D, 0x7D, 0x07, 0x7F, 0x6F,
-        0x00, 0x40, 0x49, 0x63, 0x08,
-    };
-    for (int i = 0; i < 4; i++) {
-        SPDial::Set& mode = d[i].mode_select ? d[i].mode[1] : d[i].mode[0];
-        SPDial::ValueType vt = static_cast<SPDial::ValueType>(mode.value_type);
-        double val = mode.value.value();
+    static constexpr int twbase[] = { 7, 9, 11, 13, 16 };
 
-        if (mode.active) {
-            bool change = false;
-            double scale = dial_closed[i] ? mode.pressed_scale : mode.unpressed_scale;
-            if (dial_delta[i] > 0) {
-                val = (floor(val / scale) + dial_delta[i]) * scale;
-                change = true;
+    for (int i = 0; i < 5; i++) {
+        unsigned char s = switch_closed[twbase[i]] ? 0 : (switch_closed[twbase[i] + 1] ? 2 : 1);
+        if (threeway_state[i] != s) {
+            threeway_state[i] = s;
+            switch (s) {
+            case 0: tw[i].top.update(ev); break;
+            case 1: tw[i].middle.update(ev); break;
+            case 2: tw[i].bottom.update(ev); break;
             }
-            else if (dial_delta[i] < 0) {
-                val = (ceil(val / scale) + dial_delta[i]) * scale;
-                change = true;
-            }
-            dial_delta[i] = 0;
-            if (change) {
-                switch (vt) {
-                case SPDial::Track:
-                    while (val < 0)
-                        val += 360;
-                    while (val >= 360)
-                        val -= 360;
-                    break;
-                case SPDial::IAS:
-                    if (val < 0)
-                        val = 0.0;
-                    break;
+        }
+
+        static const int disp_offset[4] = { 0, 3, 6, 12 };
+        static const int disp_width[4] = { 3, 3, 6, 6 };
+        static const unsigned char sevenseg[] = {
+            0x3F, 0x06, 0x5B, 0x4F, 0x66,
+            0x6D, 0x7D, 0x07, 0x7F, 0x6F,
+            0x00, 0x40, 0x49, 0x63, 0x08,
+        };
+        for (int i = 0; i < 4; i++) {
+            SPDial& mode = d[i].mode_select ? d[i].dial[1] : d[i].dial[0];
+            SPDial::ValueType vt = static_cast<SPDial::ValueType>(mode.value_type.natural());
+            double val = mode.value;
+
+            if (mode.active) {
+                bool change = false;
+                double scale = dial_closed[i] ? mode.pressed_scale : mode.unpressed_scale;
+                if (dial_delta[i] > 0) {
+                    val = (floor(val / scale) + dial_delta[i]) * scale;
+                    change = true;
                 }
-                mode.set_value.add(ev, val);
+                else if (dial_delta[i] < 0) {
+                    val = (ceil(val / scale) + dial_delta[i]) * scale;
+                    change = true;
+                }
+                dial_delta[i] = 0;
+                if (change) {
+                    switch (vt) {
+                    case SPDial::Track:
+                        while (val < 0)
+                            val += 360;
+                        while (val >= 360)
+                            val -= 360;
+                        break;
+                    case SPDial::IAS:
+                        if (val < 0)
+                            val = 0.0;
+                        break;
+                    }
+                    mode.set_value.update(ev, val);
+                }
+                if (dial_pushed[i]) {
+                    mode.push.update(ev);
+                    dial_pushed[i] = false;
+                }
             }
-            if (dial_pushed[i]) {
-                mode.press_action.add(ev);
-                dial_pushed[i] = false;
-            }
-        }
-        else
-            vt = SPDial::Blank;
+            else
+                vt = SPDial::Blank;
 
-        char pad[8] = "-------";
+            char pad[8] = "-------";
 
-        switch (vt) {
-        case SPDial::Blank:
-            pad[0] = 0;
-            break;
-        case SPDial::Error:
-            break;
-        case SPDial::Track:
-            sprintf(pad, "%03d", int(val));
-            break;
-        case SPDial::Mach:
-            sprintf(pad, "%3.2g", val);
-            break;
-        case SPDial::VS:
-            sprintf(pad, "%5d", int(val));
-            break;
-        case SPDial::Angle:
-            sprintf(pad, "%+4.2go", val);
-            break;
-        case SPDial::IAS:
-            if (long(val) == 0) {
+            switch (vt) {
+            case SPDial::Blank:
                 pad[0] = 0;
                 break;
-            }
-            // Fallthrough
-        case SPDial::Altitude:
-            sprintf(pad, "%6ld", long(val));
-            break;
-        }
-
-        int pi = strlen(pad);
-        int di = 0;
-        unsigned char* dp = out_report.digits + disp_offset[i];
-
-        for (di = 0; di < disp_width[i]; di++)
-            dp[di] = 0;
-        while (di-- > 0 && pi-- > 0) {
-            switch (pad[pi]) {
-            case '.':
-                dp[di++] |= 0x80;
+            case SPDial::Error:
                 break;
-            case '-':
-                dp[di] |= sevenseg[11];
+            case SPDial::Track:
+                sprintf(pad, "%03d", int(val));
                 break;
-            case ' ':
-                dp[di] |= sevenseg[10];
+            case SPDial::Mach:
+                sprintf(pad, "%3.2g", val);
                 break;
-            case 'o':
-                dp[di] |= sevenseg[13];
+            case SPDial::VS:
+                sprintf(pad, "%5d", int(val));
                 break;
-            case '+':
-                dp[di] |= sevenseg[14];
+            case SPDial::Angle:
+                sprintf(pad, "%+4.2go", val);
                 break;
-            default:
-                dp[di] |= sevenseg[(pad[pi] >= '0' && pad[pi] <= '9') ? pad[pi] - '0' : 12];
+            case SPDial::IAS:
+                if (long(val) == 0) {
+                    pad[0] = 0;
+                    break;
+                }
+                // Fallthrough
+            case SPDial::Altitude:
+                sprintf(pad, "%6ld", long(val));
                 break;
             }
+
+            int pi = strlen(pad);
+            int di = 0;
+            unsigned char* dp = out_report.digits + disp_offset[i];
+
+            for (di = 0; di < disp_width[i]; di++)
+                dp[di] = 0;
+            while (di-- > 0 && pi-- > 0) {
+                switch (pad[pi]) {
+                case '.':
+                    dp[di++] |= 0x80;
+                    break;
+                case '-':
+                    dp[di] |= sevenseg[11];
+                    break;
+                case ' ':
+                    dp[di] |= sevenseg[10];
+                    break;
+                case 'o':
+                    dp[di] |= sevenseg[13];
+                    break;
+                case '+':
+                    dp[di] |= sevenseg[14];
+                    break;
+                default:
+                    dp[di] |= sevenseg[(pad[pi] >= '0' && pad[pi] <= '9') ? pad[pi] - '0' : 12];
+                    break;
+                }
+            }
+
         }
 
+        ev.request();
+
+        out_report.id = 2;
+        out_report.leds[0] = 0;
+        out_report.leds[1] = 0;
+        for (int i = 0; i < 3; i++)
+            if (leds[i])
+                out_report.leds[0] |= 0x04 >> i;
+        for (int i = 0; i < 8; i++)
+            if (leds[3 + i])
+                out_report.leds[1] |= 1 << (7 - i);
+        WriteFile(whid, &out_report, 21, 0, 0);
     }
-
-    ev.request();
-
-    out_report.id = 2;
-    out_report.leds[0] = 0;
-    out_report.leds[1] = 0;
-    for (int i = 0; i < 3; i++)
-        if (leds[i])
-            out_report.leds[0] |= 0x04 >> i;
-    for (int i = 0; i < 8; i++)
-        if (leds[3+i])
-            out_report.leds[1] |= 1 << (7-i);
-    WriteFile(whid, &out_report, 21, 0, 0);
 }
 
-void SIMPANEL_AP_rev_C::load_plane(const char*)
-{
-    // Right now, we hardcode "TBM 930 Asobo"
-
-    power.value = "(A:CIRCUIT AVIONICS ON,Bool)";
-
-    // Dial 0 is configured with sane defaults for GA planes with no A/T
-    d[0].mode_select = "(L:XMLVAR_AirSpeedIsInMach,Bool)";
-    d[0].mode[0].active = true;
-    d[0].mode[0].pressed_scale = 1.0;
-    d[0].mode[0].unpressed_scale = 1.0;
-    d[0].mode[0].value_type = SPDial::IAS;
-    d[0].mode[0].value = "(A:AUTOPILOT AIRSPEED HOLD VAR, knots)";
-    d[0].mode[0].set_value = false;
-    d[0].mode[0].press_action = "(>K:BAROMETRIC)";
-    d[0].mode[1].active = false;
-    d[0].mode[1].pressed_scale = 0.01;
-    d[0].mode[1].unpressed_scale = 0.01;
-    d[0].mode[1].value_type = SPDial::Mach;
-    d[0].mode[1].value = "(A:AUTOPILOT MACH HOLD VAR, number)";
-    d[0].mode[1].set_value = "(L:GCVAL) (>K:AP_MACH_VAR_SET)";
-    d[0].mode[1].press_action = "0 (>L:XMLVAR_AirSpeedIsInMach)";
-
-    d[1].mode_select = false;
-    d[1].mode[0].active = true;
-    d[1].mode[0].pressed_scale = 10.0;
-    d[1].mode[0].unpressed_scale = 1.0;
-    d[1].mode[0].value_type = SPDial::Track;
-    d[1].mode[0].value = "(A:AUTOPILOT HEADING LOCK DIR,degrees)";
-    d[1].mode[0].set_value = "(L:GCVAL) (>K:HEADING_BUG_SET)";
-    d[1].mode[0].press_action = false;
-
-    d[2].mode_select = false;
-    d[2].mode[0].active = "(A:AUTOPILOT VERTICAL HOLD,bool)";
-    d[2].mode[0].pressed_scale = 100.0;
-    d[2].mode[0].unpressed_scale = 100.0;
-    d[2].mode[0].value_type = SPDial::VS;
-    d[2].mode[0].value = "(A:AUTOPILOT VERTICAL HOLD VAR,feet/minute)";
-    d[2].mode[0].set_value = "(L:GCVAL) (>K:AP_VS_VAR_SET_ENGLISH)";
-    d[2].mode[0].press_action = false;
-
-    d[3].mode_select = false;
-    d[3].mode[0].active = true;
-    d[3].mode[0].pressed_scale = 100.0;
-    d[3].mode[0].unpressed_scale = 1000.0;
-    d[3].mode[0].value_type = SPDial::Altitude;
-    d[3].mode[0].value = "(A:AUTOPILOT ALTITUDE LOCK VAR, feet)";
-    d[3].mode[0].set_value = "(L:GCVAL) (>K:AP_ALT_VAR_SET_ENGLISH)";
-    d[2].mode[0].press_action = false;
-
-    // A/T but TBM doesn't have one.  We cheat hear for convenience: nav source button!
-    b[1].led_value = false;
-    b[1].press_action = "1 (>H:AS3000_PFD_1_SOFTKEYS_7)";
-    // SPD but we use it for bank limit in the TBM
-    b[10].led_value = "(A:AUTOPILOT MAX BANK,degrees) 30 <";
-    b[10].press_action = "(A:AUTOPILOT MAX BANK, degrees) 30 < if{ (>K:AP_MAX_BANK_INC) } els{ (>K:AP_MAX_BANK_DEC) }";
-    // LNAV
-    b[7].led_value = "(A:AUTOPILOT NAV1 LOCK,bool)";
-    b[7].press_action = "(>K:AP_NAV1_HOLD)";
-    // VNAV
-    b[8].led_value = "(L:XMLVAR_VNAVButtonValue)";
-    b[8].press_action = "(L:XMLVAR_VNAVButtonValue) ! (>L:XMLVAR_VNAVButtonValue)";
-    // FLCH
-    b[9].led_value = "(A:AUTOPILOT FLIGHT LEVEL CHANGE, bool)";
-    b[9].press_action = "(>K:FLIGHT_LEVEL_CHANGE) (A:AIRSPEED INDICATED, knots) (>K:AP_SPD_VAR_SET)";
-    // HDG HOLD
-    b[6].led_value = "(A:AUTOPILOT HEADING LOCK,bool)";
-    b[6].press_action = "(>K:AP_HDG_HOLD)";
-    // VS HOLD
-    b[5].led_value = "(A:AUTOPILOT VERTICAL HOLD,bool)";
-    b[5].press_action = "(>K:AP_PANEL_VS_HOLD)";
-    // ALT HOLD
-    b[4].led_value = "(A:AUTOPILOT ATTITUDE HOLD,bool)";
-    b[4].press_action = "(>K:AP_ALT_HOLD)";
-    // A/P MASTER
-    b[0].led_value = "(A:AUTOPILOT MASTER,bool)";
-    b[0].press_action = "(A:AUTOPILOT DISENGAGED, Bool) ! if{ (>K:AP_MASTER) }";
-    // LOC/YD
-    b[2].led_value = "(A:AUTOPILOT YAW DAMPER,bool)";
-    b[2].press_action = "(>K:YAW_DAMPER_TOGGLE)";
-    // APPR
-    b[3].led_value = "(A:AUTOPILOT APPROACH HOLD, Bool) (A:AUTOPILOT GLIDESLOPE HOLD, Bool) and";
-    b[3].press_action = "(A:AUTOPILOT APPROACH HOLD, Bool) (A:AUTOPILOT GLIDESLOPE HOLD, Bool) ! and if{ (>K:AP_APR_HOLD) } (>K:AP_APR_HOLD)";
-
-    // DE-ICE airframe
-    sw[0].set_action = "(A:STRUCTURAL DEICE SWITCH, Bool) ! if{ (>K:TOGGLE_STRUCTURAL_DEICE) }";
-    sw[0].reset_action = "(A:STRUCTURAL DEICE SWITCH, Bool) if{ (>K:TOGGLE_STRUCTURAL_DEICE) }";
-    // DE-ICE ice light
-    sw[1].set_action = "(>K:TBM930_ICE_LIGHT_ON)";
-    sw[1].reset_action = "(>K:TBM930_ICE_LIGHT_OFF)";
-    // DE-ICE prop
-    sw[2].set_action = "(A:PROP DEICE SWITCH:1, Bool) ! if{ 1 (>K:1:TOGGLE_PROPELLER_DEICE) }";
-    sw[2].reset_action = "(A:PROP DEICE SWITCH:1, Bool) if{ 1 (>K:1:TOGGLE_PROPELLER_DEICE) }";
-    // DE-ICE windshield
-    sw[3].set_action = "(A:WINDSHIELD DEICE SWITCH, Bool) ! if{ (>K:WINDSHIELD_DEICE_TOGGLE) }";
-    sw[3].reset_action = "(A:WINDSHIELD DEICE SWITCH, Bool) if{ (>K:WINDSHIELD_DEICE_TOGGLE) }";
-    // DE-ICE pitot L
-    sw[4].set_action = "1 (>L:XMLVAR_Pitot_1) (A:PITOT HEAT, bool) ! if{ (>K:PITOT_HEAT_TOGGLE) }";
-    sw[4].reset_action = "0 (>L:XMLVAR_Pitot_1) (L:XMLVAR_Pitot_1) ! (L:XMLVAR_Pitot_2) ! and (A:PITOT HEAT, bool) == if{ (>K:PITOT_HEAT_TOGGLE) }";
-    // DE-ICE pitot R
-    sw[5].set_action = "1 (>L:XMLVAR_Pitot_2) (A:PITOT HEAT, bool) ! if{ (>K:PITOT_HEAT_TOGGLE) }";
-    sw[5].reset_action = "0 (>L:XMLVAR_Pitot_2) (L:XMLVAR_Pitot_1) ! (L:XMLVAR_Pitot_2) ! and (A:PITOT HEAT, bool) == if{ (>K:PITOT_HEAT_TOGGLE) }";
-    // DE-ICE inert sep
-    sw[6].set_action = "(A:ENG_ANTI_ICE:1,Bool) ! if{ (>K:ANTI_ICE_TOGGLE_ENG1) }";
-    sw[6].reset_action = "(A:ENG_ANTI_ICE:1,Bool) if{ (>K:ANTI_ICE_TOGGLE_ENG1) }";
-    // BLEED AUTO
-    sw[7].set_action = "0 (>K:BLEED_AIR_SOURCE_CONTROL_SET)";
-    sw[7].reset_action = "3 (>K:BLEED_AIR_SOURCE_CONTROL_SET)";
-    // BLEED OFF
-    sw[8].set_action = "1 (>K:BLEED_AIR_SOURCE_CONTROL_SET)";
-    sw[8].reset_action = "3 (>K:BLEED_AIR_SOURCE_CONTROL_SET)";
-    // ENGINE starter ON
-    sw[9].set_action = "0 (>L:XMLVAR_Starter, Number) (A:GENERAL ENG STARTER:1, Bool) ! if{ (>K:TOGGLE_STARTER1) }";
-    sw[9].reset_action = false;
-    // ENGINE starter ABORT
-    sw[10].set_action = "2 (>L:XMLVAR_Starter, Number) (A:GENERAL ENG STARTER:1, Bool) if{ (>K:TOGGLE_STARTER1) }";
-    sw[10].reset_action = false;
-    // ENGINE ignition AUTO
-    sw[11].set_action = "1 (>A:TURB ENG IGNITION SWITCH EX1:1, Enum) 1 (>L:XMLVAR_Ignition)";
-    sw[11].reset_action = "2 (>A:TURB ENG IGNITION SWITCH EX1:1, Enum) 0 (>L:XMLVAR_Ignition)";
-    // ENGINE ignition OFF
-    sw[12].set_action = "0 (>A:TURB ENG IGNITION SWITCH EX1:1, Enum) 0 (>L:XMLVAR_Ignition)";
-    sw[12].reset_action = "2 (>A:TURB ENG IGNITION SWITCH EX1:1, Enum) 0 (>L:XMLVAR_Ignition)";
-    // FUEL aux BP AUTO
-    sw[13].set_action = "2 (>L:XMLVAR_BoostFuelPump, Number) (A:GENERAL ENG FUEL PUMP SWITCH EX1:1, Enum) 2 != if{ 2 (>K:ELECT_FUEL_PUMP1_SET) }";
-    sw[13].reset_action = "1 (>L:XMLVAR_BoostFuelPump, Number) (A:GENERAL ENG FUEL PUMP SWITCH EX1:1, Enum) 1 != if{ 1 (>K:ELECT_FUEL_PUMP1_SET) }";
-    // FUEL aux BP OFF
-    sw[14].set_action = "0 (>L:XMLVAR_BoostFuelPump, Number) (A:GENERAL ENG FUEL PUMP SWITCH EX1:1, Enum) 0 != if{ 0 (>K:ELECT_FUEL_PUMP1_SET) }";
-    sw[14].reset_action = "1 (>L:XMLVAR_BoostFuelPump, Number) (A:GENERAL ENG FUEL PUMP SWITCH EX1:1, Enum) 1 != if{ 1 (>K:ELECT_FUEL_PUMP1_SET) }";
-    // FUEL fuel sel AUTO
-    sw[15].set_action = false; // broken in SU5
-    sw[15].reset_action = false; // broken in SU5
-    // AP/TRIM ON
-    sw[16].set_action = "0 (>L:XMLVAR_APTrim) (A:AUTOPILOT DISENGAGED, Bool) if{ (>K:AUTOPILOT_DISENGAGE_TOGGLE) }";
-    sw[16].reset_action = "1 (>L:XMLVAR_APTrim) (A:AUTOPILOT DISENGAGED, Bool) ! if{ (>K:AUTOPILOT_DISENGAGE_TOGGLE) } (A:RUDDER TRIM DISABLED, Bool) if{ 0 (>K:RUDDER_TRIM_DISABLED_SET) } (A:AILERON TRIM DISABLED, Bool) if{ 0 (>K:AILERON_TRIM_DISABLED_SET) }";
-    // AP/TRIM OFF
-    sw[17].set_action = "2 (>L:XMLVAR_APTrim) (A:AUTOPILOT DISENGAGED, Bool) ! if{ (>K:AUTOPILOT_DISENGAGE_TOGGLE) } (A:RUDDER TRIM DISABLED, Bool) ! if{ 1 (>K:RUDDER_TRIM_DISABLED_SET) } (A:AILERON TRIM DISABLED, Bool) ! if{ 1 (>K:AILERON_TRIM_DISABLED_SET) }";
-    sw[17].reset_action = "1 (>L:XMLVAR_APTrim) (A:AUTOPILOT DISENGAGED, Bool) ! if{ (>K:AUTOPILOT_DISENGAGE_TOGGLE) } (A:RUDDER TRIM DISABLED, Bool) if{ 0 (>K:RUDDER_TRIM_DISABLED_SET) } (A:AILERON TRIM DISABLED, Bool) if{ 0 (>K:AILERON_TRIM_DISABLED_SET) }";
-    // spare 1
-    sw[18].set_action = false;
-    sw[18].reset_action = false;
-    // spare 2
-    sw[19].set_action = false;
-    sw[19].reset_action = false;
-
-}
 
 HANDLE sim = 0;
 enum PanelStatus {
@@ -867,8 +1108,6 @@ static const int WM_USER_PLANE_CHANGE = 0x0404;
 static const int WM_USER_SIM_CONNECTED = 0x0405;
 static const int WM_USER_SIM_DISCONNECTED = 0x0406;
 static const int WM_USER_NOTIFY = 0x0407;
-
-static Device* panels = 0;
 
 void HID_find_panels(HWND win)
 {
@@ -1051,7 +1290,7 @@ RECV_FUNC(CLIENT_DATA)
             switch (req->command) {
             
             case GISetExpr: {
-                GaugeExpression& e = gexp[req->param];
+                GaugeExpression& e = GaugeExpression::gexp[req->param];
                 e.state = (g.result == GIOk) ? GaugeExpression::Stale : GaugeExpression::Invalid;
                 delete req;
                 break;
@@ -1059,8 +1298,9 @@ RECV_FUNC(CLIENT_DATA)
 
             case GIEvaluate: {
                 for (int i = 0; i < g.count; i++) {
-                    gexp[g.values[i].index].value = g.values[i].value;
-                    gexp[g.values[i].index].state = GaugeExpression::Valid;
+                    GaugeExpression& e = GaugeExpression::gexp[g.values[i].index];
+                    e.value = g.values[i].value;
+                    e.state = GaugeExpression::Valid;
                 }
                 if (g.result == GIComplete) {
                     delete req;
@@ -1154,8 +1394,8 @@ DWORD WINAPI simconnect_thread(void* vp)
                 plug_status = SimConnecting;
 
                 for (int i = 0; i < 256; i++)
-                    if (gexp[i].state != GaugeExpression::Free)
-                        gexp[i].state = GaugeExpression::Updated;
+                    if (GaugeExpression::gexp[i].state != GaugeExpression::Free)
+                        GaugeExpression::gexp[i].state = GaugeExpression::Updated;
 
                 PostMessage(win, WM_USER_SIM_CONNECTED, 0, 0);
             }
@@ -1173,8 +1413,9 @@ DWORD WINAPI simconnect_thread(void* vp)
             
             EnterCriticalSection(&cs_Devices);
             if (panels && current_plane_changed) {
-                for(Device* panel=panels; panel; panel=panel->next)
-                    panel->load_plane(current_plane);
+                Configuration::load(current_plane);
+                for (Device* panel = panels; panel; panel = panel->next)
+                    Configuration::configure(panel);
                 PostMessage(win, WM_USER_PLANE_CHANGE, 0, 0);
                 current_plane_changed = false;
             }
@@ -1182,12 +1423,12 @@ DWORD WINAPI simconnect_thread(void* vp)
 
             bool need_registration = false;
             for (int i = 0; i < 256; i++) {
-                if (gexp[i].state == GaugeExpression::Updated) {
+                if (GaugeExpression::gexp[i].state == GaugeExpression::Updated) {
                     need_registration = true;
-                    gexp[i].state = GaugeExpression::Sent;
+                    GaugeExpression::gexp[i].state = GaugeExpression::Sent;
                     GaugeRequest* req = new GaugeRequest(GISetExpr);
                     req->param = i;
-                    strcpy(req->data, gexp[i].expression);
+                    strcpy(req->data, GaugeExpression::gexp[i].expression);
                     req->send();
                 }
             }
@@ -1199,14 +1440,18 @@ DWORD WINAPI simconnect_thread(void* vp)
                 case PanelsUpdate:
                 {
                     EvaluateRequest r;
-                    for (Device* panel = panels; panel; panel = panel->next)
-                        for(int i=0; i<panel->num_settings; i++)
-                            if (panel->settings[i].type == Device::Setting::GetExpression) {
-                                if (!panel->settings[i].expression->fixed)
-                                    r.add(panel->settings[i].expression->index);
-                            }
 
+                    for (int i = 0; i < 256; i++) {
+                        GaugeExpression& ge = GaugeExpression::gexp[i];
+                        if (ge.readable) {
+                            if (ge.state == GaugeExpression::Valid  || ge.state == GaugeExpression::Stale) {
+                                ge.state = GaugeExpression::Stale;
+                                r.fetch(i);
+                            }
+                        }
+                    }
                     r.request();
+
                     panel_status = PanelsFetch;
                     break;
                 }
@@ -1243,13 +1488,10 @@ DWORD WINAPI simconnect_thread(void* vp)
 
 void startup(HWND win)
 {
-    for (int i = 0; i < 255; i++)
-        gexp[i].next = i + 1;
-    gexp[255].next = -1;
-    gfree = 0;
     InitializeCriticalSectionAndSpinCount(&cs_Expressions, 256);
     InitializeCriticalSectionAndSpinCount(&cs_Devices, 256);
 
+    Configuration::load_map();
     simconnect_data_waiting = CreateEventA(0, false, false, 0);
 
     HID_start_monitor(win);
@@ -1257,6 +1499,7 @@ void startup(HWND win)
     CreateThread(0, 0, simconnect_thread, reinterpret_cast<void*>(win), 0, 0);
 }
 
+#if defined(BRION_STUFF)
 // for some reason it tries to release and dies after free if i use com_ptr
 ICoreWebView2Environment* webviewEnv = nullptr;
 com_ptr<ICoreWebView2Controller> webviewController(nullptr);
@@ -1460,7 +1703,7 @@ void init_gui(HWND win, HINSTANCE hInstance)
 }
 
 /// WINDOWS DEFAULT STUFF BELOW
-
+#endif // defined(BRION_STUFF)
 
 #define MAX_LOADSTRING 100
 
@@ -1509,7 +1752,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     startup(mainwin);
+#if defined(BRION_STUFF)
     init_gui(mainwin, hInstance);
+#endif
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SIMPANELPLUG));
 
@@ -1735,11 +1980,13 @@ LRESULT CALLBACK main_proc(HWND win, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_SIZE:
     {
+#if defined(BRION_STUFF)
         if (webviewController) {
             RECT bounds;
             GetClientRect(win, &bounds);
             webviewController->put_Bounds(bounds);
         }
+#endif
         break;
     }
 
