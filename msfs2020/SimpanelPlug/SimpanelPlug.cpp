@@ -59,112 +59,6 @@ using namespace Microsoft::WRL::Wrappers;
 CRITICAL_SECTION cs_Expressions;
 CRITICAL_SECTION cs_Devices;
 
-
-struct GaugeExpression {
-    enum State {
-        Free, Updated, Sent, Invalid, Valid, Stale,
-    };
-
-    static GaugeExpression gexp[256];
-
-    State   state;
-    bool readable;
-    unsigned short refs;
-    const char* expression;
-    double  value;
-
-    GaugeExpression(State s = Free) : state(s), readable(false), refs(0), expression(0), value(0.0) { };
-    ~GaugeExpression() { delete[] expression; };
-
-    void free(void) {
-        if (--refs)
-            return;
-        delete[] expression;
-        expression = 0;
-        state = Free;
-    }
-
-    struct Ref {
-        short i;
-
-        bool valid(void) const { return i >= 0 && gexp[i].state == Valid; };
-        double value(void) const { return valid() ? gexp[i].value : 0.0; };
-
-        Ref(void) : i(-1) { };
-        Ref(const Ref& r) : i(r.i) { if (i >= 0) gexp[i].refs++; };
-        Ref(Ref&& r) : i(r.i) { r.i = -1; };
-        ~Ref() { free(); };
-
-        void free(void) {
-            if (i >= 0) {
-                gexp[i].free();
-                i = -1;
-            }
-        }
-        void set(const char* exp, bool readable) {
-            if (i >= 0) {
-                if (gexp[i].expression && !strcmp(exp, gexp[i].expression)) {
-                    if (readable)
-                        gexp[i].readable = true;
-                    return;
-                }
-                gexp[i].free();
-            }
-            short free = -1;
-            for (short e = 0; e < 256; e++) {
-                if (gexp[e].state == Free) {
-                    if (free < 0)
-                        free = e;
-                }
-                else {
-                    if (gexp[e].expression && !strcmp(exp, gexp[e].expression)) {
-                        i = e;
-                        gexp[e].refs++;
-                        if (readable)
-                            gexp[e].readable = true;
-                        return;
-                    }
-                }
-            }
-            if (free < 0) {
-                i = -1;
-                return;
-            }
-
-            char* nexp = new char[strlen(exp) + 1];
-            strcpy(nexp, exp);
-
-            i = free;
-            gexp[i].state = Updated;
-            gexp[i].readable = readable;
-            gexp[i].refs = 1;
-            gexp[i].expression = nexp;
-            gexp[i].value = 0.0;
-        }
-
-        bool update(double v) {
-            if (i < 0)
-                return false;
-            switch (gexp[i].state) {
-            case Stale:
-                gexp[i].state = Valid;
-                [[fallthrough]];
-            case Valid:
-                gexp[i].value = v;
-                return true;
-            default:
-                return false;
-            }
-        }
-
-        std::string expr(void) { return (i<0)? "": gexp[i].expression; }
-
-    };
-
-};
-
-GaugeExpression GaugeExpression::gexp[256];
-
 static const char* current_plane = 0;
 static bool current_plane_changed = false;
 static size_t current_model_loaded = 0;
@@ -247,10 +141,8 @@ struct EvaluateRequest {
 
     EvaluateRequest(void) : numx(0) { };
 
-    void update(const GaugeExpression::Ref& ge, double v = 0.0) {
-        if (ge.i >= 0) {
-            xnum[numx] = ge.i; xval[numx++] = v;
-        }
+    void update(short i, double v = 0.0) {
+       xnum[numx] = i; xval[numx++] = v;
     }
     void fetch(UINT16 i) {
         xnum[numx] = i; xval[numx++] = 0.0;
@@ -280,41 +172,270 @@ struct EvaluateRequest {
 
 struct Value {
 
-    enum Kind {
-        Boolean, Natural, Floating, Gauge,
+    struct Registrable {
+        unsigned short flags; // 1 free 2 unregistered 4 invalid 8 dirty
+        unsigned short refs;
+        const char* name;
+
+        bool free(void) const { return flags & 1; };
+        bool unregistered(void) const { return flags & 2; };
+        bool valid(void) const { return (flags & 7) == 0; };
+        bool dirty(void) const { return flags & 8; };
+        void touch(void) { flags |= 4; };
+
+        constexpr Registrable(void) : flags(3), refs(0), name(0) { };
+        Registrable(Registrable&& r) : flags(r.flags), refs(r.refs), name(r.name) { r.flags |= 1; r.refs = 0; r.name = 0; };
+        Registrable(const Registrable&) = delete;
+        ~Registrable() { delete[] name; };
+
+        Registrable& operator = (Registrable&& r) { flags = r.flags; refs = r.refs; name = r.name; r.flags = 1; r.refs = 0; r.name = 0; return *this; };
+        Registrable& operator = (const char* n) { flags = (flags & ~5) | 2; delete[] name; char* nn = new char[strlen(n) + 1]; strcpy(nn, name); name = n; return *this; };
+        bool matches(const char* n) const { return n && name && !strcmp(n, name); };
     };
-    Kind kind;
-    GaugeExpression::Ref ge;
-    union {
+
+    template<typename R, size_t MAX = 256> struct Registry {
+        R* reg;
+        size_t alloc;
+        size_t latest;
+        bool needs_registration;
+
+        Registry(void) { reg = new R[alloc = 256]; latest = 0; needs_registration = false; };
+        ~Registry() { delete reg; };
+
+        R& operator[] (unsigned short i) { return reg[i]; };
+        short set(const char* n) {
+            for (short i = 0; i < alloc; i++)
+                if ((reg[i].flags & 1) == 0 && !strcmp(n, reg[i].name)) {
+                    latest = i + 1;
+                    return i;
+                }
+            if (latest >= alloc)
+                latest = 0;
+            if ((reg[latest].flags & 1) == 0)
+                for (short i = 0; i < alloc; i++)
+                    if (reg[i].flags & 1) {
+                        latest = i;
+                        break;
+                    }
+            if ((reg[latest].flags & 1) == 0) {
+                if (alloc >= MAX)
+                    return -1;
+                R* nr = new R[alloc + 256];
+                for (size_t i = 0; i < alloc; i++)
+                    nr[i] = std::move(reg[i]);
+                reg = nr;
+                latest = alloc;
+                alloc += 256;
+            }
+            needs_registration = true;
+            reg[latest].flags = 2;
+            reg[latest].refs = 0;
+            char* nn = new char[strlen(n)];
+            strcpy(nn, n);
+            reg[latest].name = nn;
+            return latest++;
+        };
+    };
+
+    template<typename R, Registry<R>& REG> struct Ref {
+        short i;
+
+        constexpr Ref(void) : i(-1) { };
+        Ref(Ref&& r) : i(r.i) { r.i = -1; };
+        Ref(const Ref& r) { ref(r.i); };
+        Ref(const char* n) { i = REG.set(n); if (i >= 0) ref(i); };
+        ~Ref() { unref(); };
+
+        void ref(short ni) { if (ni >= 0 && ni < REG.alloc) REG[i = ni].refs++; else i = -1; };
+        void unref(void) { if (i >= 0 && i < REG.alloc) REG[i].refs--; };
+
+        bool valid(void) const { return i >= 0 && i < REG.alloc&& REG[i].valid(); };
+        R* operator -> (void) const { return (i>=0) ? REG.reg + i : 0; };
+
+        void set(const char* n) { 
+            short ni = REG.set(n); 
+            if (ni != i) {
+                unref(); 
+                ref(ni);
+            }
+        };
+    };
+
+    struct Source {
+
+        virtual bool valid(void) const { return true; };
+        virtual bool istrue(void) const = 0;
+        virtual double read(void) const = 0;
+        virtual void write(double) { };
+        virtual void trigger(void) { write(0.0); };
+        virtual Source* copy(void) = 0;
+        virtual std::string string(void) = 0;
+    };
+
+    struct Integer : public Source {
+        long val;
+
+        constexpr Integer(long v = 0) : val(v) { };
+
+        bool istrue(void) const { return val; };
+        double read(void) const { return val; };
+        void write(double v) { val = v; };
+        Source* copy(void) { return new Integer(val); };
+        std::string string(void) { return std::to_string(val); };
+    };
+
+    struct Floating : public Source {
         double val;
-        int nat;
+
+        constexpr Floating(double v = 0) : val(v) { };
+        bool istrue(void) const { return val != 0.0; };
+        double read(void) const { return val; };
+        void write(double v) { val = v; };
+        Source* copy(void) { return new Floating(val); };
+        std::string string(void) { return std::to_string(val); };
     };
 
-    Value(void) : kind(Boolean), nat(0) { };
-    ~Value() { blank(); };
+    struct Simvar : public Source {
+        struct Record : public Registrable {
+            size_t offset;
+            double value;
+        };
 
-    void blank(void) {
-        if (kind == Gauge)
-            ge.free();
-        kind = Boolean;
-        nat = 0;
+        static Registry<Record> sv;
+
+        Ref<Record, sv> i;
+
+        constexpr Simvar(void) { };
+        Simvar(const Simvar& v) : i(v.i) { };
+        Simvar(Simvar&& v) : i(v.i) { };
+        Simvar(const char* n, bool push) : i(n) { if (push && i.i >= 0) i->flags |= 16; };
+        Source* copy(void) { return new Simvar(*this); };
+
+        bool valid(void) const { return i.valid(); };
+        bool istrue(void) const { return valid() && read() != 0.0; };
+        double read(void) const { return valid() ? i->value : 0.0; };
+        void write(double v) { if (valid()) { i->value = v; i->touch(); i->flags |= 8; } };
+        bool matches(const char* n) const { return valid() && i->matches(n); };
+        std::string string(void) {
+            std::string s;
+            if (i.i >= 0) {
+                s = i->name;
+                if (i->flags & 16)
+                    s = ">" + s;
+            }
+            return s;
+        }
+    };
+
+    struct KEvent : public Source {
+        struct Event : public Registrable {
+        };
+
+        static Registry<Event> ev;
+
+        Ref<Event, ev> i;
+
+        constexpr KEvent(void) { };
+        KEvent(const  KEvent& v) : i(v.i) { };
+        KEvent(KEvent&& v) : i(v.i) { };
+        KEvent(const char* n) : i(n) { };
+        Source* copy(void) { return new  KEvent(*this); };
+
+        bool valid(void) const { return i.valid(); };
+        bool istrue(void) const { return false; };
+        double read(void) const { return 0.0; };
+        void write(double v);
+        void trigger(void) { write(0.0); };
+        bool matches(const char* n) const { return valid() && i->matches(n); };
+        std::string string(void) { if (i.i < 0) return ""; return ">" + std::string(i->name); };
+    };
+
+    struct GaugeExpression : public Source {
+        struct Record : public Registrable {
+            enum State {
+                Sent = 16, Stale = 64,
+            };
+            bool poll;
+            double value;
+        };
+
+        static Registry<Record> rv;
+        static EvaluateRequest* ev;
+
+        Ref<Record, rv> i;
+
+        constexpr GaugeExpression(void) { };
+        GaugeExpression(const GaugeExpression& v) : i(v.i) { };
+        GaugeExpression(GaugeExpression&& v) : i(v.i) { };
+        GaugeExpression(const char* n, bool pull) : i(n) { if (i.i >= 0) { i->value = 0.0; if (i->poll = pull) i->flags |= Record::Stale; } };
+        Source* copy(void) { return new GaugeExpression(*this); };
+
+        operator bool(void) const { return istrue(); };
+        bool valid(void) const { return i.valid() && (i->flags & 112) == 0; };
+        bool istrue(void) const { return valid() && read() != 0.0; };
+        double read(void) const { return (valid() && i->poll) ? i->value : 0.0; };
+        void write(double v) {
+            if (!valid() || i->poll)
+                return;
+            if (!ev)
+                ev = new EvaluateRequest;
+            ev->update(i.i, v);
+        }
+        void trigger(void) { write(0.0); };
+        bool matches(const char* n) const { return valid() && i->matches(n); };
+        std::string string(void) { if (i.i < 0) return ""; return i->name; }
+
+        static void flush(void) {
+            if (ev) {
+                ev->request();
+                delete ev;
+                ev = 0;
+            }
+        }
+    };
+
+    Source* source;
+
+    constexpr Value(void) : source(0) { };
+    Value(const Value& v) : source(v.source ? v.source->copy() : 0) { };
+    Value(Value&& v) : source(v.source) { v.source = 0; };
+    ~Value() { if (source) delete source; };
+
+    void set(int v) {
+        if (Integer* ip = dynamic_cast<Integer*>(source))
+            ip->val = v;
+        else {
+            if (source)
+                delete source;
+            source = new Integer(v);
+        }
+    }
+
+    void set(double v)
+    {
+        if (Floating* ip = dynamic_cast<Floating*>(source))
+            ip->val = v;
+        else {
+            if (source)
+                delete source;
+            source = new Floating(v);
+        }
     }
 
     bool set(const char* exp, size_t count, const char* const* enums) {
         if (exp && exp[0])
             for (int e = 0; e < count; e++)
                 if (!_stricmp(exp, enums[e])) {
-                    blank();
-                    kind = Natural;
-                    nat = e;
+                    set(e);
                     return true;
                 }
         return false;
     }
 
-    void set(const char* exp, bool readable) {
+    void set(const char* exp, bool pull) {
         if (!exp || !exp[0]) {
-            blank();
+            delete source;
+            source = 0;
             return;
         }
 
@@ -322,50 +443,82 @@ struct Value {
         static constexpr const char* bool_false[] = { "False", "Off", "No" };
 
         if (set(exp, 3, bool_true)) {
-            nat = 1;
-            kind = Boolean;
+            set(1);
             return;
         }
+
         if (set(exp, 3, bool_false)) {
-            nat = 0;
-            kind = Boolean;
+            set(0);
             return;
         }
 
         std::from_chars_result fcr;
         const char* end = exp + strlen(exp);
 
+        int nat;
+        double val;
         fcr = std::from_chars(exp, end, nat);
         if (fcr.ptr == end) {
-            blank();
-            kind = Natural;
+            set(nat);
             return;
         }
         fcr = std::from_chars(exp, end, val);
         if (fcr.ptr == end) {
-            blank();
-            kind = Floating;
+            set(val);
             return;
         }
-        kind = Gauge;
-        ge.set(exp, readable);
-    }
 
-    operator bool(void) { return natural(); };
-    operator UINT32(void) { return natural(); };
-    operator int(void) { return natural(); };
-    operator double(void) { return value(); };
-    UINT32 natural(void) { return (kind == Natural || kind==Boolean) ? nat : value(); };
-    double value(void) { return (kind == Natural || kind == Boolean) ? nat : ((kind == Floating) ? val : ge.value()); };
-
-    void update(EvaluateRequest& ev, double val = 0.0) {
-        if (kind != Gauge)
+        const char* key = 0;
+        if (exp[0] == '>' && exp[1] && exp[2] == ':')
+            key = exp + 3;
+        else if (exp[1] == ':')
+            key = exp + 2;
+        if (key) {
+            switch (key[-2]) {
+            case 'a':
+            case 'A':
+                if (Simvar* s = dynamic_cast<Simvar*>(source))
+                    if (s->matches(key))
+                        return;
+                delete source;
+                source = new Simvar(key, pull || exp[0] != '>');
+                return;
+            case 'k':
+            case 'K':
+                if (KEvent* k = dynamic_cast<KEvent*>(source))
+                    if (k->matches(key))
+                        return;
+                delete source;
+                source = new KEvent(key);
+                return;
+                // Eventually 'B'?  Maybe?  Pretty please asobo?  :-)
+            default:
+                break;
+            }
+        }
+        GaugeExpression* ge = dynamic_cast<GaugeExpression*>(source);
+        if (ge && ge->matches(exp))
             return;
-        if(ge.update(val))
-            ev.update(ge, val);
+        ge = new GaugeExpression(exp, pull);
+        delete source;
+        source = ge;
     }
+
+    explicit operator bool(void) const { return source && source->istrue(); };
+    operator double(void) const { if (source && source->valid()) { return source->read(); } return 0.0; };
+    bool valid(void) const { return source && source->valid(); };
+    double read(void) const { return valid() ? source->read() : 0.0; };
+    void write(double val) { if (source) source->write(val); };
+    void trigger(void) { if (source) source->trigger(); };
+    std::string string(void) { return source ? source->string() : "[null]"; };
 
 };
+
+EvaluateRequest* Value::GaugeExpression::ev = 0;
+Value::Registry<Value::GaugeExpression::Record, 256> Value::GaugeExpression::rv;
+Value::Registry<Value::KEvent::Event, 256> Value::KEvent::ev;
+Value::Registry<Value::Simvar::Record, 256> Value::Simvar::sv;
+
 
 struct Control {
     static Control prototype_;
@@ -484,26 +637,11 @@ struct Config {
         else if(value) {
             out << prefix << std::string(label) << " = "s;
             if (type == Setting::Enumerated) {
-                int v = value->natural();
-                out << std::string(enums[(v<0 || v>=count_enums)? 0: v]) << std::endl;
+                int v = value->read();
+                out << std::string(enums[(v < 0 || v >= count_enums) ? 0 : v]) << std::endl;
             }
-            else switch (value->kind) {
-            case Value::Boolean:
-                out << (value->natural() ? "True"s : "False"s) << std::endl;
-                break;
-            case Value::Natural:
-                out << value->natural() << std::endl;
-                break;
-            case Value::Floating:
-                out << value->value() << std::endl;
-                break;
-            case Value::Gauge:
-                out << value->ge.expr() << std::endl;
-                break;
-            default:
-                out << "0" << std::endl;
-                break;
-            }
+            else
+                out << value->string() << std::endl;
         }
         if (next)
             next->save(out, prefix);
@@ -513,6 +651,12 @@ struct Config {
 DWORD WINAPI device_thread_reader(void*);
 struct Device;
 static Device* panels = 0;
+
+enum PanelStatus {
+    NoPanels, PanelsReady, PanelsUpdate, PanelsFetch,
+};
+static PanelStatus panel_status = NoPanels;
+static bool panel_update = false;
 
 struct Device {
 
@@ -742,8 +886,8 @@ namespace Configuration {
         models.push_back(name);
         current_model = mdl;
         map[name] = mdl;
-        save_map();
-        save();
+        // save_map();
+        // save();
     }
 
     static void load(const char* title) {
@@ -910,6 +1054,8 @@ void SIMPANEL_AP_rev_C::recv_hid_report(void* buf, size_t len)
         int n = sw_remap[s];
         switch_closed[s] = report->switches[n>> 3] & (1 << (n & 7));
     }
+
+    panel_update = true;
 }
 
 void SIMPANEL_AP_rev_C::blank(void)
@@ -941,12 +1087,11 @@ void SIMPANEL_AP_rev_C::update(void)
 
     OutputReport out_report;
     out_report.id = 2;
-    EvaluateRequest ev;
 
     for (int i = 0; i < 11; i++) {
         leds[i] = b[i].led;
         if (button_pushed[i]) {
-            b[i].push.update(ev);
+            b[i].push.trigger();
             button_pushed[i] = false;
         }
     }
@@ -954,7 +1099,7 @@ void SIMPANEL_AP_rev_C::update(void)
     for (int i = 0; i < 10; i++) {
         if (toggle_on[i] != switch_closed[i < 9 ? i : 15]) {
             toggle_on[i] = switch_closed[i < 9 ? i : 15];
-            (toggle_on[i] ? t[i].on : t[i].off).update(ev);
+            (toggle_on[i] ? t[i].on : t[i].off).write(toggle_on[i]);
         }
     }
 
@@ -965,14 +1110,15 @@ void SIMPANEL_AP_rev_C::update(void)
         if (threeway_state[i] != s) {
             threeway_state[i] = s;
             switch (s) {
-            case 0: tw[i].top.update(ev); break;
-            case 1: tw[i].middle.update(ev); break;
-            case 2: tw[i].bottom.update(ev); break;
+            case 0: tw[i].top.trigger(); break;
+            case 1: tw[i].middle.trigger(); break;
+            case 2: tw[i].bottom.trigger(); break;
             }
         }
 
         static const int disp_offset[4] = { 0, 3, 6, 12 };
         static const int disp_width[4] = { 3, 3, 6, 6 };
+
         static const unsigned char sevenseg[] = {
             0x3F, 0x06, 0x5B, 0x4F, 0x66,
             0x6D, 0x7D, 0x07, 0x7F, 0x6F,
@@ -980,7 +1126,7 @@ void SIMPANEL_AP_rev_C::update(void)
         };
         for (int i = 0; i < 4; i++) {
             SPDial& mode = d[i].mode_select ? d[i].dial[1] : d[i].dial[0];
-            SPDial::ValueType vt = static_cast<SPDial::ValueType>(mode.value_type.natural());
+            SPDial::ValueType vt = static_cast<SPDial::ValueType>(static_cast<int>(mode.value_type.read()));
             double val = mode.value;
 
             if (mode.active) {
@@ -1008,10 +1154,11 @@ void SIMPANEL_AP_rev_C::update(void)
                             val = 0.0;
                         break;
                     }
-                    mode.set_value.update(ev, val);
+                    mode.set_value.write(val);
+                    // mode.value.write(val);
                 }
                 if (dial_pushed[i]) {
-                    mode.push.update(ev);
+                    mode.push.trigger();
                     dial_pushed[i] = false;
                 }
             }
@@ -1080,7 +1227,7 @@ void SIMPANEL_AP_rev_C::update(void)
 
         }
 
-        ev.request();
+        Value::GaugeExpression::flush();
 
         out_report.id = 2;
         out_report.leds[0] = 0;
@@ -1097,11 +1244,6 @@ void SIMPANEL_AP_rev_C::update(void)
 
 
 HANDLE sim = 0;
-enum PanelStatus {
-    NoPanels, PanelsReady, PanelsUpdate, PanelsFetch,
-};
-static PanelStatus panel_status = NoPanels;
-
 static const int WM_USER_SIMCONNECT = 0x0402;
 static const int WM_USER_PANEL_CHANGE = 0x0403;
 static const int WM_USER_PLANE_CHANGE = 0x0404;
@@ -1220,12 +1362,13 @@ enum PlugStatus {
 static PlugStatus plug_status = Unconnected;
 
 
-enum Event : DWORD {
-    GaugeInput, GaugeOutput, Sim6Hz, SimPaused, SimState, SimLoaded, SimPlane,
+enum SCEvent : DWORD {
+    GaugeInput, GaugeOutput, Sim6Hz, SimPaused, SimState, SimLoaded, SimPlane, SimVars,
+    FirstEvent,
 };
 
 enum SCData : DWORD {
-    GaugeInputData, GaugeOutputData, SimPlaneData,
+    GaugeInputData, GaugeOutputData, SimPlaneData, SimVarsPull,
 };
 
 enum SCRequest : DWORD {
@@ -1258,7 +1401,8 @@ RECV_FUNC(QUIT)
 
 RECV_FUNC(EVENT)
 {
-    switch (ev->uEventID) {
+    SCEvent ee = static_cast<SCEvent>(ev->uEventID);
+    switch (ee) {
     case GaugeOutput:
         break;
     case SimPaused:
@@ -1290,17 +1434,26 @@ RECV_FUNC(CLIENT_DATA)
             switch (req->command) {
             
             case GISetExpr: {
-                GaugeExpression& e = GaugeExpression::gexp[req->param];
-                e.state = (g.result == GIOk) ? GaugeExpression::Stale : GaugeExpression::Invalid;
+                if (req->param >= 0 && req->param <= Value::GaugeExpression::rv.alloc) {
+                    Value::GaugeExpression::Record& r = Value::GaugeExpression::rv[req->param];
+                    if (g.result != GIOk)
+                        r.flags |= 4; // invalid
+                    r.flags &= ~18; // !unregistered, !sent
+                }
                 delete req;
                 break;
             }
 
             case GIEvaluate: {
                 for (int i = 0; i < g.count; i++) {
-                    GaugeExpression& e = GaugeExpression::gexp[g.values[i].index];
-                    e.value = g.values[i].value;
-                    e.state = GaugeExpression::Valid;
+                    short idx = g.values[i].index;
+                    if (idx >= 0 && idx < Value::GaugeExpression::rv.alloc) {
+                        Value::GaugeExpression::Record& r = Value::GaugeExpression::rv[idx];
+                        if (!(r.flags & 1)) {
+                            r.value = g.values[i].value;
+                            r.flags &= ~64; // !stale
+                        }
+                    }
                 }
                 if (g.result == GIComplete) {
                     delete req;
@@ -1323,7 +1476,7 @@ RECV_FUNC(EXCEPTION)
 RECV_FUNC(SIMOBJECT_DATA)
 {
     switch (ev->dwRequestID) {
-    case SimPlane:
+    case SimPlane: {
         const char* plane = (const char*)(&ev->dwData);
         if (current_plane && !strcmp(plane, current_plane))
             break;
@@ -1333,7 +1486,22 @@ RECV_FUNC(SIMOBJECT_DATA)
         strcpy(cp, plane);
         current_plane = cp;
         current_plane_changed = true;
+    }
         break;
+    case SimVars: {
+        const long* dat = (const long*)&ev->dwData;
+        for (int i = 0; i < ev->dwDefineCount; i++) {
+            const long& id = dat[i * 3];
+            const double& val = *(const double*)(dat + i * 3 + 1);
+            if (id >= 0 && id < Value::Simvar::sv.alloc) {
+                auto& s = Value::Simvar::sv[id];
+                if ((s.flags & 7) == 0)
+                    s.value = val;
+            }
+        }
+        panel_update = true;
+        break;
+    }
     }
 }
 
@@ -1354,6 +1522,11 @@ void CALLBACK simconnect_recv(SIMCONNECT_RECV* data, DWORD dlen, void*)
 }
 
 HANDLE simconnect_data_waiting;
+
+void Value::KEvent::write(double v) {
+    if (valid())
+        SimConnect_TransmitClientEvent(sim, SIMCONNECT_OBJECT_ID_USER, FirstEvent + i.i, v, SIMCONNECT_GROUP_PRIORITY_DEFAULT, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+};
 
 DWORD WINAPI simconnect_thread(void* vp)
 {
@@ -1393,9 +1566,10 @@ DWORD WINAPI simconnect_thread(void* vp)
                 SimConnect_AddToDataDefinition(sim, SimPlaneData, "TITLE", 0, SIMCONNECT_DATATYPE_STRING32);
                 plug_status = SimConnecting;
 
-                for (int i = 0; i < 256; i++)
-                    if (GaugeExpression::gexp[i].state != GaugeExpression::Free)
-                        GaugeExpression::gexp[i].state = GaugeExpression::Updated;
+                // Make values dirty here
+//                for (int i = 0; i < 256; i++)
+//                    if (SimulatorValue::gexp[i].state != SimulatorValue::Free)
+//                        SimulatorValue::gexp[i].state = SimulatorValue::Updated;
 
                 PostMessage(win, WM_USER_SIM_CONNECTED, 0, 0);
             }
@@ -1421,33 +1595,74 @@ DWORD WINAPI simconnect_thread(void* vp)
             }
             LeaveCriticalSection(&cs_Devices);
 
-            bool need_registration = false;
-            for (int i = 0; i < 256; i++) {
-                if (GaugeExpression::gexp[i].state == GaugeExpression::Updated) {
-                    need_registration = true;
-                    GaugeExpression::gexp[i].state = GaugeExpression::Sent;
-                    GaugeRequest* req = new GaugeRequest(GISetExpr);
-                    req->param = i;
-                    strcpy(req->data, GaugeExpression::gexp[i].expression);
-                    req->send();
+            bool pending_registration = false;
+
+            // Check that all our Gauge expressions are registered
+            for (int i = 0; i < Value::GaugeExpression::rv.alloc; i++) {
+                auto& e = Value::GaugeExpression::rv.reg[i];
+                if ((e.flags & 3) == 2) { // !free && unregistered
+                    if ((e.flags & 16) == 0) { // !sent
+                        e.flags |= 16;
+                        GaugeRequest* req = new GaugeRequest(GISetExpr);
+                        req->param = i;
+                        strcpy(req->data, e.name);
+                        req->send();
+                    }
+                    pending_registration = true;
+                }
+            }
+
+            // Do we need to build the simvar block?
+            if (Value::Simvar::sv.needs_registration) {
+                SimConnect_ClearDataDefinition(sim, SimVarsPull);
+                size_t index = 0;
+                char pad[256];
+                for (int i = 0; i < Value::Simvar::sv.alloc; i++) {
+                    auto& v = Value::Simvar::sv.reg[i];
+                    if (v.flags & 1) // free
+                        continue;
+                    v.flags &= ~6; // !unregistered, !invalid
+                    const char* units = 0;
+                    size_t si = 0;
+                    do {
+                        if ((pad[si] = v.name[si]) == ',') {
+                            pad[si] = 0;
+                            units = pad + si + 1;
+                        }
+                    } while (si<255 && v.name[si++]);
+                    pad[si] = 0;
+
+                    if (SimConnect_AddToDataDefinition(sim, SimVarsPull, pad, units, SIMCONNECT_DATATYPE_FLOAT64, 0.0, i) != S_OK) {
+                        v.flags |= 4; // invalid
+                        continue;
+                    }
+                    v.offset = index++;
+                }
+                Value::Simvar::sv.needs_registration = false;
+                SimConnect_RequestDataOnSimObject(sim, SimVars, SimVarsPull, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED | SIMCONNECT_DATA_REQUEST_FLAG_TAGGED, 0, 0);
+            }
+
+            for (int i = 0; i < Value::KEvent::ev.alloc; i++) {
+                auto& e = Value::KEvent::ev.reg[i];
+                if ((e.flags & 3) == 2) { // !free && unregistered
+                    e.flags &= ~6; // !unregistered && !invalid
+                    if (SimConnect_MapClientEventToSimEvent(sim, FirstEvent + i, e.name) != S_OK)
+                        e.flags |= 4;
                 }
             }
 
             EnterCriticalSection(&cs_Devices);
-            if (!need_registration)
+            if (!pending_registration)
                 switch (panel_status) {
 
                 case PanelsUpdate:
                 {
                     EvaluateRequest r;
 
-                    for (int i = 0; i < 256; i++) {
-                        GaugeExpression& ge = GaugeExpression::gexp[i];
-                        if (ge.readable) {
-                            if (ge.state == GaugeExpression::Valid  || ge.state == GaugeExpression::Stale) {
-                                ge.state = GaugeExpression::Stale;
-                                r.fetch(i);
-                            }
+                    for (int i = 0; i < Value::GaugeExpression::rv.alloc; i++) {
+                        auto& e = Value::GaugeExpression::rv.reg[i];
+                        if ((e.flags & 5) == 0 && e.poll) { // !free && !invalid
+                            r.fetch(i);
                         }
                     }
                     r.request();
@@ -1457,14 +1672,18 @@ DWORD WINAPI simconnect_thread(void* vp)
                 }
 
                 case PanelsFetch:
-                {
-                    for (Device* panel = panels; panel; panel = panel->next)
-                        panel->update();
+                    panel_update = true;
                     panel_status = PanelsReady;
                     break;
                 }
 
+            if (panel_update) {
+                if (panel_status == PanelsReady) {
+                    for (Device* panel = panels; panel; panel = panel->next)
+                        panel->update();
                 }
+                panel_update = false;
+            }
             LeaveCriticalSection(&cs_Devices);
 
         }
